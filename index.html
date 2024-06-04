@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Leaflet Map with Bootstrap 5</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <!-- Leaflet.markercluster CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.1/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.1/MarkerCluster.Default.css" />
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        #map {
+            height: 100%;
+            width: 100%;
+            z-index: 0; /* Ensure map is behind other elements */
+        }
+        .map-container {
+            height: 100vh; /* Full height */
+            width: 100vw; /* Full width */
+            margin: 0; /* Remove any margin */
+            padding: 0; /* Remove any padding */
+            position: relative; /* Position relative for absolute positioning of footer */
+        }
+        .footer-buttons {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+        }
+        .footer-buttons button {
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="map-container">
+    <div id="map"></div>
+    <div class="footer-buttons">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-4 col-md-4 col-4"> <!-- Modified col sizes -->
+                    <button type="button" class="btn btn-primary btn-lg btn-block">Button 1</button>
+                </div>
+                <div class="col-lg-4 col-md-4 col-4"> <!-- Modified col sizes -->
+                    <button type="button" class="btn btn-secondary btn-lg btn-block" id="myLocationBtn">My location</button>
+                </div>
+                <div class="col-lg-4 col-md-4 col-4"> <!-- Modified col sizes -->
+                    <button type="button" class="btn btn-success btn-lg btn-block">Button 3</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<!-- Leaflet.markercluster JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.1/leaflet.markercluster.js"></script>
+<script>
+    // Initialize the map
+    var map = L.map('map').setView([11.55, 104.91], 7);
+
+    // Add OpenStreetMap tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy;<a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // Initialize marker cluster group
+    var markers = L.markerClusterGroup();
+
+    // Fetch data from JSON file
+    fetch('/data/markers.json')
+        .then(response => response.json())
+        .then(data => {
+            data.STATION.forEach(station => {
+                // Create marker
+                var marker = L.marker([station.latitude, station.longitude]);
+                // Create popup content
+                var popupContent = `
+                        <b>${station.title}</b><br>
+                        <b>Address:</b> ${station.address}<br>
+                        <b>Province:</b> ${station.province}<br>
+                        <b>Description:</b> ${station.description.join(', ')}<br>
+                        <b>Product:</b> ${station.product.join(', ')}<br>
+                        <b>Service:</b> ${station.service.join(', ')}<br>
+                        <b>Status:</b> ${station.status}<br>
+                    `;
+                // Bind popup to marker
+                marker.bindPopup(popupContent);
+                // Add marker to marker cluster group
+                markers.addLayer(marker);
+            });
+            // Add marker cluster group to map
+            map.addLayer(markers);
+            // Fit map to markers bounds
+            map.fitBounds(markers.getBounds());
+        })
+        .catch(error => console.error('Error fetching data:', error));
+
+        // Function to get current location
+    document.getElementById('myLocationBtn').addEventListener('click', function() {
+        // Check if geolocation is available
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                var lat = position.coords.latitude;
+                var lng = position.coords.longitude;
+                map.setView([lat, lng], 15); // Set map view to current position
+                // Optionally, add a marker at the current position
+                L.marker([lat, lng]).addTo(map)
+                    .bindPopup('You are here.')
+                    .openPopup();
+            }, function(error) {
+                console.error('Error getting geolocation:', error);
+                alert('Error getting your location. Please try again later.');
+            });
+        } else {
+            alert('Geolocation is not supported by your browser.');
+        }MAP_0124
+    });
+
+</script>
+
+</body>
+</html>
