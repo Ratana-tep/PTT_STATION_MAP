@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PTT Station Map</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <!-- Leaflet.markercluster CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.1/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.1/MarkerCluster.Default.css" />
+    <link rel="stylesheet" href="./css/currentStyle.css">
+    <!-- Custom CSS -->
+    <style>
+        body,
+        html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            height: 100%;
+            width: 100%;
+            z-index: 0;
+        }
+
+        .map-container {
+            height: 90vh;
+            width: 100vw;
+            margin: 0;
+            padding: 0;
+            position: relative;
+        }
+
+        .footer-buttons {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+        }
+
+        .footer-buttons .row {
+            justify-content: center;
+        }
+
+        .footer-buttons .col-lg-2,
+        .footer-buttons .col-md-3,
+        .footer-buttons .col-sm-3,
+        .footer-buttons .col-4 {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .footer-buttons button {
+            margin: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .footer-buttons button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .footer-buttons button:active {
+            transform: scale(0.9);
+        }
+
+        .modal-dialog {
+            max-width: 100%;
+        }
+
+        .navbar {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand img {
+            max-height: 40px;
+        }
+
+        footer {
+            background: #f8f9fa;
+            padding: 20px 0;
+        }
+
+        footer a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        .search-panel {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: white;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            z-index: 1000;
+        }
+
+        .search-panel select,
+        .search-panel button {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#"><img src="https://via.placeholder.com/100x40" alt="PTT Station Logo"></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Search Panel -->
+    <div class="search-panel">
+        <h5>ค้นหาสถานีบริการ</h5>
+        <form id="filterForm">
+            <select class="form-select" id="country">
+                <option value="">เลือกประเทศ</option>
+                <option value="thailand">ไทย</option>
+                <option value="cambodia">กัมพูชา</option>
+            </select>
+            <select class="form-select" id="region">
+                <option value="">เลือกภูมิภาค</option>
+            </select>
+            <select class="form-select" id="province">
+                <option value="">เลือกจังหวัด</option>
+            </select>
+            <div class="mb-3">
+                <label>ผลิตภัณฑ์</label>
+                <select class="form-select" id="product">
+                    <option value="">เลือกผลิตภัณฑ์</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label>อื่นๆ</label>
+                <select class="form-select" id="other">
+                    <option value="">เลือกอื่นๆ</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label>บริการ</label>
+                <select class="form-select" id="service">
+                    <option value="">เลือกบริการ</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">ค้นหา</button>
+            <button type="reset" class="btn btn-secondary">เริ่มใหม่</button>
+        </form>
+    </div>
+
+    <!-- Map Container -->
+    <div class="map-container">
+        <div id="map"></div>
+        <div class="footer-buttons">
+            <div class="row">
+                <div class="col-lg-2 col-md-3 col-sm-3 col-4">
+                    <button type="button" class="btn btn-info btn-lg btn-block small-font" id="myLocationBtn">My location</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Marker Data -->
+    <div class="modal fade" id="markerModal" tabindex="-1" aria-labelledby="markerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="markerModalLabel">Marker Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="markerModalBody">
+                    <!-- Marker details will be injected here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center mt-auto py-3">
+        <div class="container">
+            <p>&copy; 2023 PTT Station. All Rights Reserved.</p>
+            <p><a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a> | <a href="#">Contact Us</a></p>
+        </div>
+    </footer>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <!-- Leaflet.markercluster JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.1/leaflet.markercluster.js"></script>
+    <script src="./js/map.js"></script>
+    <script src="./js/filter.js"></script>
+    <script>
+        // Initialize the map
+        var map = L.map('map').setView([11.55, 104.91], 7);
+
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy;<a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Initialize marker cluster group
+        var markers = L.markerClusterGroup();
+        var allMarkers = []; // Array to hold all markers for filtering
+
+        // Fetch data from JSON file
+        fetch('http://180.178.127.119:8282/API/data/markers.json')
+            .then(response => response.json())
+            .then(data => {
+                var stations = data.STATION;
+                populateSelectOptions(stations);
+
+                stations.forEach(station => {
+                    // Create marker
+                    var marker = L.marker([station.latitude, station.longitude]);
+
+                    // Create image URL
+                    var imageUrl = `http://180.178.127.119:8282/API/picture/${station.picture}`;
+
+                    // Create popup content
+                    var popupContent = `
+                        <b>${station.title}</b><br>
+                        <b>Address:</b> ${station.address}<br>
+                        <b>Province:</b> ${station.province}<br>
+                        <b>Description:</b> ${station.description.join(', ')}<br>
+                        <b>Product:</b> ${station.product.join(', ')}<br>
+                        <b>Service:</b> ${station.service.join(', ')}<br>
+                        <b>Status:</b> ${station.status}<br>
+                        <img src="${imageUrl}" alt="${station.title}" style="width:100%; height:auto;">
+                    `;
+
+                    if (station.other_product && station.other_product[0]) {
+                        popupContent += `<b>Other Products:</b> ${station.other_product.join(', ')}<br>`;
+                    }
+
+                    // Bind popup to marker
+                    marker.bindPopup(popupContent);
+
+                    // Add click event to marker to show modal
+                    marker.on('click', function() {
+                        showMarkerModal(station, imageUrl);
+                    });
+
+                    // Add marker to marker cluster group
+                    markers.addLayer(marker);
+                    allMarkers.push({ marker: marker, data: station }); // Store marker and its data
+                });
+
+                // Add marker cluster group to map
+                map.addLayer(markers);
+
+                // Fit map to markers bounds
+                map.fitBounds(markers.getBounds());
+            })
+            .catch(error => console.error('Error fetching data:', error));
+
+        // Function to get current location
+        document.getElementById('myLocationBtn').addEventListener('click', function() {
+            // Check if geolocation is available
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var lat = position.coords.latitude;
+                    var lng = position.coords.longitude;
+
+                    // Remove existing marker and circle if they exist
+                    if (currentLocationMarker) {
+                        map.removeLayer(currentLocationMarker);
+                    }
+                    if (currentLocationCircle) {
+                        map.removeLayer(currentLocationCircle);
+                    }
+
+                    // Set map view to current position
+                    map.setView([lat, lng], 15);
+
+                    // Add animated circle to represent current location
+                    var circle = L.circle([lat, lng], {
+                        color: 'blue',
+                        fillColor: '#blue',
+                        fillOpacity: 0.2,
+                        radius: 1000,
+                        className: 'pulse-circle'
+                    }).addTo(map);
+
+                    // Create a custom icon
+                    var customIcon = L.icon({
+                        iconUrl: './pictures/mylocal.png',
+                        iconSize: [25, 41],
+                        iconAnchor: [12, 41],
+                        popupAnchor: [1, -34],
+                        shadowSize: [41, 41]
+                    });
+
+                    // Add marker with custom icon
+                    var marker = L.marker([lat, lng], { icon: customIcon }).addTo(map);
+
+                    // Optionally, you can bind a popup to the marker
+                    marker.bindPopup('You are here.').openPopup();
+
+                    // Store the current marker and circle for removal later
+                    currentLocationMarker = marker;
+                    currentLocationCircle = circle;
+                }, function(error) {
+                    console.error('Error getting geolocation:', error);
+                    alert('Error getting your location. Please try again later.');
+                });
+            } else {
+                alert('Geolocation is not supported by your browser.');
+            }
+        });
+
+        // Variable to store the current marker and circle
+        var currentLocationMarker;
+        var currentLocationCircle;
+
+        // Function to show marker data in modal
+        function showMarkerModal(station, imageUrl) {
+            var modalBody = document.getElementById('markerModalBody');
+            modalBody.innerHTML = `
+                <b>Title:</b> ${station.title}<br>
+                <b>Address:</b> ${station.address}<br>
+                <b>Province:</b> ${station.province}<br>
+                <b>Description:</b> ${station.description.join(', ')}<br>
+                <b>Product:</b> ${station.product.join(', ')}<br>
+                <b>Service:</b> ${station.service.join(', ')}<br>
+                <b>Status:</b> ${station.status}<br>
+                <img src="${imageUrl}" alt="${station.title}" style="width:100%; height:auto;">
+            `;
+
+            if (station.other_product && station.other_product[0]) {
+                modalBody.innerHTML += `<b>Other Products:</b> ${station.other_product.join(', ')}<br>`;
+            }
+
+            var markerModal = new bootstrap.Modal(document.getElementById('markerModal'), {
+                keyboard: false
+            });
+            markerModal.show();
+        }
+
+        // Function to populate select options
+        function populateSelectOptions(data) {
+            var provinces = new Set();
+            var descriptions = new Set();
+            var services = new Set();
+            var products = new Set();
+            var otherProducts = new Set();
+
+            data.forEach(station => {
+                provinces.add(station.province);
+                station.description.forEach(desc => descriptions.add(desc));
+                station.service.forEach(serv => services.add(serv));
+                station.product.forEach(prod => products.add(prod));
+                if (station.other_product) {
+                    station.other_product.forEach(otherProd => {
+                        if (otherProd.trim() !== "") {
+                            otherProducts.add(otherProd);
+                        }
+                    });
+                }
+            });
+
+            // Populate select elements
+            populateSelectElement('province', provinces);
+            populateSelectElement('description', descriptions);
+            populateSelectElement('service', services);
+            populateSelectElement('product', products);
+            populateSelectElement('other', otherProducts);
+        }
+
+        // Helper function to populate a select element
+        function populateSelectElement(elementId, values) {
+            var selectElement = document.getElementById(elementId);
+            values.forEach(value => {
+                if (value.trim() !== "") {
+                    var option = document.createElement('option');
+                    option.value = value;
+                    option.text = value;
+                    selectElement.add(option);
+                }
+            });
+        }
+
+        // Filter function
+        function applyFilter() {
+            var province = document.getElementById('province').value.toLowerCase();
+            var description = document.getElementById('description').value.toLowerCase();
+            var service = document.getElementById('service').value.toLowerCase();
+            var product = document.getElementById('product').value.toLowerCase();
+            var otherProduct = document.getElementById('other').value.toLowerCase();
+
+            markers.clearLayers(); // Clear existing markers
+
+            allMarkers.forEach(entry => {
+                var match = true;
+
+                if (province && entry.data.province.toLowerCase().indexOf(province) === -1) {
+                    match = false;
+                }
+                if (description && !entry.data.description.some(desc => desc.toLowerCase().indexOf(description) !== -1)) {
+                    match = false;
+                }
+                if (service && !entry.data.service.some(serv => serv.toLowerCase().indexOf(service) !== -1)) {
+                    match = false;
+                }
+                if (product && !entry.data.product.some(prod => prod.toLowerCase().indexOf(product) !== -1)) {
+                    match = false;
+                }
+                if (otherProduct && (!entry.data.other_product || !entry.data.other_product.some(otherProd => otherProd.toLowerCase().indexOf(otherProduct) !== -1))) {
+                    match = false;
+                }
+
+                if (match) {
+                    markers.addLayer(entry.marker);
+                }
+            });
+
+            map.addLayer(markers);
+            map.fitBounds(markers.getBounds());
+
+            // Hide the modal
+            var filterModalElement = document.getElementById('filterModal');
+            var filterModal = bootstrap.Modal.getInstance(filterModalElement);
+            filterModal.hide();
+        }
+
+        // Add event listener to form submit
+        document.getElementById('filterForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            applyFilter();
+        });
+    </script>
+</body>
+
+</html>
