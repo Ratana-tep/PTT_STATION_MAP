@@ -113,9 +113,9 @@ function showMarkerModal(station, imageUrl) {
             <div class="info"><i class="fas fa-map-marker-alt icon"></i> ${station.address}</div>
             <div class="separator"></div>
             <div class="d-flex justify-content-center mb-3">
-                <div class="badge bg-primary text-white mx-1"><i class="fas fa-clock"></i> 5 hr. 20 min</div>
-                <div class="badge bg-primary text-white mx-1"><i class="fas fa-location-arrow"></i> 219.6 km</div>
-                <div class="badge bg-primary text-white mx-1"><i class="fas fa-arrow-up"></i> Inbound</div>
+                <div class="badge bg-primary text-white mx-1"><i class="fas fa-clock icon-background"></i> 5 hr. 20 min</div>
+                <div class="badge bg-primary text-white mx-1"><i class="fas fa-location-arrow icon-background"></i> 219.6 km</div>
+                <div class="badge bg-primary text-white mx-1"><i class="fas fa-arrow-up icon-background"></i> Inbound</div>
             </div>
             <div class="separator"></div>
             <div class="info"><i class="fas fa-clock icon"></i> ${station.status}</div>
