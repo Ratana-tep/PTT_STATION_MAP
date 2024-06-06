@@ -153,16 +153,73 @@
         .nav-tabs-container {
             overflow-x: auto;
             white-space: nowrap;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
         }
+        
+        .nav-tabs {
+            display: flex;
+            border-bottom: none;
+            padding: 10px 0;
+            scroll-behavior: smooth;
+        }
+        
         .nav-tabs .nav-item {
-            flex: 0 0 auto;
+            margin-right: 10px;
         }
+        
+        .nav-tabs .nav-link {
+            border: none;
+            border-radius: 30px;
+            padding: 10px 20px;
+            background-color: #f8f9fa;
+            color: #007bff;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        .nav-tabs .nav-link.active {
+            background-color: #007bff;
+            color: white;
+        }
+        
+        .nav-tabs .nav-link:hover {
+            background-color: #e2e6ea;
+            color: #0056b3;
+        }
+        
+        .tab-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
         .scrollable-content {
-            max-height: 150px; /* Adjust height as needed */
+            max-height: 200px;
             overflow-y: auto;
         }
-        .scrollable-content .info {
-            margin-bottom: 10px;
+        
+        .scrollable-content::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .scrollable-content::-webkit-scrollbar-thumb {
+            background-color: #007bff;
+            border-radius: 10px;
+        }
+        
+        .scrollable-content::-webkit-scrollbar-track {
+            background-color: #f8f9fa;
+        }
+        
+        .fade-enter-active,
+        .fade-leave-active {
+            transition: opacity 0.5s;
+        }
+        
+        .fade-enter,
+        .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+            opacity: 0;
         }
     </style>
 </head>
