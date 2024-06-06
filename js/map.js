@@ -246,7 +246,7 @@ function showMarkerModal(station, imageUrl) {
                 <div class="icon-background mx-2" onclick="shareLocation(${station.latitude}, ${station.longitude})">
                     <i class="fas fa-share-alt share-icon"></i>
                 </div>
-                <button class="btn btn-primary rounded-circle mx-5 go-button" onclick="openGoogleMaps(${station.latitude}, ${station.longitude})">GO</button>
+                <button class="btn btn-primary rounded-circle mx-5 go-button pulse" onclick="openGoogleMaps(${station.latitude}, ${station.longitude})">GO</button>
                 <div class="icon-background">
                     <i class="fas fa-location-arrow navigate-icon mx-2"></i>
                 </div>
@@ -289,51 +289,74 @@ function updateModalWithRoute(distance, travelTime, status) {
       `;
   }
   
-  // Helper function to determine the icon, badge class, and display text based on status and current time
-  function getStatusInfo(status) {
-      const currentTime = new Date(); // Current time in local timezone (assumed to be set to Cambodia)
-      const currentHour = currentTime.getUTCHours() + 7; // Convert UTC time to ICT (UTC+7)
-  
-      // Adjust for overflow beyond 24 hours
-      const adjustedCurrentHour = (currentHour >= 24) ? currentHour - 24 : currentHour;
-  
-      if (status.toLowerCase() === "under construct") {
-          return {
-              iconClass: "fa-hammer",
-              badgeClass: "bg-warning text-white animate-construction",
-              displayText: "Under Construction"
-          };
-      } else if (status.toLowerCase() === "24h") {
-          return {
-              iconClass: "fa-gas-pump",
-              badgeClass: "bg-success text-white",
-              displayText: "Open 24h"
-          };
-      } else if (status.match(/^\d{1,2}h$/)) {
-          const closingHour = parseInt(status); // Closing hour from status
-  
-          // Determine if the station is closed or open
-          if (adjustedCurrentHour < 5 || adjustedCurrentHour >= closingHour) {
-              return {
-                  iconClass: "fa-gas-pump",
-                  badgeClass: "bg-danger text-white",
-                  displayText: "Closed"
-              };
-          } else {
-              return {
-                  iconClass: "fa-gas-pump",
-                  badgeClass: "bg-success text-white",
-                  displayText: `Open (${status})`
-              };
-          }
-      } else {
-          return {
-              iconClass: "fa-question-circle",
-              badgeClass: "bg-secondary text-white",
-              displayText: "Unknown Status"
-          };
-      }
+ // Function to update modal with route information
+function updateModalWithRoute(distance, travelTime, status) {
+    var routeInfo = document.getElementById("route-info");
+    const statusInfo = getStatusInfo(status); // Determine the icon and badge class based on status
+    
+    routeInfo.innerHTML = `
+          <div class="badge bg-primary text-white mx-1">
+              <i class="fas fa-clock icon-background"></i> ${travelTime}
+          </div>
+          <div class="badge bg-primary text-white mx-1">
+              <i class="fas fa-location-arrow icon-background"></i> ${distance}
+          </div>
+          <div class="badge ${statusInfo.badgeClass} text-white mx-1 status-badge">
+              <i class="fas ${statusInfo.iconClass} icon-background"></i> ${statusInfo.displayText}
+          </div>
+      `;
   }
+  
+// Helper function to determine the icon, badge class, and display text based on status and current time
+function getStatusInfo(status) {
+    const currentTime = new Date();
+    const currentUTCOffset = currentTime.getTimezoneOffset() * 60000; // Offset in milliseconds
+    const cambodiaTime = new Date(currentTime.getTime() + (7 * 60 * 60000) - currentUTCOffset); // Convert to Cambodia time (UTC+7)
+    const currentHour = cambodiaTime.getHours();
+    const currentMinutes = cambodiaTime.getMinutes();
+
+    // Parse the status to extract the closing hour and minutes if present
+    const statusParts = status.match(/^(\d{1,2})(?:h(\d{1,2})?)?$/); // Match hours optionally followed by minutes
+
+    if (status.toLowerCase() === "under construct") {
+        return {
+            iconClass: "fa-tools",
+            badgeClass: "bg-warning text-white blink-border",
+            displayText: "Under Construction"
+        };
+    } else if (status.toLowerCase() === "24h") {
+        return {
+            iconClass: "fa-gas-pump",
+            badgeClass: "bg-success text-white",
+            displayText: "Open 24h"
+        };
+    } else if (statusParts) {
+        const closingHour = parseInt(statusParts[1]); // Closing hour from status
+        const closingMinutes = statusParts[2] ? parseInt(statusParts[2]) : 0; // Closing minutes from status or default to 0
+
+        // Determine if the station is closed or open
+        if ((currentHour < 5) || (currentHour > closingHour) || (currentHour === closingHour && currentMinutes >= closingMinutes)) {
+            return {
+                iconClass: "fa-times-circle",
+                badgeClass: "bg-danger text-white",
+                displayText: "Closed"
+            };
+        } else {
+            return {
+                iconClass: "fa-gas-pump",
+                badgeClass: "bg-success text-white",
+                displayText: `Open (${status})`
+            };
+        }
+    } else {
+        return {
+            iconClass: "fa-question-circle",
+            badgeClass: "bg-secondary text-white",
+            displayText: "Unknown Status"
+        };
+    }
+}
+
   
 // Function to open Google Maps with the destination
 function openGoogleMaps(lat, lon) {
