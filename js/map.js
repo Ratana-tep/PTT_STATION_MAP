@@ -131,37 +131,18 @@ document.getElementById("myLocationBtn").addEventListener("click", function () {
 var currentLocationMarker;
 var currentLocationCircle;
 
-// Helper function to get the icon URL based on the station status and current time in Cambodia
+// Helper function to get the icon URL based on the station status
 function getIconUrl(status) {
-    const currentTime = new Date();
-    const currentUTCOffset = currentTime.getTimezoneOffset() * 60000; // Offset in milliseconds
-    const cambodiaTime = new Date(currentTime.getTime() + (7 * 60 * 60000) - currentUTCOffset); // Convert to Cambodia time (UTC+7)
-    const currentHour = cambodiaTime.getHours();
-    const currentMinutes = cambodiaTime.getMinutes();
-
-    // Operational hours: 5:00 AM to 8:30 PM ICT
-    const openHour = 5; // 5:00 AM
-    const closeHour = 20; // 8:00 PM
-    const closeMinutes = 30; // 8:30 PM
-
     if (status.toLowerCase() === "under construct") {
         return './pictures/under_construction.png'; // Path to the under construction icon
     } else if (status.toLowerCase() === "24h") {
         return './pictures/61.png'; // Path to the 24h icon
     } else if (status.match(/^\d{1,2}h$/)) {
-        const closingHour = parseInt(status); // Closing hour from status
-
-        // Compare current time with station's closing hour
-        if ((currentHour >= openHour && currentHour < closeHour) || (currentHour === closeHour && currentMinutes <= closeMinutes)) {
-            return './pictures/61.png'; // Open icon (adjust the path if needed)
-        } else {
-            return './pictures/time_close1.png'; // Closed icon (adjust the path if needed)
-        }
+        return './pictures/time_close1.png'; // Assuming 16h icon or replace with a specific hour icon if needed
     } else {
         return './pictures/default.png'; // Default icon for unknown statuses
     }
 }
-
 
 // Function to get the current location
 function getCurrentLocation() {
@@ -326,9 +307,9 @@ function updateModalWithRoute(distance, travelTime, status) {
 
 // Helper function to determine the icon, badge class, and display text based on status and current time
 function getStatusInfo(status) {
-    const currentTime = new Date();
-    const currentUTCOffset = currentTime.getTimezoneOffset() * 60000; // Offset in milliseconds
-    const cambodiaTime = new Date(currentTime.getTime() + (7 * 60 * 60000) - currentUTCOffset); // Convert to Cambodia time (UTC+7)
+    const currentTime = new Date(); // Current time in local timezone
+    const cambodiaOffset = 7 * 60 * 60 * 1000; // Cambodia is UTC+7
+    const cambodiaTime = new Date(currentTime.getTime() + currentTime.getTimezoneOffset() * 60000 + cambodiaOffset);
     const currentHour = cambodiaTime.getHours();
     const currentMinutes = cambodiaTime.getMinutes();
 
@@ -348,11 +329,11 @@ function getStatusInfo(status) {
             displayText: "Open 24h"
         };
     } else if (statusParts) {
-        const closingHour = parseInt(statusParts[1]); // Closing hour from status
-        const closingMinutes = statusParts[2] ? parseInt(statusParts[2]) : 0; // Closing minutes from status or default to 0
+        const closingHour = parseInt(statusParts[1], 10); // Closing hour from status
+        const closingMinutes = statusParts[2] ? parseInt(statusParts[2], 10) : 0; // Closing minutes from status or default to 0
 
         // Determine if the station is closed or open
-        if ((currentHour < 5) || (currentHour > closingHour) || (currentHour === closingHour && currentMinutes >= closingMinutes)) {
+        if (currentHour > closingHour || (currentHour === closingHour && currentMinutes >= closingMinutes)) {
             return {
                 iconClass: "fa-times-circle",
                 badgeClass: "bg-danger text-white",
@@ -362,7 +343,7 @@ function getStatusInfo(status) {
             return {
                 iconClass: "fa-gas-pump",
                 badgeClass: "bg-success text-white",
-                displayText: `Open (${status})`
+                displayText: `Open until ${status}`
             };
         }
     } else {
@@ -373,6 +354,7 @@ function getStatusInfo(status) {
         };
     }
 }
+
 
 // Function to open Google Maps with the destination
 function openGoogleMaps(lat, lon) {
