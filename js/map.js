@@ -128,11 +128,12 @@ function getCurrentLocation() {
 // Function to get route information from Bing Maps API
 function getBingRoute(startLat, startLng, endLat, endLng) {
     const bingMapsKey = 'AhQxc3Nm4Sfv53x7JRXUoj76QZnlm7VWkT5qAigmHQo8gjeYFthvGgEqVcjO5c7C'; // Replace with your Bing Maps API Key
-    const url = `http://dev.virtualearth.net/REST/V1/Routes/Driving?wp.0=${startLat},${startLng}&wp.1=${endLat},${endLng}&key=${bingMapsKey}`;
+    const url = `https://dev.virtualearth.net/REST/V1/Routes/Driving?wp.0=${startLat},${startLng}&wp.1=${endLat},${endLng}&key=${bingMapsKey}`;
 
     return fetch(url)
         .then(response => response.json())
         .then(data => {
+            console.log('Bing Maps API response:', data); // Log response for debugging
             if (data.resourceSets[0].resources.length > 0) {
                 const route = data.resourceSets[0].resources[0];
                 const distance = route.travelDistance; // in kilometers
