@@ -153,6 +153,7 @@ function getBingRoute(startLat, startLng, endLat, endLng) {
 }
 
 // Function to show marker data in modal
+// Function to show marker data in modal
 function showMarkerModal(station, imageUrl, distance, travelTime) {
     var modalBody = document.getElementById('markerModalBody');
     modalBody.innerHTML = `
@@ -170,10 +171,49 @@ function showMarkerModal(station, imageUrl, distance, travelTime) {
             </div>
             <div class="separator"></div>
             <div class="info"><i class="fas fa-clock icon"></i> ${station.status}</div>
-            <div class="info"><i class="fas fa-box-open icon"></i> Products: ${station.product.join(', ')}</div>
-            <div class="info"><i class="fas fa-tools icon"></i> Payment: ${station.service.join(', ')}</div>
-            ${station.other_product && station.other_product[0] ? `<div class="info"><i class="fas fa-boxes icon"></i> Other Products: ${station.other_product.join(', ')}</div>` : ''}
-            ${station.description && station.description[0] ? `<div class="info"><i class="fas fa-boxes icon"></i> Services: ${station.description.join(', ')}</div>` : ''}
+            
+            <div class="nav-tabs-container">
+            <ul class="nav nav-tabs flex-nowrap" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="products-tab" data-bs-toggle="tab" data-bs-target="#products" type="button" role="tab" aria-controls="products" aria-selected="true">Products</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="payment-tab" data-bs-toggle="tab" data-bs-target="#payment" type="button" role="tab" aria-controls="payment" aria-selected="false">Payment</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="services-tab" data-bs-toggle="tab" data-bs-target="#services" type="button" role="tab" aria-controls="services" aria-selected="false">Services</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="promotion-tab" data-bs-toggle="tab" data-bs-target="#promotion" type="button" role="tab" aria-controls="promotion" aria-selected="false">Promotion</button>
+                </li>
+            </ul>
+        </div>
+        <!-- Tab panes -->
+        <div class="tab-content mt-3">
+            <div class="tab-pane fade show active" id="products" role="tabpanel" aria-labelledby="products-tab">
+                <div class="scrollable-content">
+                    <div class="info"><i class="fas fa-box-open icon"></i> ${station.product.join(', ')}</div>
+                    ${station.other_product && station.other_product[0] ? `<div class="info"><i class="fas fa-boxes icon"></i> Other Products: ${station.other_product.join(', ')}</div>` : ''}
+                </div>
+            </div>
+            <div class="tab-pane fade" id="payment" role="tabpanel" aria-labelledby="payment-tab">
+                <div class="scrollable-content">
+                    <div class="info"><i class="fas fa-tools icon"></i> ${station.service.join(', ')}</div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="services" role="tabpanel" aria-labelledby="services-tab">
+                <div class="scrollable-content">
+                    ${station.description && station.description[0] ? `<div class="info"><i class="fas fa-boxes icon"></i> Services: ${station.description.join(', ')}</div>` : ''}
+                </div>
+            </div>
+            <div class="tab-pane fade" id="promotion" role="tabpanel" aria-labelledby="promotion-tab">
+                <div class="scrollable-content">
+                    ${station.promotion && station.promotion[0] ? `<div class="info"><i class="fas fa-boxes icon"></i> Promotion: ${station.promotion.join(', ')}</div>` : ''}
+                </div>
+            </div>
+        </div>
+        
+
             <div class="text-center mt-3">
               <div class="d-flex justify-content-center align-items-center">
                 <div class="icon-background mx-2" onclick="shareLocation(${station.latitude}, ${station.longitude})">
