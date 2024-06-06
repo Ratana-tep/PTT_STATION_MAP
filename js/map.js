@@ -26,17 +26,16 @@ fetch('https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers.json')
 
             // Add click event to marker to show modal
             marker.on('click', function () {
+                showMarkerModal(station, imageUrl); // Show modal first
                 getCurrentLocation().then(currentLocation => {
                     getBingRoute(currentLocation.lat, currentLocation.lng, station.latitude, station.longitude).then(result => {
                         const { distance, travelTime } = result;
-                        showMarkerModal(station, imageUrl, distance, travelTime);
+                        updateModalWithRoute(distance, travelTime);
                     }).catch(error => {
                         console.error('Error getting route from Bing Maps:', error);
-                        alert('Error calculating route.');
                     });
                 }).catch(error => {
                     console.error('Error getting current location:', error);
-                    alert('Error getting your current location.');
                 });
             });
 
@@ -153,8 +152,7 @@ function getBingRoute(startLat, startLng, endLat, endLng) {
 }
 
 // Function to show marker data in modal
-// Function to show marker data in modal
-function showMarkerModal(station, imageUrl, distance, travelTime) {
+function showMarkerModal(station, imageUrl) {
     var modalBody = document.getElementById('markerModalBody');
     modalBody.innerHTML = `
         <div class="station-details">
@@ -164,56 +162,51 @@ function showMarkerModal(station, imageUrl, distance, travelTime) {
             </div>
             <div class="info"><i class="fas fa-map-marker-alt icon"></i> ${station.address}</div>
             <div class="separator"></div>
-            <div class="d-flex justify-content-center mb-3">
-                <div class="badge bg-primary text-white mx-1"><i class="fas fa-clock icon-background"></i> ${travelTime}</div>
-                <div class="badge bg-primary text-white mx-1"><i class="fas fa-location-arrow icon-background"></i> ${distance}</div>
-                <div class="badge bg-primary text-white mx-1"><i class="fas fa-arrow-up icon-background"></i> Inbound</div>
-            </div>
+            <div id="route-info" class="d-flex justify-content-center mb-3"></div> <!-- Route info will be updated here -->
             <div class="separator"></div>
             <div class="info"><i class="fas fa-clock icon"></i> ${station.status}</div>
             
             <div class="nav-tabs-container">
-            <ul class="nav nav-tabs flex-nowrap" id="myTab" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="products-tab" data-bs-toggle="tab" data-bs-target="#products" type="button" role="tab" aria-controls="products" aria-selected="true">Products</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="payment-tab" data-bs-toggle="tab" data-bs-target="#payment" type="button" role="tab" aria-controls="payment" aria-selected="false">Payment</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="services-tab" data-bs-toggle="tab" data-bs-target="#services" type="button" role="tab" aria-controls="services" aria-selected="false">Services</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="promotion-tab" data-bs-toggle="tab" data-bs-target="#promotion" type="button" role="tab" aria-controls="promotion" aria-selected="false">Promotion</button>
-                </li>
-            </ul>
-        </div>
-        <!-- Tab panes -->
-        <div class="tab-content mt-3">
-            <div class="tab-pane fade show active" id="products" role="tabpanel" aria-labelledby="products-tab">
-                <div class="scrollable-content">
-                    <div class="info"><i class="fas fa-box-open icon"></i> ${station.product.join(', ')}</div>
-                    ${station.other_product && station.other_product[0] ? `<div class="info"><i class="fas fa-boxes icon"></i> Other Products: ${station.other_product.join(', ')}</div>` : ''}
+                <ul class="nav nav-tabs flex-nowrap" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="products-tab" data-bs-toggle="tab" data-bs-target="#products" type="button" role="tab" aria-controls="products" aria-selected="true">Products</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="payment-tab" data-bs-toggle="tab" data-bs-target="#payment" type="button" role="tab" aria-controls="payment" aria-selected="false">Payment</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="services-tab" data-bs-toggle="tab" data-bs-target="#services" type="button" role="tab" aria-controls="services" aria-selected="false">Services</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="promotion-tab" data-bs-toggle="tab" data-bs-target="#promotion" type="button" role="tab" aria-controls="promotion" aria-selected="false">Promotion</button>
+                    </li>
+                </ul>
+            </div>
+            <!-- Tab panes --> 
+            <div class="tab-content mt-3">
+                <div class="tab-pane fade show active" id="products" role="tabpanel" aria-labelledby="products-tab">
+                    <div class="scrollable-content">
+                        <div class="info"><i class="fas fa-box-open icon"></i> ${station.product.join(', ')}</div>
+                        ${station.other_product && station.other_product[0] ? `<div class="info"><i class="fas fa-boxes icon"></i> Other Products: ${station.other_product.join(', ')}</div>` : ''}
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="payment" role="tabpanel" aria-labelledby="payment-tab">
+                    <div class="scrollable-content">
+                        <div class="info"><i class="fas fa-tools icon"></i> ${station.service.join(', ')}</div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="services" role="tabpanel" aria-labelledby="services-tab">
+                    <div class="scrollable-content">
+                        ${station.description && station.description[0] ? `<div class="info"><i class="fas fa-boxes icon"></i> Services: ${station.description.join(', ')}</div>` : ''}
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="promotion" role="tabpanel" aria-labelledby="promotion-tab">
+                    <div class="scrollable-content">
+                        ${station.promotion && station.promotion[0] ? `<div class="info"><i class="fas fa-boxes icon"></i> Promotion: ${station.promotion.join(', ')}</div>` : ''}
+                    </div>
                 </div>
             </div>
-            <div class="tab-pane fade" id="payment" role="tabpanel" aria-labelledby="payment-tab">
-                <div class="scrollable-content">
-                    <div class="info"><i class="fas fa-tools icon"></i> ${station.service.join(', ')}</div>
-                </div>
-            </div>
-            <div class="tab-pane fade" id="services" role="tabpanel" aria-labelledby="services-tab">
-                <div class="scrollable-content">
-                    ${station.description && station.description[0] ? `<div class="info"><i class="fas fa-boxes icon"></i> Services: ${station.description.join(', ')}</div>` : ''}
-                </div>
-            </div>
-            <div class="tab-pane fade" id="promotion" role="tabpanel" aria-labelledby="promotion-tab">
-                <div class="scrollable-content">
-                    ${station.promotion && station.promotion[0] ? `<div class="info"><i class="fas fa-boxes icon"></i> Promotion: ${station.promotion.join(', ')}</div>` : ''}
-                </div>
-            </div>
-        </div>
-        
-
+            
             <div class="text-center mt-3">
               <div class="d-flex justify-content-center align-items-center">
                 <div class="icon-background mx-2" onclick="shareLocation(${station.latitude}, ${station.longitude})">
@@ -232,6 +225,16 @@ function showMarkerModal(station, imageUrl, distance, travelTime) {
         keyboard: false
     });
     markerModal.show();
+}
+
+// Function to update modal with route information
+function updateModalWithRoute(distance, travelTime) {
+    var routeInfo = document.getElementById('route-info');
+    routeInfo.innerHTML = `
+        <div class="badge bg-primary text-white mx-1"><i class="fas fa-clock icon-background"></i> ${travelTime}</div>
+        <div class="badge bg-primary text-white mx-1"><i class="fas fa-location-arrow icon-background"></i> ${distance}</div>
+        <div class="badge bg-primary text-white mx-1"><i class="fas fa-arrow-up icon-background"></i> Inbound</div>
+    `;
 }
 
 // Function to open Google Maps with the destination
