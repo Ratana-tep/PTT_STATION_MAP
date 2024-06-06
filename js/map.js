@@ -3,8 +3,7 @@ var map = L.map("map").setView([11.55, 104.91], 7);
 
 // Add OpenStreetMap tiles
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-  attribution:
-    '&copy;<a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  attribution: '&copy;<a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
 }).addTo(map);
 
 // Initialize marker cluster group
@@ -19,9 +18,6 @@ fetch("https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers.json")
     populateSelectOptions(stations);
 
     stations.forEach((station) => {
-      // Create marker
-      var marker = L.marker([station.latitude, station.longitude]);
-
       // Create custom icon for the marker
       var customIcon = L.icon({
         iconUrl: `./pictures/61.png`, // Replace with the correct path to your logo images
@@ -51,14 +47,16 @@ fetch("https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers.json")
             )
               .then((result) => {
                 const { distance, travelTime } = result;
-                updateModalWithRoute(distance, travelTime);
+                updateModalWithRoute(distance, travelTime, station.status);
               })
               .catch((error) => {
                 console.error("Error getting route from Bing Maps:", error);
+                updateModalWithRoute("N/A", "N/A", station.status); // Use placeholders if there's an error
               });
           })
           .catch((error) => {
             console.error("Error getting current location:", error);
+            updateModalWithRoute("N/A", "N/A", station.status); // Use placeholders if location is unavailable
           });
       });
 
@@ -193,25 +191,14 @@ function showMarkerModal(station, imageUrl) {
   var modalBody = document.getElementById("markerModalBody");
   modalBody.innerHTML = `
         <div class="station-details">
-            <img src="${imageUrl}" alt="${
-    station.title
-  }" class="img-fluid mb-3 rounded-image" />
+            <img src="${imageUrl}" alt="${station.title}" class="img-fluid mb-3 rounded-image" />
             <div class="text-center">
-                <h3 class="station-title mb-3 font-weight-bold">${
-                  station.title
-                }</h3>
+                <h3 class="station-title mb-3 font-weight-bold">${station.title}</h3>
             </div>
-            <div class="info"><i class="fas fa-map-marker-alt icon"></i> ${
-              station.address
-            }</div>
+             <div class="info"><i class="fas fa-map-marker-alt icon"></i> ${station.address}</div>
             <div class="separator"></div>
-            <div id="route-info" class="d-flex justify-content-center mb-3"></div> <!-- Route info will be updated here -->
+            <div id="route-info" class="d-flex justify-content-center mb-3"></div> 
             <div class="separator"></div>
-            <div class="info"><i class="fas fa-clock icon"></i> ${
-              station.status
-            }</div>
-            
-            <!-- Nav tabs with modern styling and smooth animation -->
             <div class="nav-tabs-container">
                 <ul class="nav nav-tabs flex-nowrap" id="myTab" role="tablist">
                     <li class="nav-item" role="presentation">
@@ -233,59 +220,33 @@ function showMarkerModal(station, imageUrl) {
             <div class="tab-content mt-3">
                 <div class="tab-pane fade show active" id="products" role="tabpanel" aria-labelledby="products-tab">
                     <div class="scrollable-content">
-                        <div class="info"><i class="fas fa-box-open icon"></i> ${station.product.join(
-                          ", "
-                        )}</div>
-                        ${
-                          station.other_product && station.other_product[0]
-                            ? `<div class="info"><i class="fas fa-boxes icon"></i> Other Products: ${station.other_product.join(
-                                ", "
-                              )}</div>`
-                            : ""
-                        }
+                        <div class="info"><i class="fas fa-box-open icon"></i> ${station.product.join(", ")}</div>
+                        ${station.other_product && station.other_product[0] ? `<div class="info"><i class="fas fa-boxes icon"></i> Other Products: ${station.other_product.join(", ")}</div>` : ""}
                     </div>
                 </div>
                 <div class="tab-pane fade" id="payment" role="tabpanel" aria-labelledby="payment-tab">
                     <div class="scrollable-content">
-                        <div class="info"><i class="fas fa-tools icon"></i> ${station.service.join(
-                          ", "
-                        )}</div>
+                        <div class="info"><i class="fas fa-tools icon"></i> ${station.service.join(", ")}</div>
                     </div>
                 </div>
                 <div class="tab-pane fade" id="services" role="tabpanel" aria-labelledby="services-tab">
                     <div class="scrollable-content">
-                        ${
-                          station.description && station.description[0]
-                            ? `<div class="info"><i class="fas fa-boxes icon"></i> Services: ${station.description.join(
-                                ", "
-                              )}</div>`
-                            : ""
-                        }
+                        ${station.description && station.description[0] ? `<div class="info"><i class="fas fa-boxes icon"></i> Services: ${station.description.join(", ")}</div>` : ""}
                     </div>
                 </div>
                 <div class="tab-pane fade" id="promotion" role="tabpanel" aria-labelledby="promotion-tab">
                     <div class="scrollable-content">
-                        ${
-                          station.promotion && station.promotion[0]
-                            ? `<div class="info"><i class="fas fa-boxes icon"></i> Promotion: ${station.promotion.join(
-                                ", "
-                              )}</div>`
-                            : ""
-                        }
+                        ${station.promotion && station.promotion[0] ? `<div class="info"><i class="fas fa-boxes icon"></i> Promotion: ${station.promotion.join(", ")}</div>` : ""}
                     </div>
                 </div>
             </div>
             
             <div class="text-center mt-3">
               <div class="d-flex justify-content-center align-items-center">
-                <div class="icon-background mx-2" onclick="shareLocation(${
-                  station.latitude
-                }, ${station.longitude})">
+                <div class="icon-background mx-2" onclick="shareLocation(${station.latitude}, ${station.longitude})">
                     <i class="fas fa-share-alt share-icon"></i>
                 </div>
-                <button class="btn btn-primary rounded-circle mx-5 go-button" onclick="openGoogleMaps(${
-                  station.latitude
-                }, ${station.longitude})">GO</button>
+                <button class="btn btn-primary rounded-circle mx-5 go-button" onclick="openGoogleMaps(${station.latitude}, ${station.longitude})">GO</button>
                 <div class="icon-background">
                     <i class="fas fa-location-arrow navigate-icon mx-2"></i>
                 </div>
@@ -294,35 +255,86 @@ function showMarkerModal(station, imageUrl) {
         </div>
     `;
 
-  var markerModal = new bootstrap.Modal(
-    document.getElementById("markerModal"),
-    {
-      keyboard: false,
-    }
-  );
-  markerModal.show();
-}
-// Initialize Bootstrap tabs
-var triggerTabList = [].slice.call(document.querySelectorAll("#myTab button"));
-triggerTabList.forEach(function (triggerEl) {
-  var tabTrigger = new bootstrap.Tab(triggerEl);
-
-  triggerEl.addEventListener("click", function (event) {
-    event.preventDefault();
-    tabTrigger.show();
+  var markerModal = new bootstrap.Modal(document.getElementById("markerModal"), {
+    keyboard: false,
   });
-});
+  markerModal.show();
+
+  // Initialize Bootstrap tabs correctly
+  var triggerTabList = [].slice.call(document.querySelectorAll('#myTab button'));
+  triggerTabList.forEach(function (triggerEl) {
+    var tabTrigger = new bootstrap.Tab(triggerEl);
+    triggerEl.addEventListener('click', function (event) {
+      event.preventDefault();
+      tabTrigger.show();
+    });
+  });
+}
 
 // Function to update modal with route information
-function updateModalWithRoute(distance, travelTime) {
-  var routeInfo = document.getElementById("route-info");
-  routeInfo.innerHTML = `
-        <div class="badge bg-primary text-white mx-1"><i class="fas fa-clock icon-background"></i> ${travelTime}</div>
-        <div class="badge bg-primary text-white mx-1"><i class="fas fa-location-arrow icon-background"></i> ${distance}</div>
-        <div class="badge bg-primary text-white mx-1"><i class="fas fa-arrow-up icon-background"></i> Inbound</div>
-    `;
-}
-
+function updateModalWithRoute(distance, travelTime, status) {
+    var routeInfo = document.getElementById("route-info");
+    const statusInfo = getStatusInfo(status); // Determine the icon and badge class based on status
+    
+    routeInfo.innerHTML = `
+          <div class="badge bg-primary text-white mx-1">
+              <i class="fas fa-clock icon-background"></i> ${travelTime}
+          </div>
+          <div class="badge bg-primary text-white mx-1">
+              <i class="fas fa-location-arrow icon-background"></i> ${distance}
+          </div>
+          <div class="badge ${statusInfo.badgeClass} text-white mx-1">
+              <i class="fas ${statusInfo.iconClass} icon-background"></i> ${statusInfo.displayText}
+          </div>
+      `;
+  }
+  
+  // Helper function to determine the icon, badge class, and display text based on status and current time
+  function getStatusInfo(status) {
+      const currentTime = new Date(); // Current time in local timezone (assumed to be set to Cambodia)
+      const currentHour = currentTime.getUTCHours() + 7; // Convert UTC time to ICT (UTC+7)
+  
+      // Adjust for overflow beyond 24 hours
+      const adjustedCurrentHour = (currentHour >= 24) ? currentHour - 24 : currentHour;
+  
+      if (status.toLowerCase() === "under construct") {
+          return {
+              iconClass: "fa-hammer",
+              badgeClass: "bg-warning text-white animate-construction",
+              displayText: "Under Construction"
+          };
+      } else if (status.toLowerCase() === "24h") {
+          return {
+              iconClass: "fa-gas-pump",
+              badgeClass: "bg-success text-white",
+              displayText: "Open 24h"
+          };
+      } else if (status.match(/^\d{1,2}h$/)) {
+          const closingHour = parseInt(status); // Closing hour from status
+  
+          // Determine if the station is closed or open
+          if (adjustedCurrentHour < 5 || adjustedCurrentHour >= closingHour) {
+              return {
+                  iconClass: "fa-gas-pump",
+                  badgeClass: "bg-danger text-white",
+                  displayText: "Closed"
+              };
+          } else {
+              return {
+                  iconClass: "fa-gas-pump",
+                  badgeClass: "bg-success text-white",
+                  displayText: `Open (${status})`
+              };
+          }
+      } else {
+          return {
+              iconClass: "fa-question-circle",
+              badgeClass: "bg-secondary text-white",
+              displayText: "Unknown Status"
+          };
+      }
+  }
+  
 // Function to open Google Maps with the destination
 function openGoogleMaps(lat, lon) {
   var url =
