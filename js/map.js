@@ -18,9 +18,12 @@ fetch("https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers.json")
     populateSelectOptions(stations);
 
     stations.forEach((station) => {
+      // Get the custom icon URL based on the station status
+      var iconUrl = getIconUrl(station.status);
+
       // Create custom icon for the marker
       var customIcon = L.icon({
-        iconUrl: `./pictures/61.png`, // Replace with the correct path to your logo images
+        iconUrl: iconUrl, // Use the path returned by getIconUrl
         iconSize: [41, 62], // Adjust the size to fit your needs
         iconAnchor: [24, 75],
         popupAnchor: [1, -1000],
@@ -127,6 +130,38 @@ document.getElementById("myLocationBtn").addEventListener("click", function () {
 // Variable to store the current marker and circle
 var currentLocationMarker;
 var currentLocationCircle;
+
+// Helper function to get the icon URL based on the station status and current time in Cambodia
+function getIconUrl(status) {
+    const currentTime = new Date();
+    const currentUTCOffset = currentTime.getTimezoneOffset() * 60000; // Offset in milliseconds
+    const cambodiaTime = new Date(currentTime.getTime() + (7 * 60 * 60000) - currentUTCOffset); // Convert to Cambodia time (UTC+7)
+    const currentHour = cambodiaTime.getHours();
+    const currentMinutes = cambodiaTime.getMinutes();
+
+    // Operational hours: 5:00 AM to 8:30 PM ICT
+    const openHour = 5; // 5:00 AM
+    const closeHour = 20; // 8:00 PM
+    const closeMinutes = 30; // 8:30 PM
+
+    if (status.toLowerCase() === "under construct") {
+        return './pictures/under_construction.png'; // Path to the under construction icon
+    } else if (status.toLowerCase() === "24h") {
+        return './pictures/61.png'; // Path to the 24h icon
+    } else if (status.match(/^\d{1,2}h$/)) {
+        const closingHour = parseInt(status); // Closing hour from status
+
+        // Compare current time with station's closing hour
+        if ((currentHour >= openHour && currentHour < closeHour) || (currentHour === closeHour && currentMinutes <= closeMinutes)) {
+            return './pictures/61.png'; // Open icon (adjust the path if needed)
+        } else {
+            return './pictures/time_close1.png'; // Closed icon (adjust the path if needed)
+        }
+    } else {
+        return './pictures/default.png'; // Default icon for unknown statuses
+    }
+}
+
 
 // Function to get the current location
 function getCurrentLocation() {
@@ -288,25 +323,7 @@ function updateModalWithRoute(distance, travelTime, status) {
           </div>
       `;
   }
-  
- // Function to update modal with route information
-function updateModalWithRoute(distance, travelTime, status) {
-    var routeInfo = document.getElementById("route-info");
-    const statusInfo = getStatusInfo(status); // Determine the icon and badge class based on status
-    
-    routeInfo.innerHTML = `
-          <div class="badge bg-primary text-white mx-1">
-              <i class="fas fa-clock icon-background"></i> ${travelTime}
-          </div>
-          <div class="badge bg-primary text-white mx-1">
-              <i class="fas fa-location-arrow icon-background"></i> ${distance}
-          </div>
-          <div class="badge ${statusInfo.badgeClass} text-white mx-1 status-badge">
-              <i class="fas ${statusInfo.iconClass} icon-background"></i> ${statusInfo.displayText}
-          </div>
-      `;
-  }
-  
+
 // Helper function to determine the icon, badge class, and display text based on status and current time
 function getStatusInfo(status) {
     const currentTime = new Date();
@@ -357,7 +374,6 @@ function getStatusInfo(status) {
     }
 }
 
-  
 // Function to open Google Maps with the destination
 function openGoogleMaps(lat, lon) {
   var url =
