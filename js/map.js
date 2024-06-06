@@ -171,8 +171,9 @@ function showMarkerModal(station, imageUrl, distance, travelTime) {
             <div class="separator"></div>
             <div class="info"><i class="fas fa-clock icon"></i> ${station.status}</div>
             <div class="info"><i class="fas fa-box-open icon"></i> Products: ${station.product.join(', ')}</div>
-            <div class="info"><i class="fas fa-tools icon"></i> Services: ${station.service.join(', ')}</div>
+            <div class="info"><i class="fas fa-tools icon"></i> Payment: ${station.service.join(', ')}</div>
             ${station.other_product && station.other_product[0] ? `<div class="info"><i class="fas fa-boxes icon"></i> Other Products: ${station.other_product.join(', ')}</div>` : ''}
+            ${station.description && station.description[0] ? `<div class="info"><i class="fas fa-boxes icon"></i> Services: ${station.description.join(', ')}</div>` : ''}
             <div class="text-center mt-3">
               <div class="d-flex justify-content-center align-items-center">
                 <div class="icon-background mx-2" onclick="shareLocation(${station.latitude}, ${station.longitude})">
