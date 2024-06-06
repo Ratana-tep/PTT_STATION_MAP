@@ -27,9 +27,13 @@ fetch('https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers.json')
             // Add click event to marker to show modal
             marker.on('click', function () {
                 getCurrentLocation().then(currentLocation => {
-                    const distance = calculateDistance(currentLocation.lat, currentLocation.lng, station.latitude, station.longitude);
-                    const travelTime = calculateTravelTime(distance);
-                    showMarkerModal(station, imageUrl, distance, travelTime);
+                    getBingRoute(currentLocation.lat, currentLocation.lng, station.latitude, station.longitude).then(result => {
+                        const { distance, travelTime } = result;
+                        showMarkerModal(station, imageUrl, distance, travelTime);
+                    }).catch(error => {
+                        console.error('Error getting route from Bing Maps:', error);
+                        alert('Error calculating route.');
+                    });
                 }).catch(error => {
                     console.error('Error getting current location:', error);
                     alert('Error getting your current location.');
@@ -53,8 +57,6 @@ fetch('https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers.json')
 document.getElementById('myLocationBtn').addEventListener('click', function () {
     getCurrentLocation().then(currentLocation => {
         const { lat, lng } = currentLocation;
-
-        console.log(`Current location: ${lat}, ${lng}`); // Log current location for debugging
 
         // Remove existing marker and circle if they exist
         if (currentLocationMarker) {
@@ -123,25 +125,26 @@ function getCurrentLocation() {
     });
 }
 
-// Function to calculate distance using Haversine formula
-function calculateDistance(lat1, lon1, lat2, lon2) {
-    const R = 6371; // Radius of the Earth in kilometers
-    const dLat = (lat2 - lat1) * Math.PI / 180;
-    const dLon = (lon2 - lon1) * Math.PI / 180;
-    const a = 
-        0.5 - Math.cos(dLat) / 2 + 
-        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
-        (1 - Math.cos(dLon)) / 2;
-    return R * 2 * Math.asin(Math.sqrt(a));
-}
+// Function to get route information from Bing Maps API
+function getBingRoute(startLat, startLng, endLat, endLng) {
+    const bingMapsKey = 'AhQxc3Nm4Sfv53x7JRXUoj76QZnlm7VWkT5qAigmHQo8gjeYFthvGgEqVcjO5c7C'; // Replace with your Bing Maps API Key
+    const url = `http://dev.virtualearth.net/REST/V1/Routes/Driving?wp.0=${startLat},${startLng}&wp.1=${endLat},${endLng}&key=${bingMapsKey}`;
 
-// Function to calculate travel time (assuming an average speed of 60 km/h)
-function calculateTravelTime(distance) {
-    const speed = 60; // Average speed in km/h
-    const time = distance / speed; // Time in hours
-    const hours = Math.floor(time);
-    const minutes = Math.round((time - hours) * 60);
-    return `${hours} hr. ${minutes} min`;
+    return fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            if (data.resourceSets[0].resources.length > 0) {
+                const route = data.resourceSets[0].resources[0];
+                const distance = route.travelDistance; // in kilometers
+                const travelTime = route.travelDurationTraffic / 60; // in minutes
+                return {
+                    distance: distance.toFixed(1) + ' km',
+                    travelTime: Math.floor(travelTime / 60) + ' hr. ' + Math.round(travelTime % 60) + ' min'
+                };
+            } else {
+                throw new Error('No route found');
+            }
+        });
 }
 
 // Function to show marker data in modal
@@ -157,7 +160,7 @@ function showMarkerModal(station, imageUrl, distance, travelTime) {
             <div class="separator"></div>
             <div class="d-flex justify-content-center mb-3">
                 <div class="badge bg-primary text-white mx-1"><i class="fas fa-clock icon-background"></i> ${travelTime}</div>
-                <div class="badge bg-primary text-white mx-1"><i class="fas fa-location-arrow icon-background"></i> ${distance.toFixed(1)} km</div>
+                <div class="badge bg-primary text-white mx-1"><i class="fas fa-location-arrow icon-background"></i> ${distance}</div>
                 <div class="badge bg-primary text-white mx-1"><i class="fas fa-arrow-up icon-background"></i> Inbound</div>
             </div>
             <div class="separator"></div>
