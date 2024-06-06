@@ -26,7 +26,14 @@ fetch('https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers.json')
 
             // Add click event to marker to show modal
             marker.on('click', function () {
-                showMarkerModal(station, imageUrl);
+                getCurrentLocation().then(currentLocation => {
+                    const distance = calculateDistance(currentLocation.lat, currentLocation.lng, station.latitude, station.longitude);
+                    const travelTime = calculateTravelTime(distance);
+                    showMarkerModal(station, imageUrl, distance, travelTime);
+                }).catch(error => {
+                    console.error('Error getting current location:', error);
+                    alert('Error getting your current location.');
+                });
             });
 
             // Add marker to marker cluster group
@@ -44,65 +51,101 @@ fetch('https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers.json')
 
 // Function to get current location
 document.getElementById('myLocationBtn').addEventListener('click', function () {
-    // Check if geolocation is available
-    if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition(function (position) {
-            var lat = position.coords.latitude;
-            var lng = position.coords.longitude;
+    getCurrentLocation().then(currentLocation => {
+        const { lat, lng } = currentLocation;
 
-            // Remove existing marker and circle if they exist
-            if (currentLocationMarker) {
-                map.removeLayer(currentLocationMarker);
-            }
-            if (currentLocationCircle) {
-                map.removeLayer(currentLocationCircle);
-            }
+        console.log(`Current location: ${lat}, ${lng}`); // Log current location for debugging
 
-            // Set map view to current position
-            map.setView([lat, lng], 15);
+        // Remove existing marker and circle if they exist
+        if (currentLocationMarker) {
+            map.removeLayer(currentLocationMarker);
+        }
+        if (currentLocationCircle) {
+            map.removeLayer(currentLocationCircle);
+        }
 
-            // Add animated circle to represent current location
-            var circle = L.circle([lat, lng], {
-                color: 'blue',
-                fillColor: '#blue',
-                fillOpacity: 0.2,
-                radius: 1000,
-                className: 'pulse-circle'
-            }).addTo(map);
+        // Set map view to current position
+        map.setView([lat, lng], 15);
 
-            // Create a custom icon
-            var customIcon = L.icon({
-                iconUrl: './pictures/mylocal.png',
-                iconSize: [25, 41],
-                iconAnchor: [12, 41],
-                popupAnchor: [1, -34],
-                shadowSize: [41, 41]
-            });
+        // Add animated circle to represent current location
+        var circle = L.circle([lat, lng], {
+            color: 'blue',
+            fillColor: 'blue',
+            fillOpacity: 0.2,
+            radius: 1000,
+            className: 'pulse-circle'
+        }).addTo(map);
 
-            // Add marker with custom icon
-            var marker = L.marker([lat, lng], { icon: customIcon }).addTo(map);
-
-            // Optionally, you can bind a popup to the marker
-            marker.bindPopup('You are here.').openPopup();
-
-            // Store the current marker and circle for removal later
-            currentLocationMarker = marker;
-            currentLocationCircle = circle;
-        }, function (error) {
-            console.error('Error getting geolocation:', error);
-            alert('Error getting your location. Please try again later.');
+        // Create a custom icon
+        var customIcon = L.icon({
+            iconUrl: './pictures/mylocal.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize: [41, 41]
         });
-    } else {
-        alert('Geolocation is not supported by your browser.');
-    }
+
+        // Add marker with custom icon
+        var marker = L.marker([lat, lng], { icon: customIcon }).addTo(map);
+
+        // Optionally, you can bind a popup to the marker
+        marker.bindPopup('You are here.').openPopup();
+
+        // Store the current marker and circle for removal later
+        currentLocationMarker = marker;
+        currentLocationCircle = circle;
+    }).catch(error => {
+        console.error('Error getting geolocation:', error);
+        alert('Error getting your location. Please try again later.');
+    });
 });
 
 // Variable to store the current marker and circle
 var currentLocationMarker;
 var currentLocationCircle;
 
+// Function to get the current location
+function getCurrentLocation() {
+    return new Promise((resolve, reject) => {
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                resolve({ lat: position.coords.latitude, lng: position.coords.longitude });
+            }, function (error) {
+                reject(error);
+            }, {
+                enableHighAccuracy: true, // Request high accuracy
+                timeout: 5000, // Set timeout to 5 seconds
+                maximumAge: 0 // Do not use cached location
+            });
+        } else {
+            reject(new Error('Geolocation is not supported by your browser.'));
+        }
+    });
+}
+
+// Function to calculate distance using Haversine formula
+function calculateDistance(lat1, lon1, lat2, lon2) {
+    const R = 6371; // Radius of the Earth in kilometers
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = 
+        0.5 - Math.cos(dLat) / 2 + 
+        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+        (1 - Math.cos(dLon)) / 2;
+    return R * 2 * Math.asin(Math.sqrt(a));
+}
+
+// Function to calculate travel time (assuming an average speed of 60 km/h)
+function calculateTravelTime(distance) {
+    const speed = 60; // Average speed in km/h
+    const time = distance / speed; // Time in hours
+    const hours = Math.floor(time);
+    const minutes = Math.round((time - hours) * 60);
+    return `${hours} hr. ${minutes} min`;
+}
+
 // Function to show marker data in modal
-function showMarkerModal(station, imageUrl) {
+function showMarkerModal(station, imageUrl, distance, travelTime) {
     var modalBody = document.getElementById('markerModalBody');
     modalBody.innerHTML = `
         <div class="station-details">
@@ -113,8 +156,8 @@ function showMarkerModal(station, imageUrl) {
             <div class="info"><i class="fas fa-map-marker-alt icon"></i> ${station.address}</div>
             <div class="separator"></div>
             <div class="d-flex justify-content-center mb-3">
-                <div class="badge bg-primary text-white mx-1"><i class="fas fa-clock icon-background"></i> 5 hr. 20 min</div>
-                <div class="badge bg-primary text-white mx-1"><i class="fas fa-location-arrow icon-background"></i> 219.6 km</div>
+                <div class="badge bg-primary text-white mx-1"><i class="fas fa-clock icon-background"></i> ${travelTime}</div>
+                <div class="badge bg-primary text-white mx-1"><i class="fas fa-location-arrow icon-background"></i> ${distance.toFixed(1)} km</div>
                 <div class="badge bg-primary text-white mx-1"><i class="fas fa-arrow-up icon-background"></i> Inbound</div>
             </div>
             <div class="separator"></div>
@@ -124,9 +167,9 @@ function showMarkerModal(station, imageUrl) {
             ${station.other_product && station.other_product[0] ? `<div class="info"><i class="fas fa-boxes icon"></i> Other Products: ${station.other_product.join(', ')}</div>` : ''}
             <div class="text-center mt-3">
               <div class="d-flex justify-content-center align-items-center">
-              <div class="icon-background mx-2" onclick="shareLocation(${station.latitude}, ${station.longitude})">
-              <i class="fas fa-share-alt share-icon"></i>
-               </div>
+                <div class="icon-background mx-2" onclick="shareLocation(${station.latitude}, ${station.longitude})">
+                    <i class="fas fa-share-alt share-icon"></i>
+                </div>
                 <button class="btn btn-primary rounded-circle mx-5 go-button" onclick="openGoogleMaps(${station.latitude}, ${station.longitude})">GO</button>
                 <div class="icon-background">
                     <i class="fas fa-location-arrow navigate-icon mx-2"></i>
@@ -147,6 +190,7 @@ function openGoogleMaps(lat, lon) {
     var url = "https://www.google.com/maps/dir/?api=1&destination=" + lat + "," + lon;
     window.open(url, "_self");
 }
+
 // Function to share location via Google Maps
 function shareLocation(lat, lon) {
     var url = "https://www.google.com/maps?q=" + lat + "," + lon;

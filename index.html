@@ -63,6 +63,9 @@
         .modal-dialog {
             max-width: 100%;
         }
+        .modal-content {
+            border-radius: 20px;
+        }
         .modal-header {
             display: flex;
             justify-content: space-between;
@@ -97,8 +100,8 @@
 
         @media (max-width: 576px) {
             .badge {
-                padding:6px 6px;
-                font-size: 15px;
+                padding: 6px 6px;
+                font-size: 12px;
             }
 
             .badge i {
@@ -167,7 +170,7 @@
 
     <!-- Modal for Filter -->
     <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
                     <img src="your-uploaded-image-path.png" alt="Logo" class="img-fluid">
@@ -214,7 +217,7 @@
 
     <!-- Modal for Marker Data -->
     <div class="modal fade" id="markerModal" tabindex="-1" aria-labelledby="markerModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header no-border-bottom">
                     <img src="./pictures/logo_Station.png" alt="Logo" class="img-fluid logo-small">
