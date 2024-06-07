@@ -250,6 +250,36 @@
             box-shadow: 0 0 15px #174c85;
         }
     }
+    .product-icon, .item-icon {
+        width:40px; /* Adjust size as needed */
+        height: 40px; /* Adjust size as needed */
+        margin-right: 8px; /* Add some space between the icon and the text */
+    }
+    
+    .round {
+        border-radius: 50%; /* Make the image round */
+        object-fit: cover; /* Ensure the image covers the container */
+    }
+    
+    .full {
+        width: 32px; /* Ensure consistent size */
+        height: auto; /* Ensure consistent size */
+        object-fit: cover; /* Ensure the image covers the container */
+    }
+    
+    .product-row, .service-row, .description-row, .promotion-row {
+        display: flex;
+        flex-wrap: wrap; /* Wrap items if they don't fit in one line */
+        gap: 10px; /* Space between items */
+    }
+    
+    .info {
+        display: flex;
+        align-items: center; /* Vertically center the image and text */
+        margin-bottom: 8px; /* Add some space between info items */
+    }
+    
+    
     </style>
 </head>
 <body>

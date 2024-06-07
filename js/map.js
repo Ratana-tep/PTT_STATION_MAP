@@ -3,7 +3,8 @@ var map = L.map("map").setView([11.55, 104.91], 7);
 
 // Add OpenStreetMap tiles
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-  attribution: '&copy;<a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  attribution:
+    '&copy;<a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
 }).addTo(map);
 
 // Initialize marker cluster group
@@ -131,17 +132,42 @@ document.getElementById("myLocationBtn").addEventListener("click", function () {
 var currentLocationMarker;
 var currentLocationCircle;
 
-// Helper function to get the icon URL based on the station status
+// Helper function to get the icon URL based on the station status and current time
+// Helper function to get the icon URL based on the station status and current time
 function getIconUrl(status) {
-    if (status.toLowerCase() === "under construct") {
-        return './pictures/under_construction.png'; // Path to the under construction icon
-    } else if (status.toLowerCase() === "24h") {
-        return './pictures/61.png'; // Path to the 24h icon
-    } else if (status.match(/^\d{1,2}h$/)) {
-        return './pictures/time_close1.png'; // Assuming 16h icon or replace with a specific hour icon if needed
+  const currentTime = new Date(); // Current time in local timezone
+  const cambodiaOffset = 7 * 60 * 60 * 1000; // Cambodia is UTC+7
+  const cambodiaTime = new Date(
+    currentTime.getTime() +
+      cambodiaOffset -
+      currentTime.getTimezoneOffset() * 60000
+  ); // Convert to Cambodia time (UTC+7)
+  const currentHour = cambodiaTime.getHours();
+  const currentMinutes = cambodiaTime.getMinutes();
+
+  // Parse the status to extract the closing hour and minutes if present
+  const statusParts = status.match(/^(\d{1,2})(?:h(\d{1,2})?)?$/); // Match hours optionally followed by minutes
+
+  if (status.toLowerCase() === "under construct") {
+    return "./pictures/under_construction.png"; // Path to the under construction icon
+  } else if (status.toLowerCase() === "24h") {
+    return "./pictures/61.png"; // Path to the 24h icon
+  } else if (statusParts) {
+    const closingHour = parseInt(statusParts[1], 10); // Closing hour from status
+    const closingMinutes = statusParts[2] ? parseInt(statusParts[2], 10) : 0; // Closing minutes from status or default to 0
+
+    // Determine if the station is closed or open
+    if (
+      currentHour > closingHour ||
+      (currentHour === closingHour && currentMinutes >= closingMinutes)
+    ) {
+      return "./pictures/time_close1.png"; // Path to the closed icon
     } else {
-        return './pictures/default.png'; // Default icon for unknown statuses
+      return "./pictures/61.png"; // Path to the open icon
     }
+  } else {
+    return "./pictures/default.png"; // Default icon for unknown statuses
+  }
 }
 
 // Function to get the current location
@@ -201,160 +227,363 @@ function getBingRoute(startLat, startLng, endLat, endLng) {
       throw error;
     });
 }
-
 // Function to show marker data in modal
 function showMarkerModal(station, imageUrl) {
   var modalBody = document.getElementById("markerModalBody");
+
+  // Generate product HTML with appropriate round images
+  const productHtml = station.product
+    .map(
+      (product) =>
+        `<div class="info product-item">
+          <img src="${getProductIcon(
+            product
+          )}" class="product-icon round" alt="${product}" /> ${product}
+      </div>`
+    )
+    .join("");
+
+  // Generate other product HTML with appropriate non-round images
+  const otherProductHtml =
+    station.other_product && station.other_product[0]
+      ? station.other_product
+          .map(
+            (otherProduct) =>
+              `<div class="info product-item">
+              <img src="${getProductIcon(
+                otherProduct
+              )}" class="product-icon full" alt="${otherProduct}" /> ${otherProduct}
+          </div>`
+          )
+          .join("")
+      : "";
+
   modalBody.innerHTML = `
-        <div class="station-details">
-            <img src="${imageUrl}" alt="${station.title}" class="img-fluid mb-3 rounded-image" />
-            <div class="text-center">
-                <h3 class="station-title mb-3 font-weight-bold">${station.title}</h3>
-            </div>
-             <div class="info"><i class="fas fa-map-marker-alt icon"></i> ${station.address}</div>
-            <div class="separator"></div>
-            <div id="route-info" class="d-flex justify-content-center mb-3"></div> 
-            <div class="separator"></div>
-            <div class="nav-tabs-container">
-                <ul class="nav nav-tabs flex-nowrap" id="myTab" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="products-tab" data-bs-toggle="tab" data-bs-target="#products" type="button" role="tab" aria-controls="products" aria-selected="true">Products</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="payment-tab" data-bs-toggle="tab" data-bs-target="#payment" type="button" role="tab" aria-controls="payment" aria-selected="false">Payment</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="services-tab" data-bs-toggle="tab" data-bs-target="#services" type="button" role="tab" aria-controls="services" aria-selected="false">Services</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="promotion-tab" data-bs-toggle="tab" data-bs-target="#promotion" type="button" role="tab" aria-controls="promotion" aria-selected="false">Promotion</button>
-                    </li>
-                </ul>
-            </div>
-            
-            <!-- Tab panes with smooth animation -->
-            <div class="tab-content mt-3">
-                <div class="tab-pane fade show active" id="products" role="tabpanel" aria-labelledby="products-tab">
-                    <div class="scrollable-content">
-                        <div class="info"><i class="fas fa-box-open icon"></i> ${station.product.join(", ")}</div>
-                        ${station.other_product && station.other_product[0] ? `<div class="info"><i class="fas fa-boxes icon"></i> Other Products: ${station.other_product.join(", ")}</div>` : ""}
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="payment" role="tabpanel" aria-labelledby="payment-tab">
-                    <div class="scrollable-content">
-                        <div class="info"><i class="fas fa-tools icon"></i> ${station.service.join(", ")}</div>
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="services" role="tabpanel" aria-labelledby="services-tab">
-                    <div class="scrollable-content">
-                        ${station.description && station.description[0] ? `<div class="info"><i class="fas fa-boxes icon"></i> Services: ${station.description.join(", ")}</div>` : ""}
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="promotion" role="tabpanel" aria-labelledby="promotion-tab">
-                    <div class="scrollable-content">
-                        ${station.promotion && station.promotion[0] ? `<div class="info"><i class="fas fa-boxes icon"></i> Promotion: ${station.promotion.join(", ")}</div>` : ""}
-                    </div>
-                </div>
-            </div>
-            
-            <div class="text-center mt-3">
-              <div class="d-flex justify-content-center align-items-center">
-                <div class="icon-background mx-2" onclick="shareLocation(${station.latitude}, ${station.longitude})">
-                    <i class="fas fa-share-alt share-icon"></i>
-                </div>
-                <button class="btn btn-primary rounded-circle mx-5 go-button pulse" onclick="openGoogleMaps(${station.latitude}, ${station.longitude})">GO</button>
-                <div class="icon-background">
-                    <i class="fas fa-location-arrow navigate-icon mx-2"></i>
-                </div>
+      <div class="station-details">
+          <img src="${imageUrl}" alt="${
+    station.title
+  }" class="img-fluid mb-3 rounded-image" />
+          <div class="text-center">
+              <h3 class="station-title mb-3 font-weight-bold">${
+                station.title
+              }</h3>
+          </div>
+          <div class="info"><i class="fas fa-map-marker-alt icon"></i> ${
+            station.address
+          }</div>
+          <div class="separator"></div>
+          <div id="route-info" class="d-flex justify-content-center mb-3"></div> 
+          <div class="separator"></div>
+          <div class="nav-tabs-container">
+              <ul class="nav nav-tabs flex-nowrap" id="myTab" role="tablist">
+                  <li class="nav-item" role="presentation">
+                      <button class="nav-link active" id="products-tab" data-bs-toggle="tab" data-bs-target="#products" type="button" role="tab" aria-controls="products" aria-selected="true">Products</button>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                      <button class="nav-link" id="payment-tab" data-bs-toggle="tab" data-bs-target="#payment" type="button" role="tab" aria-controls="payment" aria-selected="false">Payment</button>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                      <button class="nav-link" id="services-tab" data-bs-toggle="tab" data-bs-target="#services" type="button" role="tab" aria-controls="services" aria-selected="false">Services</button>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                      <button class="nav-link" id="promotion-tab" data-bs-toggle="tab" data-bs-target="#promotion" type="button" role="tab" aria-controls="promotion" aria-selected="false">Promotion</button>
+                  </li>
+              </ul>
+          </div>
+          
+          <!-- Tab panes with smooth animation -->
+          <div class="tab-content mt-3">
+              <div class="tab-pane fade show active" id="products" role="tabpanel" aria-labelledby="products-tab">
+                  <div class="scrollable-content">
+                      <h5>Products</h5>
+                      <div class="product-row">
+                          ${productHtml}
+                      </div>
+                      ${
+                        otherProductHtml
+                          ? `<div class="separator"></div><h5>Other Products</h5><div class="product-row">${otherProductHtml}</div>`
+                          : ""
+                      }
+                  </div>
+              </div>
+              <div class="tab-pane fade" id="payment" role="tabpanel" aria-labelledby="payment-tab">
+                  <div class="scrollable-content">
+                      <div class="info"><i class="fas fa-tools icon"></i> ${station.service.join(
+                        ", "
+                      )}</div>
+                  </div>
+              </div>
+              <div class="tab-pane fade" id="services" role="tabpanel" aria-labelledby="services-tab">
+                  <div class="scrollable-content">
+                      ${
+                        station.description && station.description[0]
+                          ? `<div class="info"><i class="fas fa-boxes icon"></i> Services: ${station.description.join(
+                              ", "
+                            )}</div>`
+                          : ""
+                      }
+                  </div>
+              </div>
+              <div class="tab-pane fade" id="promotion" role="tabpanel" aria-labelledby="promotion-tab">
+                  <div class="scrollable-content">
+                      ${
+                        station.promotion && station.promotion[0]
+                          ? `<div class="info"><i class="fas fa-boxes icon"></i> Promotion: ${station.promotion.join(
+                              ", "
+                            )}</div>`
+                          : ""
+                      }
+                  </div>
+              </div>
+          </div>
+          
+          <div class="text-center mt-3">
+            <div class="d-flex justify-content-center align-items-center">
+              <div class="icon-background mx-2" onclick="shareLocation(${
+                station.latitude
+              }, ${station.longitude})">
+                  <i class="fas fa-share-alt share-icon"></i>
+              </div>
+              <button class="btn btn-primary rounded-circle mx-5 go-button pulse" onclick="openGoogleMaps(${
+                station.latitude
+              }, ${station.longitude})">GO</button>
+              <div class="icon-background">
+                  <i class="fas fa-location-arrow navigate-icon mx-2"></i>
               </div>
             </div>
-        </div>
-    `;
+          </div>
+      </div>
+  `;
 
-  var markerModal = new bootstrap.Modal(document.getElementById("markerModal"), {
-    keyboard: false,
-  });
+  var markerModal = new bootstrap.Modal(
+    document.getElementById("markerModal"),
+    {
+      keyboard: false,
+    }
+  );
   markerModal.show();
 
   // Initialize Bootstrap tabs correctly
-  var triggerTabList = [].slice.call(document.querySelectorAll('#myTab button'));
+  var triggerTabList = [].slice.call(
+    document.querySelectorAll("#myTab button")
+  );
   triggerTabList.forEach(function (triggerEl) {
     var tabTrigger = new bootstrap.Tab(triggerEl);
-    triggerEl.addEventListener('click', function (event) {
+    triggerEl.addEventListener("click", function (event) {
       event.preventDefault();
       tabTrigger.show();
     });
   });
 }
 
-// Function to update modal with route information
-function updateModalWithRoute(distance, travelTime, status) {
-    var routeInfo = document.getElementById("route-info");
-    const statusInfo = getStatusInfo(status); // Determine the icon and badge class based on status
-    
-    routeInfo.innerHTML = `
-          <div class="badge bg-primary text-white mx-1">
-              <i class="fas fa-clock icon-background"></i> ${travelTime}
+// Function to get the image URL based on the product name
+function getProductIcon(product) {
+  const productImages = {
+    "ULR 91": "./pictures/ULR91.png", // Path to the URL 91 image
+    "ULG 95": "./pictures/ULG95.png", // Path to the ULG 95 image
+    HSD: "./pictures/HSD.png", // Path to the HSD image
+    EV: "./pictures/ev.png", // Path to the EV image
+    Onion: "./pictures/onion.png", // Path to the Onion image
+  };
+  return productImages[product] || "./pictures/default.png"; // Default image if product not found
+}
+
+// Function to get the image URL based on the item name
+function getItemIcon(item) {
+  const itemImages = {
+      "Fleet card": "./pictures/fleet_card.png", // Path to the Fleet card image
+      "ABA": "./pictures/aba.png", // Path to the ABA image
+      "Cash": "./pictures/cash.png", // Path to the Cash image
+      "Amazon": "./pictures/amazon.png", // Path to the Amazon image
+      "Fleet card": "./pictures/fleet.png", // Path to the Amazon image
+      "7-Eleven": "./pictures/7eleven.png", // Path to the 7-Eleven image
+      "promotion1": "./pictures/opening1.jpg" // Path to the promotion1 image
+      // Add other items as needed
+  };
+  return itemImages[item] || "./pictures/default.png"; // Default image if item not found
+}
+
+// Function to show marker data in modal
+function showMarkerModal(station, imageUrl) {
+  var modalBody = document.getElementById("markerModalBody");
+  
+  // Generate product HTML with appropriate round images
+  const productHtml = station.product.map(product => 
+      `<div class="info product-item">
+          <img src="${getProductIcon(product)}" class="product-icon round" alt="${product}" /> ${product}
+      </div>`
+  ).join("");
+  
+  // Generate other product HTML with appropriate non-round images
+  const otherProductHtml = station.other_product && station.other_product[0] ? 
+      station.other_product.map(otherProduct => 
+          `<div class="info product-item">
+              <img src="${getProductIcon(otherProduct)}" class="product-icon full" alt="${otherProduct}" /> ${otherProduct}
+          </div>`
+      ).join("") : "";
+
+  // Generate service HTML with appropriate images
+  const serviceHtml = station.service.map(service => 
+      `<div class="info service-item">
+          <img src="${getItemIcon(service)}" class="item-icon" alt="${service}" /> ${service}
+      </div>`
+  ).join("");
+
+  // Generate description HTML with appropriate images
+  const descriptionHtml = station.description.map(description => 
+      `<div class="info description-item">
+          <img src="${getItemIcon(description)}" class="item-icon" alt="${description}" /> ${description}
+      </div>`
+  ).join("");
+
+  // Generate promotion HTML with appropriate images
+  const promotionHtml = station.promotion.map(promotion => 
+      `<div class="info promotion-item">
+          <img src="${getItemIcon(promotion)}" class="item-icon" alt="${promotion}" /> ${promotion}
+      </div>`
+  ).join("");
+
+  modalBody.innerHTML = `
+      <div class="station-details">
+          <img src="${imageUrl}" alt="${station.title}" class="img-fluid mb-3 rounded-image" />
+          <div class="text-center">
+              <h3 class="station-title mb-3 font-weight-bold">${station.title}</h3>
           </div>
-          <div class="badge bg-primary text-white mx-1">
-              <i class="fas fa-location-arrow icon-background"></i> ${distance}
+          <div class="info"><i class="fas fa-map-marker-alt icon"></i> ${station.address}</div>
+          <div class="separator"></div>
+          <div id="route-info" class="d-flex justify-content-center mb-3"></div> 
+          <div class="separator"></div>
+          <div class="nav-tabs-container">
+              <ul class="nav nav-tabs flex-nowrap" id="myTab" role="tablist">
+                  <li class="nav-item" role="presentation">
+                      <button class="nav-link active" id="products-tab" data-bs-toggle="tab" data-bs-target="#products" type="button" role="tab" aria-controls="products" aria-selected="true">Products</button>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                      <button class="nav-link" id="payment-tab" data-bs-toggle="tab" data-bs-target="#payment" type="button" role="tab" aria-controls="payment" aria-selected="false">Payment</button>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                      <button class="nav-link" id="services-tab" data-bs-toggle="tab" data-bs-target="#services" type="button" role="tab" aria-controls="services" aria-selected="false">Services</button>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                      <button class="nav-link" id="promotion-tab" data-bs-toggle="tab" data-bs-target="#promotion" type="button" role="tab" aria-controls="promotion" aria-selected="false">Promotion</button>
+                  </li>
+              </ul>
           </div>
-          <div class="badge ${statusInfo.badgeClass} text-white mx-1">
-              <i class="fas ${statusInfo.iconClass} icon-background"></i> ${statusInfo.displayText}
+          
+          <!-- Tab panes with smooth animation -->
+          <div class="tab-content mt-3">
+              <div class="tab-pane fade show active" id="products" role="tabpanel" aria-labelledby="products-tab">
+                  <div class="scrollable-content">
+                      <h5 class="font-weight-bold">Products</h5>
+                      <div class="product-row">
+                          ${productHtml}
+                      </div>
+                      ${otherProductHtml ? `<div class="separator"></div><h5 class="font-weight-bold">Other Products</h5><div class="product-row">${otherProductHtml}</div>` : ""}
+                  </div>
+              </div>
+              <div class="tab-pane fade" id="payment" role="tabpanel" aria-labelledby="payment-tab">
+                  <div class="scrollable-content">
+                      ${serviceHtml ? `<h5 class="font-weight-bold">Services</h5><div class="service-row">${serviceHtml}</div>` : ""}
+                  </div>
+              </div>
+              <div class="tab-pane fade" id="services" role="tabpanel" aria-labelledby="services-tab">
+                  <div class="scrollable-content">
+                      ${descriptionHtml ? `<h5 class="font-weight-bold">Descriptions</h5><div class="description-row">${descriptionHtml}</div>` : ""}
+                  </div>
+              </div>
+              <div class="tab-pane fade" id="promotion" role="tabpanel" aria-labelledby="promotion-tab">
+                  <div class="scrollable-content">
+                      ${promotionHtml ? `<h5 class="font-weight-bold">Promotions</h5><div class="promotion-row">${promotionHtml}</div>` : ""}
+                  </div>
+              </div>
           </div>
-      `;
-  }
+          
+          <div class="text-center mt-3">
+            <div class="d-flex justify-content-center align-items-center">
+              <div class="icon-background mx-2" onclick="shareLocation(${station.latitude}, ${station.longitude})">
+                  <i class="fas fa-share-alt share-icon"></i>
+              </div>
+              <button class="btn btn-primary rounded-circle mx-5 go-button pulse" onclick="openGoogleMaps(${station.latitude}, ${station.longitude})">GO</button>
+              <div class="icon-background">
+                  <i class="fas fa-location-arrow navigate-icon mx-2"></i>
+              </div>
+            </div>
+          </div>
+      </div>
+  `;
+
+  var markerModal = new bootstrap.Modal(document.getElementById("markerModal"), {
+      keyboard: false,
+  });
+  markerModal.show();
+
+  // Initialize Bootstrap tabs correctly
+  var triggerTabList = [].slice.call(document.querySelectorAll('#myTab button'));
+  triggerTabList.forEach(function (triggerEl) {
+      var tabTrigger = new bootstrap.Tab(triggerEl);
+      triggerEl.addEventListener('click', function (event) {
+          event.preventDefault();
+          tabTrigger.show();
+      });
+  });
+}
 
 // Helper function to determine the icon, badge class, and display text based on status and current time
 function getStatusInfo(status) {
-    const currentTime = new Date(); // Current time in local timezone
-    const cambodiaOffset = 7 * 60 * 60 * 1000; // Cambodia is UTC+7
-    const cambodiaTime = new Date(currentTime.getTime() + currentTime.getTimezoneOffset() * 60000 + cambodiaOffset);
-    const currentHour = cambodiaTime.getHours();
-    const currentMinutes = cambodiaTime.getMinutes();
+  const currentTime = new Date(); // Current time in local timezone
+  const cambodiaOffset = 7 * 60 * 60 * 1000; // Cambodia is UTC+7
+  const cambodiaTime = new Date(
+    currentTime.getTime() +
+      currentTime.getTimezoneOffset() * 60000 +
+      cambodiaOffset
+  );
+  const currentHour = cambodiaTime.getHours();
+  const currentMinutes = cambodiaTime.getMinutes();
 
-    // Parse the status to extract the closing hour and minutes if present
-    const statusParts = status.match(/^(\d{1,2})(?:h(\d{1,2})?)?$/); // Match hours optionally followed by minutes
+  // Parse the status to extract the closing hour and minutes if present
+  const statusParts = status.match(/^(\d{1,2})(?:h(\d{1,2})?)?$/); // Match hours optionally followed by minutes
 
-    if (status.toLowerCase() === "under construct") {
-        return {
-            iconClass: "fa-tools",
-            badgeClass: "bg-warning text-white blink-border",
-            displayText: "Under Construction"
-        };
-    } else if (status.toLowerCase() === "24h") {
-        return {
-            iconClass: "fa-gas-pump",
-            badgeClass: "bg-success text-white",
-            displayText: "Open 24h"
-        };
-    } else if (statusParts) {
-        const closingHour = parseInt(statusParts[1], 10); // Closing hour from status
-        const closingMinutes = statusParts[2] ? parseInt(statusParts[2], 10) : 0; // Closing minutes from status or default to 0
+  if (status.toLowerCase() === "under construct") {
+    return {
+      iconClass: "fa-tools",
+      badgeClass: "bg-warning text-white blink-border",
+      displayText: "Under Construction",
+    };
+  } else if (status.toLowerCase() === "24h") {
+    return {
+      iconClass: "fa-gas-pump",
+      badgeClass: "bg-success text-white",
+      displayText: "Open 24h",
+    };
+  } else if (statusParts) {
+    const closingHour = parseInt(statusParts[1], 10); // Closing hour from status
+    const closingMinutes = statusParts[2] ? parseInt(statusParts[2], 10) : 0; // Closing minutes from status or default to 0
 
-        // Determine if the station is closed or open
-        if (currentHour > closingHour || (currentHour === closingHour && currentMinutes >= closingMinutes)) {
-            return {
-                iconClass: "fa-times-circle",
-                badgeClass: "bg-danger text-white",
-                displayText: "Closed"
-            };
-        } else {
-            return {
-                iconClass: "fa-gas-pump",
-                badgeClass: "bg-success text-white",
-                displayText: `Open until ${status}`
-            };
-        }
+    // Determine if the station is closed or open
+    if (
+      currentHour > closingHour ||
+      (currentHour === closingHour && currentMinutes >= closingMinutes)
+    ) {
+      return {
+        iconClass: "fa-times-circle",
+        badgeClass: "bg-danger text-white",
+        displayText: "Closed",
+      };
     } else {
-        return {
-            iconClass: "fa-question-circle",
-            badgeClass: "bg-secondary text-white",
-            displayText: "Unknown Status"
-        };
+      return {
+        iconClass: "fa-gas-pump",
+        badgeClass: "bg-success text-white",
+        displayText: `Open until ${status}`,
+      };
     }
+  } else {
+    return {
+      iconClass: "fa-question-circle",
+      badgeClass: "bg-secondary text-white",
+      displayText: "Unknown Status",
+    };
+  }
 }
-
 
 // Function to open Google Maps with the destination
 function openGoogleMaps(lat, lon) {
@@ -382,123 +611,3 @@ function shareLocation(lat, lon) {
     window.open(url, "_blank");
   }
 }
-
-// Function to populate select options
-function populateSelectOptions(data) {
-  var provinces = new Set();
-  var descriptions = new Set();
-  var services = new Set();
-  var products = new Set();
-  var otherProducts = new Set();
-
-  data.forEach((station) => {
-    provinces.add(station.province);
-    station.description.forEach((desc) => descriptions.add(desc));
-    station.service.forEach((serv) => services.add(serv));
-    station.product.forEach((prod) => products.add(prod));
-    if (station.other_product) {
-      station.other_product.forEach((otherProd) => {
-        if (otherProd.trim() !== "") {
-          otherProducts.add(otherProd);
-        }
-      });
-    }
-  });
-
-  // Populate select elements
-  populateSelectElement("province", provinces);
-  populateSelectElement("description", descriptions);
-  populateSelectElement("service", services);
-  populateSelectElement("product", products);
-  populateSelectElement("otherProduct", otherProducts);
-}
-
-// Helper function to populate a select element
-function populateSelectElement(elementId, values) {
-  var selectElement = document.getElementById(elementId);
-  values.forEach((value) => {
-    if (value.trim() !== "") {
-      var option = document.createElement("option");
-      option.value = value;
-      option.text = value;
-      selectElement.add(option);
-    }
-  });
-}
-
-// Filter function
-function applyFilter() {
-  var province = document.getElementById("province").value.toLowerCase();
-  var description = document.getElementById("description").value.toLowerCase();
-  var service = document.getElementById("service").value.toLowerCase();
-  var product = document.getElementById("product").value.toLowerCase();
-  var otherProduct = document
-    .getElementById("otherProduct")
-    .value.toLowerCase();
-
-  markers.clearLayers(); // Clear existing markers
-
-  allMarkers.forEach((entry) => {
-    var match = true;
-
-    if (
-      province &&
-      entry.data.province.toLowerCase().indexOf(province) === -1
-    ) {
-      match = false;
-    }
-    if (
-      description &&
-      !entry.data.description.some(
-        (desc) => desc.toLowerCase().indexOf(description) !== -1
-      )
-    ) {
-      match = false;
-    }
-    if (
-      service &&
-      !entry.data.service.some(
-        (serv) => serv.toLowerCase().indexOf(service) !== -1
-      )
-    ) {
-      match = false;
-    }
-    if (
-      product &&
-      !entry.data.product.some(
-        (prod) => prod.toLowerCase().indexOf(product) !== -1
-      )
-    ) {
-      match = false;
-    }
-    if (
-      otherProduct &&
-      (!entry.data.other_product ||
-        !entry.data.other_product.some(
-          (otherProd) => otherProd.toLowerCase().indexOf(otherProduct) !== -1
-        ))
-    ) {
-      match = false;
-    }
-
-    if (match) {
-      markers.addLayer(entry.marker);
-    }
-  });
-
-  map.addLayer(markers);
-  map.fitBounds(markers.getBounds());
-
-  // Hide the modal
-  var filterModalElement = document.getElementById("filterModal");
-  var filterModal = bootstrap.Modal.getInstance(filterModalElement);
-  filterModal.hide();
-}
-
-// Add event listener to form submit
-document
-  .getElementById("filterForm")
-  .addEventListener("submit", function (event) {
-    event.preventDefault();
-    applyFilter();
-  });
