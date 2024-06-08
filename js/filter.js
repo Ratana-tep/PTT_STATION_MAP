@@ -1,75 +1,108 @@
-// Function to populate select options
-function populateSelectOptions(data) {
-    var provinces = new Set();
-    var descriptions = new Set();
-    var services = new Set();
-    var products = new Set();
-    var otherProducts = new Set();
+// Mapping object to associate data entries with specific images
+const imageMapping = {
+    "Amazon": "amazon.png",
+    "7-Eleven": "7eleven.png",
+    "Fleet card": "fleet.png",
+    "ABA": "aba.png",
+    "Cash": "cash.png",
+    "EV": "ev.png",
+    "Onion": "onion.png",
+    "ULG 95": "ULG95.png",
+    "ULR 91": "ULR91.png",
+    "HSD": "HSD.png",
+    "promotion1": "opening1.jpg"
+    // Add more mappings as needed
+};
 
+// Function to populate icon containers and province dropdown
+function populateIconContainersAndDropdown(data) {
+    populateIconContainer('product-icons', getUniqueItems(data, 'product'), 'round');
+    populateIconContainer('other-product-icons', getUniqueItems(data, 'other_product'), 'custom');
+    populateIconContainer('service-icons', getUniqueItems(data, 'service'), 'custom');
+    populateIconContainer('description-icons', getUniqueItems(data, 'description'), 'round');
+    populateIconContainer('promotion-icons', getUniqueItems(data, 'promotion'), 'round');
+    populateProvinceDropdown(data);
+}
+
+// Helper function to get unique items from data
+function getUniqueItems(data, key) {
+    const items = new Set();
     data.forEach(station => {
-        provinces.add(station.province);
-        station.description.forEach(desc => descriptions.add(desc));
-        station.service.forEach(serv => services.add(serv));
-        station.product.forEach(prod => products.add(prod));
-        if (station.other_product) {
-            station.other_product.forEach(otherProd => {
-                if (otherProd.trim() !== "") {
-                    otherProducts.add(otherProd);
+        if (station[key]) {
+            station[key].forEach(item => {
+                if (item.trim() !== "") { // Filter out empty items
+                    items.add(item);
                 }
             });
         }
     });
-
-    // Populate select elements
-    populateSelectElement('province', provinces);
-    populateSelectElement('description', descriptions);
-    populateSelectElement('service', services);
-    populateSelectElement('product', products);
-    populateSelectElement('otherProduct', otherProducts);
+    return Array.from(items);
 }
 
-// Helper function to populate a select element
-function populateSelectElement(elementId, values) {
-    var selectElement = document.getElementById(elementId);
-    values.forEach(value => {
-        if (value.trim() !== "") {
-            var option = document.createElement('option');
-            option.value = value;
-            option.text = value;
-            selectElement.add(option);
-        }
+// Helper function to populate an icon container
+function populateIconContainer(containerId, items, shapeClass) {
+    const container = document.getElementById(containerId);
+    items.forEach(item => {
+        const img = document.createElement('img');
+        img.src = `./pictures/${imageMapping[item]}`; // Use the mapping object to get the image filename
+        img.alt = item;
+        img.classList.add('filter-icon', shapeClass); // Apply the shape class
+        img.dataset.item = item;
+        img.addEventListener('click', toggleIconSelection);
+        container.appendChild(img);
     });
 }
 
-// Filter function
+// Helper function to populate province dropdown
+function populateProvinceDropdown(data) {
+    const provinces = new Set();
+    data.forEach(station => provinces.add(station.province));
+    const provinceSelect = document.getElementById('province');
+    provinces.forEach(province => {
+        const option = document.createElement('option');
+        option.value = province;
+        option.text = province;
+        provinceSelect.add(option);
+    });
+}
+
+// Toggle icon selection
+function toggleIconSelection(event) {
+    const icon = event.target;
+    icon.classList.toggle('selected');
+}
+
+// Apply filter function
 function applyFilter() {
-    var province = document.getElementById('province').value.toLowerCase();
-    var description = document.getElementById('description').value.toLowerCase();
-    var service = document.getElementById('service').value.toLowerCase();
-    var product = document.getElementById('product').value.toLowerCase();
-    var otherProduct = document.getElementById('otherProduct').value.toLowerCase();
+    const province = document.getElementById('province').value.toLowerCase();
+    const selectedProducts = getSelectedItems('product-icons').map(item => item.toLowerCase());
+    const selectedOtherProducts = getSelectedItems('other-product-icons').map(item => item.toLowerCase());
+    const selectedServices = getSelectedItems('service-icons').map(item => item.toLowerCase());
+    const selectedDescriptions = getSelectedItems('description-icons').map(item => item.toLowerCase());
+    const selectedPromotions = getSelectedItems('promotion-icons').map(item => item.toLowerCase());
 
     markers.clearLayers(); // Clear existing markers
 
     allMarkers.forEach(entry => {
-        var match = true;
+        let match = true;
 
         if (province && entry.data.province.toLowerCase().indexOf(province) === -1) {
             match = false;
         }
-        if (description && !entry.data.description.some(desc => desc.toLowerCase().indexOf(description) !== -1)) {
+        if (selectedDescriptions.length && !selectedDescriptions.some(item => entry.data.description.map(desc => desc.toLowerCase()).includes(item))) {
             match = false;
         }
-        if (service && !entry.data.service.some(serv => serv.toLowerCase().indexOf(service) !== -1)) {
+        if (selectedServices.length && !selectedServices.some(item => entry.data.service.map(serv => serv.toLowerCase()).includes(item))) {
             match = false;
         }
-        if (product && !entry.data.product.some(prod => prod.toLowerCase().indexOf(product) !== -1)) {
+        if (selectedProducts.length && !selectedProducts.some(item => entry.data.product.map(prod => prod.toLowerCase()).includes(item))) {
             match = false;
         }
-        if (otherProduct && (!entry.data.other_product || !entry.data.other_product.some(otherProd => otherProd.toLowerCase().indexOf(otherProduct) !== -1))) {
+        // Filter out empty strings in other_product
+        const otherProducts = (entry.data.other_product || []).filter(op => op.trim() !== "").map(op => op.toLowerCase());
+        if (selectedOtherProducts.length && !selectedOtherProducts.some(item => otherProducts.includes(item))) {
             match = false;
         }
-
         if (match) {
             markers.addLayer(entry.marker);
         }
@@ -82,6 +115,13 @@ function applyFilter() {
     var filterModalElement = document.getElementById('filterModal');
     var filterModal = bootstrap.Modal.getInstance(filterModalElement);
     filterModal.hide();
+}
+
+// Helper function to get selected items from an icon container
+function getSelectedItems(containerId) {
+    const container = document.getElementById(containerId);
+    const selectedIcons = container.querySelectorAll('.filter-icon.selected');
+    return Array.from(selectedIcons).map(icon => icon.dataset.item);
 }
 
 // Add event listener to form submit

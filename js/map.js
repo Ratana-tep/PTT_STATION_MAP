@@ -16,7 +16,7 @@ fetch("https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers.json")
   .then((response) => response.json())
   .then((data) => {
     var stations = data.STATION;
-    populateSelectOptions(stations);
+    populateIconContainersAndDropdown(stations);
 
     stations.forEach((station) => {
       // Get the custom icon URL based on the station status
@@ -258,6 +258,48 @@ function showMarkerModal(station, imageUrl) {
           .join("")
       : "";
 
+  // Generate payment HTML
+  const paymentHtml = station.service
+    .map(
+      (service) =>
+        `<div class="info payment-item">
+          <img src="${getItemIcon(
+            service
+          )}" class="payment-icon full" alt="${service}" /> ${service}
+      </div>`
+    )
+    .join("");
+
+  // Generate services HTML
+  const servicesHtml =
+    station.description && station.description[0]
+      ? station.description
+          .map(
+            (desc) =>
+              `<div class="info service-item">
+              <img src="${getItemIcon(
+                desc
+              )}" class="service-icon full" alt="${desc}" /> ${desc}
+          </div>`
+          )
+          .join("")
+      : "";
+
+  // Generate promotion HTML
+  const promotionHtml =
+    station.promotion && station.promotion[0]
+      ? station.promotion
+          .map(
+            (promo) =>
+              `<div class="info promotion-item">
+              <img src="${getItemIcon(
+                promo
+              )}" class="promotion-icon full" alt="${promo}" /> ${promo}
+          </div>`
+          )
+          .join("")
+      : "";
+
   modalBody.innerHTML = `
       <div class="station-details">
           <img src="${imageUrl}" alt="${
@@ -308,45 +350,36 @@ function showMarkerModal(station, imageUrl) {
               </div>
               <div class="tab-pane fade" id="payment" role="tabpanel" aria-labelledby="payment-tab">
                   <div class="scrollable-content">
-                      <div class="info"><i class="fas fa-tools icon"></i> ${station.service.join(
-                        ", "
-                      )}</div>
+                      <h5>Payment Methods</h5>
+                      <div class="description-row">
+                          ${paymentHtml}
+                      </div>
                   </div>
               </div>
               <div class="tab-pane fade" id="services" role="tabpanel" aria-labelledby="services-tab">
                   <div class="scrollable-content">
-                      ${
-                        station.description && station.description[0]
-                          ? `<div class="info"><i class="fas fa-boxes icon"></i> Services: ${station.description.join(
-                              ", "
-                            )}</div>`
-                          : ""
-                      }
+                      <h5>Services</h5>
+                      <div class="service-row">
+                          ${servicesHtml}
+                      </div>
                   </div>
               </div>
               <div class="tab-pane fade" id="promotion" role="tabpanel" aria-labelledby="promotion-tab">
                   <div class="scrollable-content">
-                      ${
-                        station.promotion && station.promotion[0]
-                          ? `<div class="info"><i class="fas fa-boxes icon"></i> Promotion: ${station.promotion.join(
-                              ", "
-                            )}</div>`
-                          : ""
-                      }
+                      <h5>Promotion</h5>
+                      <div class="promotion-row">
+                          ${promotionHtml}
+                      </div>
                   </div>
               </div>
           </div>
           
           <div class="text-center mt-3">
             <div class="d-flex justify-content-center align-items-center">
-              <div class="icon-background mx-2" onclick="shareLocation(${
-                station.latitude
-              }, ${station.longitude})">
+              <div class="icon-background mx-2" onclick="shareLocation(${station.latitude}, ${station.longitude})">
                   <i class="fas fa-share-alt share-icon"></i>
               </div>
-              <button class="btn btn-primary rounded-circle mx-5 go-button pulse" onclick="openGoogleMaps(${
-                station.latitude
-              }, ${station.longitude})">GO</button>
+              <button class="btn btn-primary rounded-circle mx-5 go-button pulse" onclick="openGoogleMaps(${station.latitude}, ${station.longitude})">GO</button>
               <div class="icon-background">
                   <i class="fas fa-location-arrow navigate-icon mx-2"></i>
               </div>
@@ -391,11 +424,10 @@ function getProductIcon(product) {
 // Function to get the image URL based on the item name
 function getItemIcon(item) {
   const itemImages = {
-      "Fleet card": "./pictures/fleet_card.png", // Path to the Fleet card image
+      "Fleet card": "./pictures/fleet.png", // Path to the Fleet card image
       "ABA": "./pictures/aba.png", // Path to the ABA image
       "Cash": "./pictures/cash.png", // Path to the Cash image
       "Amazon": "./pictures/amazon.png", // Path to the Amazon image
-      "Fleet card": "./pictures/fleet.png", // Path to the Amazon image
       "7-Eleven": "./pictures/7eleven.png", // Path to the 7-Eleven image
       "promotion1": "./pictures/opening1.jpg" // Path to the promotion1 image
       // Add other items as needed

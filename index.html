@@ -299,52 +299,75 @@
     </div>
 
     <!-- Modal for Filter -->
-    <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <img src="your-uploaded-image-path.png" alt="Logo" class="img-fluid">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="filterForm">
-                        <div class="mb-3">
-                            <label for="province" class="form-label">Province</label>
-                            <select class="form-select" id="province">
-                                <option value="">Select Province</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="description" class="form-label">Description</label>
-                            <select class="form-select" id="description">
-                                <option value="">Select Description</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="service" class="form-label">Service</label>
-                            <select class="form-select" id="service">
-                                <option value="">Select Service</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="product" class="form-label">Product</label>
-                            <select class="form-select" id="product">
-                                <option value="">Select Product</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="otherProduct" class="form-label">Other Product</label>
-                            <select class="form-select" id="otherProduct">
-                                <option value="">Select Other Product</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Apply Filter</button>
-                    </form>
-                </div>
+<!-- Modal for Filter -->
+<div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <img src="path/to/your/logo.png" alt="Logo" class="img-fluid">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="filterForm">
+                    <div class="mb-3">
+                        <label for="province" class="form-label">Province</label>
+                        <select class="form-select" id="province">
+                            <option value="">Select Province</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <h5>Product</h5>
+                        <div id="product-icons" class="icon-container"></div>
+                    </div>
+                    <div class="mb-3">
+                        <h5>Other Product</h5>
+                        <div id="other-product-icons" class="icon-container"></div>
+                    </div>
+                    <div class="mb-3">
+                        <h5>Service</h5>
+                        <div id="service-icons" class="icon-container"></div>
+                    </div>
+                    <div class="mb-3">
+                        <h5>Description</h5>
+                        <div id="description-icons" class="icon-container"></div>
+                    </div>
+                    <div class="mb-3">
+                        <h5>Promotion</h5>
+                        <div id="promotion-icons" class="icon-container"></div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Apply Filter</button>
+                </form>
             </div>
         </div>
     </div>
+</div>
 
+    
+    // CSS to style the icons (add this to your CSS file)
+    <style>
+.icon-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.filter-icon {
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    border-radius: 25px;
+    object-fit: contain; /* Add this line */
+}
+.filter-icon.full {
+    border-radius: 0; /* Adjust border radius for full images */
+}
+.filter-icon.selected {
+    border-color: blue;
+}
+
+        
+        
+    </style>
     <!-- Modal for Marker Data -->
     <div class="modal fade" id="markerModal" tabindex="-1" aria-labelledby="markerModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
