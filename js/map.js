@@ -457,13 +457,12 @@ function updateModalWithRoute(distance, travelTime, status) {
 function getStatusInfo(status) {
   const currentTime = new Date(); // Current time in local timezone
   const cambodiaOffset = 7 * 60 * 60 * 1000; // Cambodia is UTC+7
-  const cambodiaTime = new Date(
-    currentTime.getTime() +
-      currentTime.getTimezoneOffset() * 60000 +
-      cambodiaOffset
-  );
+  const cambodiaTime = new Date(currentTime.getTime() + cambodiaOffset - currentTime.getTimezoneOffset() * 60000); // Convert to Cambodia time (UTC+7)
   const currentHour = cambodiaTime.getHours();
   const currentMinutes = cambodiaTime.getMinutes();
+
+  console.log(`Current Cambodia Time: ${cambodiaTime}`);
+  console.log(`Current Hour: ${currentHour}, Current Minutes: ${currentMinutes}`);
 
   // Parse the status to extract the closing hour and minutes if present
   const statusParts = status.match(/^(\d{1,2})(?:h(\d{1,2})?)?$/); // Match hours optionally followed by minutes
@@ -483,6 +482,8 @@ function getStatusInfo(status) {
   } else if (statusParts) {
     const closingHour = parseInt(statusParts[1], 10); // Closing hour from status
     const closingMinutes = statusParts[2] ? parseInt(statusParts[2], 10) : 0; // Closing minutes from status or default to 0
+
+    console.log(`Closing Hour: ${closingHour}, Closing Minutes: ${closingMinutes}`);
 
     // Determine if the station is closed or open
     if (
@@ -509,6 +510,25 @@ function getStatusInfo(status) {
     };
   }
 }
+
+// Function to fetch data with cache-busting
+function fetchData(url) {
+  const cacheBuster = `?nocache=${new Date().getTime()}`;
+  return fetch(url + cacheBuster)
+    .then(response => response.json())
+    .catch(error => {
+      console.error("Error fetching data:", error);
+      throw error;
+    });
+}
+
+// Usage example with fetchData function
+const dataUrl = "https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers.json";
+fetchData(dataUrl).then(data => {
+  // Handle the data as needed
+  console.log(data);
+});
+
 
 // Function to open Google Maps with the destination
 function openGoogleMaps(lat, lon) {
