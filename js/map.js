@@ -9,7 +9,10 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
 // Initialize marker cluster group
 var markers = L.markerClusterGroup();
 var allMarkers = []; // Array to hold all markers for filtering
-
+// Variables to store the current location marker and circle
+let currentLocationMarker = null;
+let currentLocationCircle = null;
+// Function to get current location and set map view
 // Function to get current location and set map view
 function setMapToCurrentLocation() {
   getCurrentLocation()
@@ -17,8 +20,16 @@ function setMapToCurrentLocation() {
       const { lat, lng } = currentLocation;
       map.setView([lat, lng], 15);  // Set a reasonable zoom level, like 15
 
+      // Remove existing marker and circle if they exist
+      if (currentLocationMarker) {
+        map.removeLayer(currentLocationMarker);
+      }
+      if (currentLocationCircle) {
+        map.removeLayer(currentLocationCircle);
+      }
+
       // Add animated circle to represent current location
-      L.circle([lat, lng], {
+      currentLocationCircle = L.circle([lat, lng], {
         color: "blue",
         fillColor: "blue",
         fillOpacity: 0.2,
@@ -36,14 +47,15 @@ function setMapToCurrentLocation() {
       });
 
       // Add marker with custom icon
-      var marker = L.marker([lat, lng], { icon: customIcon }).addTo(map);
-      marker.bindPopup("You are here.").openPopup();
+      currentLocationMarker = L.marker([lat, lng], { icon: customIcon }).addTo(map);
+      currentLocationMarker.bindPopup("You are here.").openPopup();
     })
     .catch((error) => {
       console.error("Error getting current location:", error);
       alert("Error getting your location. Please try again later.");
     });
 }
+
 
 
 // Fetch data from JSON file
@@ -140,38 +152,44 @@ function getCurrentLocation() {
 }
 
 function getIconUrl(status) {
-  const currentTime = new Date(); // Current time in local timezone
-  const cambodiaOffset = 7 * 60 * 60 * 1000; // Cambodia is UTC+7
-  const cambodiaTime = new Date(
-    currentTime.getTime() + cambodiaOffset - currentTime.getTimezoneOffset() * 60000
-  ); // Convert to Cambodia time (UTC+7)
+  // Get the current time in Cambodia timezone
+  const cambodiaTimeString = new Date().toLocaleString("en-US", { timeZone: "Asia/Phnom_Penh" });
+  const cambodiaTime = new Date(cambodiaTimeString);
   const currentHour = cambodiaTime.getHours();
   const currentMinutes = cambodiaTime.getMinutes();
 
-  // Parse the status to extract the closing hour and minutes if present
-  const statusParts = status.match(/^(\d{1,2})(?:h(\d{1,2})?)?$/); // Match hours optionally followed by minutes
+  console.log(`Current Cambodia Time: ${cambodiaTime}`);
+  console.log(`Current Hour: ${currentHour}, Current Minutes: ${currentMinutes}`);
 
-  if (status.toLowerCase() === "under construct") {
+  // Parse the status to extract the closing hour and minutes if present
+  const statusParts = status.match(/^(\d{1,2})h(\d{1,2})?$/); // Match hours optionally followed by minutes
+  const open24Hours = status.toLowerCase() === "24h";
+  const underConstruction = status.toLowerCase() === "under construct";
+
+  if (underConstruction) {
     return "./pictures/under_construction.png"; // Path to the under construction icon
-  } else if (status.toLowerCase() === "24h") {
-    return "./pictures/61.png"; // Path to the 24h icon
+  } else if (open24Hours) {
+    return "./pictures/6.png"; // Path to the 24h icon
   } else if (statusParts) {
     const closingHour = parseInt(statusParts[1], 10); // Closing hour from status
     const closingMinutes = statusParts[2] ? parseInt(statusParts[2], 10) : 0; // Closing minutes from status or default to 0
 
+    console.log(`Closing Hour: ${closingHour}, Closing Minutes: ${closingMinutes}`);
+
     // Determine if the station is closed or open
-    if (
-      currentHour > closingHour ||
-      (currentHour === closingHour && currentMinutes >= closingMinutes)
-    ) {
-      return "./pictures/time_close1.png"; // Path to the closed icon
+    const isOpen = (currentHour < closingHour || (currentHour === closingHour && currentMinutes < closingMinutes)) &&
+                   (currentHour >= 5 || (currentHour === 5 && currentMinutes >= 0)); // Assuming opens at 5:00 AM
+
+    if (isOpen) {
+      return "./pictures/6.png"; // Path to the open icon
     } else {
-      return "./pictures/61.png"; // Path to the open icon
+      return "./pictures/time_close1.png"; // Path to the closed icon
     }
   } else {
     return "./pictures/default.png"; // Default icon for unknown statuses
   }
 }
+
 
 // Function to get route information from Bing Maps API
 function getBingRoute(startLat, startLng, endLat, endLng) {
@@ -401,19 +419,14 @@ function updateModalWithRoute(distance, travelTime, status) {
     `;
 }
 
-// Helper function to determine the icon, badge class, and display text based on status and current time
 function getStatusInfo(status) {
-  const currentTime = new Date(); // Current time in local timezone
-  const cambodiaOffset = 7 * 60 * 60 * 1000; // Cambodia is UTC+7
-  const cambodiaTime = new Date(currentTime.getTime() + cambodiaOffset - currentTime.getTimezoneOffset() * 60000); // Convert to Cambodia time (UTC+7)
+  // Calculate Cambodia time directly using UTC offset
+  const cambodiaTime = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Phnom_Penh" }));
   const currentHour = cambodiaTime.getHours();
   const currentMinutes = cambodiaTime.getMinutes();
 
   console.log(`Current Cambodia Time: ${cambodiaTime}`);
   console.log(`Current Hour: ${currentHour}, Current Minutes: ${currentMinutes}`);
-
-  // Parse the status to extract the closing hour and minutes if present
-  const statusParts = status.match(/^(\d{1,2})(?:h(\d{1,2})?)?$/); // Match hours optionally followed by minutes
 
   if (status.toLowerCase() === "under construct") {
     return {
@@ -427,35 +440,34 @@ function getStatusInfo(status) {
       badgeClass: "bg-success text-white",
       displayText: "Open 24h",
     };
-  } else if (statusParts) {
-    const closingHour = parseInt(statusParts[1], 10); // Closing hour from status
-    const closingMinutes = statusParts[2] ? parseInt(statusParts[2], 10) : 0; // Closing minutes from status or default to 0
+  } else {
+    const openingHour = 5; // Opening hour is 5 AM
+    const closingHour = 20; // Closing hour is 8 PM
+    const closingMinutes = 30; // Closing minutes is 8:30 PM
 
-    console.log(`Closing Hour: ${closingHour}, Closing Minutes: ${closingMinutes}`);
+    console.log(`Opening Hour: ${openingHour}, Closing Hour: ${closingHour}, Closing Minutes: ${closingMinutes}`);
 
-    // Determine if the station is closed or open
+    // Determine if the station is closed
     if (
-      currentHour > closingHour ||
-      (currentHour === closingHour && currentMinutes >= closingMinutes)
+      (currentHour < openingHour) || // Before 5 AM
+      (currentHour > closingHour) || // After 8 PM
+      (currentHour === closingHour && currentMinutes >= closingMinutes) || // After 8:30 PM
+      (currentHour >= 0 && currentHour < 5) // After midnight and before 5 AM
     ) {
+      console.log("Station is closed.");
       return {
         iconClass: "fa-times-circle",
         badgeClass: "bg-danger text-white",
         displayText: "Closed",
       };
     } else {
+      console.log("Station is open.");
       return {
         iconClass: "fa-gas-pump",
         badgeClass: "bg-success text-white",
-        displayText: `Open until ${status}`,
+        displayText: `Open until 8:30 PM`,
       };
     }
-  } else {
-    return {
-      iconClass: "fa-question-circle",
-      badgeClass: "bg-secondary text-white",
-      displayText: "Unknown Status",
-    };
   }
 }
 
@@ -476,6 +488,7 @@ fetchData(dataUrl).then(data => {
   // Handle the data as needed
   console.log(data);
 });
+
 
 // Function to open Google Maps with the destination
 function openGoogleMaps(lat, lon) {
