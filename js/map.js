@@ -403,129 +403,22 @@ function getItemIcon(item) {
   return itemImages[item] || "./pictures/default.png"; // Default image if item not found
 }
 
-// Function to show marker data in modal
-function showMarkerModal(station, imageUrl) {
-  var modalBody = document.getElementById("markerModalBody");
+// Function to update modal with route information
+function updateModalWithRoute(distance, travelTime, status) {
+  var routeInfo = document.getElementById("route-info");
+  const statusInfo = getStatusInfo(status); // Determine the icon and badge class based on status
   
-  // Generate product HTML with appropriate round images
-  const productHtml = station.product.map(product => 
-      `<div class="info product-item">
-          <img src="${getProductIcon(product)}" class="product-icon round" alt="${product}" /> ${product}
-      </div>`
-  ).join("");
-  
-  // Generate other product HTML with appropriate non-round images
-  const otherProductHtml = station.other_product && station.other_product[0] ? 
-      station.other_product.map(otherProduct => 
-          `<div class="info product-item">
-              <img src="${getProductIcon(otherProduct)}" class="product-icon full" alt="${otherProduct}" /> ${otherProduct}
-          </div>`
-      ).join("") : "";
-
-  // Generate service HTML with appropriate images
-  const serviceHtml = station.service.map(service => 
-      `<div class="info service-item">
-          <img src="${getItemIcon(service)}" class="item-icon" alt="${service}" /> ${service}
-      </div>`
-  ).join("");
-
-  // Generate description HTML with appropriate images
-  const descriptionHtml = station.description.map(description => 
-      `<div class="info description-item">
-          <img src="${getItemIcon(description)}" class="item-icon" alt="${description}" /> ${description}
-      </div>`
-  ).join("");
-
-  // Generate promotion HTML with appropriate images
-  const promotionHtml = station.promotion.map(promotion => 
-      `<div class="info promotion-item">
-          <img src="${getItemIcon(promotion)}" class="item-icon" alt="${promotion}" /> ${promotion}
-      </div>`
-  ).join("");
-
-  modalBody.innerHTML = `
-      <div class="station-details">
-          <img src="${imageUrl}" alt="${station.title}" class="img-fluid mb-3 rounded-image" />
-          <div class="text-center">
-              <h3 class="station-title mb-3 font-weight-bold">${station.title}</h3>
-          </div>
-          <div class="info"><i class="fas fa-map-marker-alt icon"></i> ${station.address}</div>
-          <div class="separator"></div>
-          <div id="route-info" class="d-flex justify-content-center mb-3"></div> 
-          <div class="separator"></div>
-          <div class="nav-tabs-container">
-              <ul class="nav nav-tabs flex-nowrap" id="myTab" role="tablist">
-                  <li class="nav-item" role="presentation">
-                      <button class="nav-link active" id="products-tab" data-bs-toggle="tab" data-bs-target="#products" type="button" role="tab" aria-controls="products" aria-selected="true">Products</button>
-                  </li>
-                  <li class="nav-item" role="presentation">
-                      <button class="nav-link" id="payment-tab" data-bs-toggle="tab" data-bs-target="#payment" type="button" role="tab" aria-controls="payment" aria-selected="false">Payment</button>
-                  </li>
-                  <li class="nav-item" role="presentation">
-                      <button class="nav-link" id="services-tab" data-bs-toggle="tab" data-bs-target="#services" type="button" role="tab" aria-controls="services" aria-selected="false">Services</button>
-                  </li>
-                  <li class="nav-item" role="presentation">
-                      <button class="nav-link" id="promotion-tab" data-bs-toggle="tab" data-bs-target="#promotion" type="button" role="tab" aria-controls="promotion" aria-selected="false">Promotion</button>
-                  </li>
-              </ul>
-          </div>
-          
-          <!-- Tab panes with smooth animation -->
-          <div class="tab-content mt-3">
-              <div class="tab-pane fade show active" id="products" role="tabpanel" aria-labelledby="products-tab">
-                  <div class="scrollable-content">
-                      <h5 class="font-weight-bold">Products</h5>
-                      <div class="product-row">
-                          ${productHtml}
-                      </div>
-                      ${otherProductHtml ? `<div class="separator"></div><h5 class="font-weight-bold">Other Products</h5><div class="product-row">${otherProductHtml}</div>` : ""}
-                  </div>
-              </div>
-              <div class="tab-pane fade" id="payment" role="tabpanel" aria-labelledby="payment-tab">
-                  <div class="scrollable-content">
-                      ${serviceHtml ? `<h5 class="font-weight-bold">Services</h5><div class="service-row">${serviceHtml}</div>` : ""}
-                  </div>
-              </div>
-              <div class="tab-pane fade" id="services" role="tabpanel" aria-labelledby="services-tab">
-                  <div class="scrollable-content">
-                      ${descriptionHtml ? `<h5 class="font-weight-bold">Descriptions</h5><div class="description-row">${descriptionHtml}</div>` : ""}
-                  </div>
-              </div>
-              <div class="tab-pane fade" id="promotion" role="tabpanel" aria-labelledby="promotion-tab">
-                  <div class="scrollable-content">
-                      ${promotionHtml ? `<h5 class="font-weight-bold">Promotions</h5><div class="promotion-row">${promotionHtml}</div>` : ""}
-                  </div>
-              </div>
-          </div>
-          
-          <div class="text-center mt-3">
-            <div class="d-flex justify-content-center align-items-center">
-              <div class="icon-background mx-2" onclick="shareLocation(${station.latitude}, ${station.longitude})">
-                  <i class="fas fa-share-alt share-icon"></i>
-              </div>
-              <button class="btn btn-primary rounded-circle mx-5 go-button pulse" onclick="openGoogleMaps(${station.latitude}, ${station.longitude})">GO</button>
-              <div class="icon-background">
-                  <i class="fas fa-location-arrow navigate-icon mx-2"></i>
-              </div>
-            </div>
-          </div>
-      </div>
-  `;
-
-  var markerModal = new bootstrap.Modal(document.getElementById("markerModal"), {
-      keyboard: false,
-  });
-  markerModal.show();
-
-  // Initialize Bootstrap tabs correctly
-  var triggerTabList = [].slice.call(document.querySelectorAll('#myTab button'));
-  triggerTabList.forEach(function (triggerEl) {
-      var tabTrigger = new bootstrap.Tab(triggerEl);
-      triggerEl.addEventListener('click', function (event) {
-          event.preventDefault();
-          tabTrigger.show();
-      });
-  });
+  routeInfo.innerHTML = `
+        <div class="badge bg-primary text-white mx-1">
+            <i class="fas fa-clock icon-background"></i> ${travelTime}
+        </div>
+        <div class="badge bg-primary text-white mx-1">
+            <i class="fas fa-location-arrow icon-background"></i> ${distance}
+        </div>
+        <div class="badge ${statusInfo.badgeClass} text-white mx-1">
+            <i class="fas ${statusInfo.iconClass} icon-background"></i> ${statusInfo.displayText}
+        </div>
+    `;
 }
 
 // Helper function to determine the icon, badge class, and display text based on status and current time
