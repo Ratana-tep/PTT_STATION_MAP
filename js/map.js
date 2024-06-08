@@ -3,13 +3,48 @@ var map = L.map("map").setView([11.55, 104.91], 7);
 
 // Add OpenStreetMap tiles
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-  attribution:
-    '&copy;<a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  attribution: '&copy;<a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
 }).addTo(map);
 
 // Initialize marker cluster group
 var markers = L.markerClusterGroup();
 var allMarkers = []; // Array to hold all markers for filtering
+
+// Function to get current location and set map view
+function setMapToCurrentLocation() {
+  getCurrentLocation()
+    .then((currentLocation) => {
+      const { lat, lng } = currentLocation;
+      map.setView([lat, lng], 15);  // Set a reasonable zoom level, like 15
+
+      // Add animated circle to represent current location
+      L.circle([lat, lng], {
+        color: "blue",
+        fillColor: "blue",
+        fillOpacity: 0.2,
+        radius: 1000,
+        className: "pulse-circle",
+      }).addTo(map);
+
+      // Create a custom icon for the current location marker
+      var customIcon = L.icon({
+        iconUrl: "./pictures/mylocal.png",
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41],
+      });
+
+      // Add marker with custom icon
+      var marker = L.marker([lat, lng], { icon: customIcon }).addTo(map);
+      marker.bindPopup("You are here.").openPopup();
+    })
+    .catch((error) => {
+      console.error("Error getting current location:", error);
+      alert("Error getting your location. Please try again later.");
+    });
+}
+
 
 // Fetch data from JSON file
 fetch("https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers.json")
@@ -31,9 +66,7 @@ fetch("https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers.json")
       });
 
       // Create marker with custom icon
-      var marker = L.marker([station.latitude, station.longitude], {
-        icon: customIcon,
-      });
+      var marker = L.marker([station.latitude, station.longitude], { icon: customIcon });
 
       // Create image URL
       var imageUrl = `https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/${station.picture}`;
@@ -43,12 +76,7 @@ fetch("https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers.json")
         showMarkerModal(station, imageUrl); // Show modal first
         getCurrentLocation()
           .then((currentLocation) => {
-            getBingRoute(
-              currentLocation.lat,
-              currentLocation.lng,
-              station.latitude,
-              station.longitude
-            )
+            getBingRoute(currentLocation.lat, currentLocation.lng, station.latitude, station.longitude)
               .then((result) => {
                 const { distance, travelTime } = result;
                 updateModalWithRoute(distance, travelTime, station.status);
@@ -74,73 +102,48 @@ fetch("https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers.json")
 
     // Fit map to markers bounds
     map.fitBounds(markers.getBounds());
+
+    // Set map to current location on initial load
+    setMapToCurrentLocation();
   })
   .catch((error) => console.error("Error fetching data:", error));
 
 // Function to get current location
 document.getElementById("myLocationBtn").addEventListener("click", function () {
-  getCurrentLocation()
-    .then((currentLocation) => {
-      const { lat, lng } = currentLocation;
-
-      // Remove existing marker and circle if they exist
-      if (currentLocationMarker) {
-        map.removeLayer(currentLocationMarker);
-      }
-      if (currentLocationCircle) {
-        map.removeLayer(currentLocationCircle);
-      }
-
-      // Set map view to current position
-      map.setView([lat, lng], 15);
-
-      // Add animated circle to represent current location
-      var circle = L.circle([lat, lng], {
-        color: "blue",
-        fillColor: "blue",
-        fillOpacity: 0.2,
-        radius: 1000,
-        className: "pulse-circle",
-      }).addTo(map);
-
-      // Create a custom icon
-      var customIcon = L.icon({
-        iconUrl: "./pictures/mylocal.png",
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34],
-        shadowSize: [41, 41],
-      });
-
-      // Add marker with custom icon
-      var marker = L.marker([lat, lng], { icon: customIcon }).addTo(map);
-
-      // Optionally, you can bind a popup to the marker
-      marker.bindPopup("You are here.").openPopup();
-
-      // Store the current marker and circle for removal later
-      currentLocationMarker = marker;
-      currentLocationCircle = circle;
-    })
-    .catch((error) => {
-      console.error("Error getting geolocation:", error);
-      alert("Error getting your location. Please try again later.");
-    });
+  setMapToCurrentLocation();
 });
 
-// Variable to store the current marker and circle
-var currentLocationMarker;
-var currentLocationCircle;
+// Helper functions
+function getCurrentLocation() {
+  return new Promise((resolve, reject) => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        function (position) {
+          resolve({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+        },
+        function (error) {
+          reject(error);
+        },
+        {
+          enableHighAccuracy: true, // Request high accuracy
+          timeout: 5000, // Set timeout to 5 seconds
+          maximumAge: 0, // Do not use cached location
+        }
+      );
+    } else {
+      reject(new Error("Geolocation is not supported by your browser."));
+    }
+  });
+}
 
-// Helper function to get the icon URL based on the station status and current time
-// Helper function to get the icon URL based on the station status and current time
 function getIconUrl(status) {
   const currentTime = new Date(); // Current time in local timezone
   const cambodiaOffset = 7 * 60 * 60 * 1000; // Cambodia is UTC+7
   const cambodiaTime = new Date(
-    currentTime.getTime() +
-      cambodiaOffset -
-      currentTime.getTimezoneOffset() * 60000
+    currentTime.getTime() + cambodiaOffset - currentTime.getTimezoneOffset() * 60000
   ); // Convert to Cambodia time (UTC+7)
   const currentHour = cambodiaTime.getHours();
   const currentMinutes = cambodiaTime.getMinutes();
@@ -170,36 +173,9 @@ function getIconUrl(status) {
   }
 }
 
-// Function to get the current location
-function getCurrentLocation() {
-  return new Promise((resolve, reject) => {
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        function (position) {
-          resolve({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          });
-        },
-        function (error) {
-          reject(error);
-        },
-        {
-          enableHighAccuracy: true, // Request high accuracy
-          timeout: 5000, // Set timeout to 5 seconds
-          maximumAge: 0, // Do not use cached location
-        }
-      );
-    } else {
-      reject(new Error("Geolocation is not supported by your browser."));
-    }
-  });
-}
-
 // Function to get route information from Bing Maps API
 function getBingRoute(startLat, startLng, endLat, endLng) {
-  const bingMapsKey =
-    "AhQxc3Nm4Sfv53x7JRXUoj76QZnlm7VWkT5qAigmHQo8gjeYFthvGgEqVcjO5c7C"; // Replace with your Bing Maps API Key
+  const bingMapsKey = "AhQxc3Nm4Sfv53x7JRXUoj76QZnlm7VWkT5qAigmHQo8gjeYFthvGgEqVcjO5c7C"; // Replace with your Bing Maps API Key
   const url = `https://dev.virtualearth.net/REST/V1/Routes/Driving?wp.0=${startLat},${startLng}&wp.1=${endLat},${endLng}&optmz=timeWithTraffic&key=${bingMapsKey}`;
 
   return fetch(url)
@@ -212,11 +188,7 @@ function getBingRoute(startLat, startLng, endLat, endLng) {
         const travelTime = route.travelDurationTraffic / 60; // in minutes
         return {
           distance: distance.toFixed(1) + " km",
-          travelTime:
-            Math.floor(travelTime / 60) +
-            " hr. " +
-            Math.round(travelTime % 60) +
-            " min",
+          travelTime: Math.floor(travelTime / 60) + " hr. " + Math.round(travelTime % 60) + " min",
         };
       } else {
         throw new Error("No route found");
@@ -227,6 +199,7 @@ function getBingRoute(startLat, startLng, endLat, endLng) {
       throw error;
     });
 }
+
 // Function to show marker data in modal
 function showMarkerModal(station, imageUrl) {
   var modalBody = document.getElementById("markerModalBody");
@@ -236,9 +209,7 @@ function showMarkerModal(station, imageUrl) {
     .map(
       (product) =>
         `<div class="info product-item">
-          <img src="${getProductIcon(
-            product
-          )}" class="product-icon round" alt="${product}" /> ${product}
+          <img src="${getProductIcon(product)}" class="product-icon round" alt="${product}" /> ${product}
       </div>`
     )
     .join("");
@@ -250,9 +221,7 @@ function showMarkerModal(station, imageUrl) {
           .map(
             (otherProduct) =>
               `<div class="info product-item">
-              <img src="${getProductIcon(
-                otherProduct
-              )}" class="product-icon full" alt="${otherProduct}" /> ${otherProduct}
+              <img src="${getProductIcon(otherProduct)}" class="product-icon full" alt="${otherProduct}" /> ${otherProduct}
           </div>`
           )
           .join("")
@@ -263,9 +232,7 @@ function showMarkerModal(station, imageUrl) {
     .map(
       (service) =>
         `<div class="info payment-item">
-          <img src="${getItemIcon(
-            service
-          )}" class="payment-icon full" alt="${service}" /> ${service}
+          <img src="${getItemIcon(service)}" class="payment-icon full" alt="${service}" /> ${service}
       </div>`
     )
     .join("");
@@ -277,9 +244,7 @@ function showMarkerModal(station, imageUrl) {
           .map(
             (desc) =>
               `<div class="info service-item">
-              <img src="${getItemIcon(
-                desc
-              )}" class="service-icon full" alt="${desc}" /> ${desc}
+              <img src="${getItemIcon(desc)}" class="service-icon full" alt="${desc}" /> ${desc}
           </div>`
           )
           .join("")
@@ -292,9 +257,7 @@ function showMarkerModal(station, imageUrl) {
           .map(
             (promo) =>
               `<div class="info promotion-item">
-              <img src="${getItemIcon(
-                promo
-              )}" class="promotion-icon full" alt="${promo}" /> ${promo}
+              <img src="${getItemIcon(promo)}" class="promotion-icon full" alt="${promo}" /> ${promo}
           </div>`
           )
           .join("")
@@ -302,17 +265,11 @@ function showMarkerModal(station, imageUrl) {
 
   modalBody.innerHTML = `
       <div class="station-details">
-          <img src="${imageUrl}" alt="${
-    station.title
-  }" class="img-fluid mb-3 rounded-image" />
+          <img src="${imageUrl}" alt="${station.title}" class="img-fluid mb-3 rounded-image" />
           <div class="text-center">
-              <h3 class="station-title mb-3 font-weight-bold">${
-                station.title
-              }</h3>
+              <h3 class="station-title mb-3 font-weight-bold">${station.title}</h3>
           </div>
-          <div class="info"><i class="fas fa-map-marker-alt icon"></i> ${
-            station.address
-          }</div>
+          <div class="info"><i class="fas fa-map-marker-alt icon"></i> ${station.address}</div>
           <div class="separator"></div>
           <div id="route-info" class="d-flex justify-content-center mb-3"></div> 
           <div class="separator"></div>
@@ -341,11 +298,7 @@ function showMarkerModal(station, imageUrl) {
                       <div class="product-row">
                           ${productHtml}
                       </div>
-                      ${
-                        otherProductHtml
-                          ? `<div class="separator"></div><h5>Other Products</h5><div class="product-row">${otherProductHtml}</div>`
-                          : ""
-                      }
+                      ${otherProductHtml ? `<div class="separator"></div><h5>Other Products</h5><div class="product-row">${otherProductHtml}</div>` : ""}
                   </div>
               </div>
               <div class="tab-pane fade" id="payment" role="tabpanel" aria-labelledby="payment-tab">
@@ -388,18 +341,13 @@ function showMarkerModal(station, imageUrl) {
       </div>
   `;
 
-  var markerModal = new bootstrap.Modal(
-    document.getElementById("markerModal"),
-    {
-      keyboard: false,
-    }
-  );
+  var markerModal = new bootstrap.Modal(document.getElementById("markerModal"), {
+    keyboard: false,
+  });
   markerModal.show();
 
   // Initialize Bootstrap tabs correctly
-  var triggerTabList = [].slice.call(
-    document.querySelectorAll("#myTab button")
-  );
+  var triggerTabList = [].slice.call(document.querySelectorAll("#myTab button"));
   triggerTabList.forEach(function (triggerEl) {
     var tabTrigger = new bootstrap.Tab(triggerEl);
     triggerEl.addEventListener("click", function (event) {
@@ -529,11 +477,9 @@ fetchData(dataUrl).then(data => {
   console.log(data);
 });
 
-
 // Function to open Google Maps with the destination
 function openGoogleMaps(lat, lon) {
-  var url =
-    "https://www.google.com/maps/dir/?api=1&destination=" + lat + "," + lon;
+  var url = "https://www.google.com/maps/dir/?api=1&destination=" + lat + "," + lon;
   window.open(url, "_self");
 }
 
