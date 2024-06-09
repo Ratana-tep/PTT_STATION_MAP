@@ -161,34 +161,37 @@ function getIconUrl(status) {
   console.log(`Current Cambodia Time: ${cambodiaTime}`);
   console.log(`Current Hour: ${currentHour}, Current Minutes: ${currentMinutes}`);
 
-  // Parse the status to extract the closing hour and minutes if present
-  const statusParts = status.match(/^(\d{1,2})h(\d{1,2})?$/); // Match hours optionally followed by minutes
+  // Handle different status cases
   const open24Hours = status.toLowerCase() === "24h";
   const underConstruction = status.toLowerCase() === "under construct";
 
   if (underConstruction) {
+    console.log("Status: Under Construction");
     return "./pictures/under_construction.png"; // Path to the under construction icon
   } else if (open24Hours) {
-    return "./pictures/6.png"; // Path to the 24h icon
-  } else if (statusParts) {
-    const closingHour = parseInt(statusParts[1], 10); // Closing hour from status
-    const closingMinutes = statusParts[2] ? parseInt(statusParts[2], 10) : 0; // Closing minutes from status or default to 0
+    console.log("Status: Open 24 Hours");
+    return "./pictures/61.png"; // Path to the 24h icon
+  } else {
+    // Assume the default open hours are from 5:00 AM to 8:30 PM
+    const openingHour = 5;
+    const closingHour = 20;
+    const closingMinutes = 30;
 
-    console.log(`Closing Hour: ${closingHour}, Closing Minutes: ${closingMinutes}`);
+    console.log(`Opening Hour: ${openingHour}, Closing Hour: ${closingHour}, Closing Minutes: ${closingMinutes}`);
 
-    // Determine if the station is closed or open
-    const isOpen = (currentHour < closingHour || (currentHour === closingHour && currentMinutes < closingMinutes)) &&
-                   (currentHour >= 5 || (currentHour === 5 && currentMinutes >= 0)); // Assuming opens at 5:00 AM
+    // Determine if the station is open
+    const isOpen = (currentHour >= openingHour && (currentHour < closingHour || (currentHour === closingHour && currentMinutes < closingMinutes)));
 
     if (isOpen) {
-      return "./pictures/6.png"; // Path to the open icon
+      console.log("Status: Open");
+      return "./pictures/61.png"; // Path to the open icon
     } else {
+      console.log("Status: Closed");
       return "./pictures/time_close1.png"; // Path to the closed icon
     }
-  } else {
-    return "./pictures/default.png"; // Default icon for unknown statuses
   }
 }
+
 
 
 // Function to get route information from Bing Maps API
