@@ -292,9 +292,9 @@
             <button type="button" class="btn" id="myLocationBtn">
                 <i class="fa fa-location-arrow"></i>
             </button>
-            <button type="button" class="btn">
-                <i class="fa fa-star"></i>
-            </button>
+            <button type="button" class="btn" id="nearbyStationsBtn">
+                <i class="fa fa-map-marker-alt"></i>
+              </button>
         </div>
     </div>
 
@@ -368,20 +368,86 @@
         
         
     </style>
-    <!-- Modal for Marker Data -->
-    <div class="modal fade" id="markerModal" tabindex="-1" aria-labelledby="markerModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header no-border-bottom">
-                    <img src="./pictures/logo_Station.png" alt="Logo" class="img-fluid logo-small">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body" id="markerModalBody">
-                    <!-- Marker details will be injected here -->
-                </div>
+     <!-- Modal for Nearby Stations -->
+<div class="modal fade" id="nearbyStationsModal" tabindex="-1" aria-labelledby="nearbyStationsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="nearbyStationsModalLabel">Nearby Stations</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <ul id="nearbyStationsList" class="list-group">
+                    <!-- Nearby stations will be appended here -->
+                </ul>
             </div>
         </div>
     </div>
+</div>
+
+<!-- Modal for Marker Data -->
+<div class="modal fade" id="markerModal" tabindex="-1" aria-labelledby="markerModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header no-border-bottom">
+                <img src="./pictures/logo_Station.png" alt="Logo" class="img-fluid logo-small">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="markerModalBody">
+                <!-- Marker details will be injected here -->
+            </div>
+        </div>
+    </div>
+</div>
+  <style>
+    /* Add this CSS to your stylesheet */
+.list-group-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border: none; /* Remove default border */
+    border-radius: 15px; /* Add rounded corners */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
+    margin-bottom: 10px; /* Space between items */
+  }
+  
+  .list-group-item img {
+    width: 100px; /* Adjust size as needed */
+    height: 100px; /* Adjust size as needed */
+    margin-right: 10px;
+    border-radius: 15px; /* Add rounded corners */
+    object-fit: cover; /* Ensure the image covers the container */
+  }
+  
+  .station-details {
+    flex-grow: 1;
+  }
+  
+  .station-details h6 {
+    margin: 0 0 5px 0; /* Adjust spacing as needed */
+    font-weight: bold;
+  }
+  
+  .station-details p {
+    margin: 0;
+    color: #555; /* Adjust color as needed */
+    font-size: 12px; /* Make the address smaller */
+  }
+  
+  .station-details .icons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 10px; /* Space between text and icons */
+  }
+  
+  .station-details .icons img {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%; /* Round icons */
+  }
+  
+  </style>
 
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
@@ -389,5 +455,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.1/leaflet.markercluster.js"></script>
     <script src="./js/map.js"></script>
     <script src="./js/filter.js"></script>
+    <script src="./js/nearly.js"></script>
 </body>
 </html>

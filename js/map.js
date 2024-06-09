@@ -12,7 +12,7 @@ var allMarkers = []; // Array to hold all markers for filtering
 // Variables to store the current location marker and circle
 let currentLocationMarker = null;
 let currentLocationCircle = null;
-// Function to get current location and set map view
+
 // Function to get current location and set map view
 function setMapToCurrentLocation() {
   getCurrentLocation()
@@ -33,7 +33,7 @@ function setMapToCurrentLocation() {
         color: "blue",
         fillColor: "blue",
         fillOpacity: 0.2,
-        radius: 1000,
+        radius: 200,
         className: "pulse-circle",
       }).addTo(map);
 
@@ -55,8 +55,6 @@ function setMapToCurrentLocation() {
       alert("Error getting your location. Please try again later.");
     });
 }
-
-
 
 // Fetch data from JSON file
 fetch("https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers.json")
@@ -191,8 +189,6 @@ function getIconUrl(status) {
     }
   }
 }
-
-
 
 // Function to get route information from Bing Maps API
 function getBingRoute(startLat, startLng, endLat, endLng) {
@@ -492,7 +488,6 @@ fetchData(dataUrl).then(data => {
   console.log(data);
 });
 
-
 // Function to open Google Maps with the destination
 function openGoogleMaps(lat, lon) {
   var url = "https://www.google.com/maps/dir/?api=1&destination=" + lat + "," + lon;
@@ -517,4 +512,9 @@ function shareLocation(lat, lon) {
     // Fallback for browsers that do not support the Web Share API
     window.open(url, "_blank");
   }
+}
+
+// Function to populate icon containers and dropdown
+function populateIconContainersAndDropdown(stations) {
+  // Implement your logic here
 }
