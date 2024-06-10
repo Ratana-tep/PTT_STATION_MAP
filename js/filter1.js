@@ -22,7 +22,8 @@ const imageMapping = {
 
 // Function to populate icon containers and province dropdown
 function populateIconContainersAndDropdown(data) {
-    const province = document.getElementById('province').value.toLowerCase();
+    const province = document.getElementById('province').value.toLowerCase() || '';
+
     populateIconContainer('product-icons', getUniqueItems(data, 'product', province), 'round');
     populateIconContainer('other-product-icons', getUniqueItems(data, 'other_product', province), 'custom');
     populateIconContainer('service-icons', getUniqueItems(data, 'service', province), 'custom');
@@ -31,7 +32,7 @@ function populateIconContainersAndDropdown(data) {
     populateProvinceDropdown(data);
 }
 
-// Helper function to get unique items from data
+// Helper function to get unique items from data, filtered by province if provided
 function getUniqueItems(data, key, province = '') {
     const items = new Set();
     data.forEach(station => {
@@ -46,9 +47,9 @@ function getUniqueItems(data, key, province = '') {
     return Array.from(items);
 }
 
-// Helper function to populate an icon container
 function populateIconContainer(containerId, items, shapeClass) {
     const container = document.getElementById(containerId);
+    const province = document.getElementById('province').value.toLowerCase();
     container.innerHTML = ''; // Clear existing icons
 
     items.forEach(item => {
@@ -61,14 +62,16 @@ function populateIconContainer(containerId, items, shapeClass) {
         // Check if the item is available in the selected province
         const isAvailable = allMarkers.some(marker => {
             return (!province || marker.data.province.toLowerCase() === province) &&
-                   marker.data[containerId.replace('-icons', '')] &&
-                   marker.data[containerId.replace('-icons', '')].map(el => el.toLowerCase()).includes(item.toLowerCase());
+                   marker.data[containerId.replace('-icons', '').replace('-', '_')] && // Adjusting key name to match data structure
+                   marker.data[containerId.replace('-icons', '').replace('-', '_')].map(el => el.toLowerCase()).includes(item.toLowerCase());
         });
 
-        if (!isAvailable) {
+        if (!isAvailable && province) {
             img.classList.add('disabled'); // Add disabled class to grey out the icon
             img.style.pointerEvents = 'none'; // Prevent clicking on the icon
         } else {
+            img.classList.remove('disabled'); // Ensure the item is enabled
+            img.style.pointerEvents = 'auto'; // Ensure the item can be clicked
             img.addEventListener('click', toggleIconSelection);
         }
 
@@ -76,7 +79,6 @@ function populateIconContainer(containerId, items, shapeClass) {
     });
 }
 
-// Helper function to populate province dropdown
 function populateProvinceDropdown(data) {
     const provinces = new Set();
     data.forEach(station => {
