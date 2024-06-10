@@ -98,6 +98,22 @@ function calculateDistance(lat1, lng1, lat2, lng2) {
                   if (markerObj && markerObj.marker) {
                     markerObj.marker.openPopup();
                     showMarkerModal(station, `https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/${station.picture}`);
+                    getCurrentLocation()
+                      .then((currentLocation) => {
+                        getBingRoute(currentLocation.lat, currentLocation.lng, station.latitude, station.longitude)
+                          .then((result) => {
+                            const { distance, travelTime } = result;
+                            updateModalWithRoute(distance, travelTime, station.status);
+                          })
+                          .catch((error) => {
+                            console.error("Error getting route from Bing Maps:", error);
+                            updateModalWithRoute("N/A", "N/A", station.status); // Use placeholders if there's an error
+                          });
+                      })
+                      .catch((error) => {
+                        console.error("Error getting current location:", error);
+                        updateModalWithRoute("N/A", "N/A", station.status); // Use placeholders if location is unavailable
+                      });
                   }
                   const nearbyStationsModal = bootstrap.Modal.getInstance(document.getElementById("nearbyStationsModal"));
                   nearbyStationsModal.hide();
