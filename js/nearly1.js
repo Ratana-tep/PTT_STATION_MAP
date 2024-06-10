@@ -29,7 +29,6 @@ function calculateDistance(lat1, lng1, lat2, lng2) {
       .filter((station) => station.distance <= maxDistance)
       .sort((a, b) => a.distance - b.distance);
   }
-  
 // Event listener for nearby stations button
 document.getElementById("nearbyStationsBtn").addEventListener("click", function () {
     getCurrentLocation()
@@ -97,6 +96,23 @@ document.getElementById("nearbyStationsBtn").addEventListener("click", function 
                   if (markerData) {
                     markerData.marker.openPopup(); // Open the marker popup
                     showMarkerModal(station, `https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/${station.picture}`); // Show the marker modal
+                    // Get route information and update modal
+                    getCurrentLocation()
+                      .then((currentLocation) => {
+                        getBingRoute(currentLocation.lat, currentLocation.lng, station.latitude, station.longitude)
+                          .then((result) => {
+                            const { distance, travelTime } = result;
+                            updateModalWithRoute(distance, travelTime, station.status);
+                          })
+                          .catch((error) => {
+                            console.error("Error getting route from Bing Maps:", error);
+                            updateModalWithRoute("N/A", "N/A", station.status); // Use placeholders if there's an error
+                          });
+                      })
+                      .catch((error) => {
+                        console.error("Error getting current location:", error);
+                        updateModalWithRoute("N/A", "N/A", station.status); // Use placeholders if location is unavailable
+                      });
                   } else {
                     console.error("Marker not found for station:", station);
                   }
