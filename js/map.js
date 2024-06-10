@@ -226,7 +226,7 @@ function showMarkerModal(station, imageUrl) {
     .map(
       (product) =>
         `<div class="info product-item">
-          <img src="${getProductIcon(product)}" class="product-icon round" alt="${product}" /> ${product}
+          <img src="${getProductIcon(product)}" class="product-icon round reviewable-image" alt="${product}" data-image="${getProductIcon(product)}" /> ${product}
       </div>`
     )
     .join("");
@@ -238,7 +238,7 @@ function showMarkerModal(station, imageUrl) {
           .map(
             (otherProduct) =>
               `<div class="info product-item">
-              <img src="${getProductIcon(otherProduct)}" class="product-icon full" alt="${otherProduct}" /> ${otherProduct}
+              <img src="${getProductIcon(otherProduct)}" class="product-icon full reviewable-image" alt="${otherProduct}" data-image="${getProductIcon(otherProduct)}" /> ${otherProduct}
           </div>`
           )
           .join("")
@@ -249,7 +249,7 @@ function showMarkerModal(station, imageUrl) {
     .map(
       (service) =>
         `<div class="info payment-item">
-          <img src="${getItemIcon(service)}" class="payment-icon full" alt="${service}" /> ${service}
+          <img src="${getItemIcon(service)}" class="payment-icon full reviewable-image" alt="${service}" data-image="${getItemIcon(service)}" /> ${service}
       </div>`
     )
     .join("");
@@ -261,7 +261,7 @@ function showMarkerModal(station, imageUrl) {
           .map(
             (desc) =>
               `<div class="info service-item">
-              <img src="${getItemIcon(desc)}" class="service-icon full" alt="${desc}" /> ${desc}
+              <img src="${getItemIcon(desc)}" class="service-icon full reviewable-image" alt="${desc}" data-image="${getItemIcon(desc)}" /> ${desc}
           </div>`
           )
           .join("")
@@ -274,7 +274,7 @@ function showMarkerModal(station, imageUrl) {
           .map(
             (promo) =>
               `<div class="info promotion-item">
-              <img src="${getItemIcon(promo)}" class="promotion-icon full" alt="${promo}" /> ${promo}
+              <img src="${getItemIcon(promo)}" class="promotion-icon full reviewable-image" alt="${promo}" data-image="${getItemIcon(promo)}" /> ${promo}
           </div>`
           )
           .join("")
@@ -282,7 +282,7 @@ function showMarkerModal(station, imageUrl) {
 
   modalBody.innerHTML = `
       <div class="station-details">
-          <img src="${imageUrl}" alt="${station.title}" class="img-fluid mb-3 rounded-image" />
+          <img src="${imageUrl}" alt="${station.title}" class="img-fluid mb-3 rounded-image reviewable-image" data-image="${imageUrl}" />
           <div class="text-center">
               <h3 class="station-title mb-3 font-weight-bold">${station.title}</h3>
           </div>
@@ -372,8 +372,26 @@ function showMarkerModal(station, imageUrl) {
       tabTrigger.show();
     });
   });
+
+  // Add event listeners for reviewable images
+  const reviewableImages = document.querySelectorAll('.reviewable-image');
+  reviewableImages.forEach(image => {
+    image.addEventListener('click', function() {
+      const imageUrl = this.getAttribute('data-image');
+      showImagePreview(imageUrl);
+    });
+  });
 }
 
+// Function to show image preview in the modal
+function showImagePreview(imageUrl) {
+  const imagePreview = document.getElementById('imagePreview');
+  imagePreview.src = imageUrl;
+  const imagePreviewModal = new bootstrap.Modal(document.getElementById('imagePreviewModal'), {
+    keyboard: false,
+  });
+  imagePreviewModal.show();
+}
 // Function to get the image URL based on the product name
 function getProductIcon(product) {
   const productImages = {

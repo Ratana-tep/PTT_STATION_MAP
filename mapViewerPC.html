@@ -418,7 +418,17 @@
 .filter-icon.selected {
     border-color: blue;
 }
-
+        /* Shadow for the modal content */
+        .modal-content.shadow-lg {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 10px; /* Optional: Add rounded corners */
+          }
+          
+          /* Shadow for the image inside the modal */
+          .img-fluid.shadow {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 10px; /* Optional: Add rounded corners */
+          }
         
         
     </style>
@@ -449,6 +459,21 @@
             <!-- Nearby stations will be appended here -->
         </ul>
     </div>
+</div>
+<!-- Modal for Image Preview -->
+<!-- Modal for Image Preview -->
+<div class="modal fade" id="imagePreviewModal" tabindex="-1" aria-labelledby="imagePreviewModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content shadow-lg animate__animated animate__fadeIn">
+      <div class="modal-header border-0">
+        <h5 class="modal-title" id="imagePreviewModalLabel">Image Preview</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <img id="imagePreview" src="" alt="Image Preview" class="img-fluid shadow animate__animated animate__pulse animate__infinite" />
+      </div>
+    </div>
+  </div>
 </div>
 
 
