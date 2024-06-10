@@ -22,19 +22,20 @@ const imageMapping = {
 
 // Function to populate icon containers and province dropdown
 function populateIconContainersAndDropdown(data) {
-    populateIconContainer('product-icons', getUniqueItems(data, 'product'), 'round');
-    populateIconContainer('other-product-icons', getUniqueItems(data, 'other_product'), 'custom');
-    populateIconContainer('service-icons', getUniqueItems(data, 'service'), 'custom');
-    populateIconContainer('description-icons', getUniqueItems(data, 'description'), 'round');
-    populateIconContainer('promotion-icons', getUniqueItems(data, 'promotion'), 'round');
+    const province = document.getElementById('province').value.toLowerCase();
+    populateIconContainer('product-icons', getUniqueItems(data, 'product', province), 'round');
+    populateIconContainer('other-product-icons', getUniqueItems(data, 'other_product', province), 'custom');
+    populateIconContainer('service-icons', getUniqueItems(data, 'service', province), 'custom');
+    populateIconContainer('description-icons', getUniqueItems(data, 'description', province), 'round');
+    populateIconContainer('promotion-icons', getUniqueItems(data, 'promotion', province), 'round');
     populateProvinceDropdown(data);
 }
 
 // Helper function to get unique items from data
-function getUniqueItems(data, key) {
+function getUniqueItems(data, key, province = '') {
     const items = new Set();
     data.forEach(station => {
-        if (station[key]) {
+        if ((!province || station.province.toLowerCase() === province) && station[key]) {
             station[key].forEach(item => {
                 if (item.trim() !== "") { // Filter out empty items
                     items.add(item);
@@ -48,13 +49,29 @@ function getUniqueItems(data, key) {
 // Helper function to populate an icon container
 function populateIconContainer(containerId, items, shapeClass) {
     const container = document.getElementById(containerId);
+    container.innerHTML = ''; // Clear existing icons
+
     items.forEach(item => {
         const img = document.createElement('img');
         img.src = `./pictures/${imageMapping[item]}`; // Use the mapping object to get the image filename
         img.alt = item;
         img.classList.add('filter-icon', shapeClass); // Apply the shape class
         img.dataset.item = item;
-        img.addEventListener('click', toggleIconSelection);
+
+        // Check if the item is available in the selected province
+        const isAvailable = allMarkers.some(marker => {
+            return (!province || marker.data.province.toLowerCase() === province) &&
+                   marker.data[containerId.replace('-icons', '')] &&
+                   marker.data[containerId.replace('-icons', '')].map(el => el.toLowerCase()).includes(item.toLowerCase());
+        });
+
+        if (!isAvailable) {
+            img.classList.add('disabled'); // Add disabled class to grey out the icon
+            img.style.pointerEvents = 'none'; // Prevent clicking on the icon
+        } else {
+            img.addEventListener('click', toggleIconSelection);
+        }
+
         container.appendChild(img);
     });
 }
@@ -62,13 +79,39 @@ function populateIconContainer(containerId, items, shapeClass) {
 // Helper function to populate province dropdown
 function populateProvinceDropdown(data) {
     const provinces = new Set();
-    data.forEach(station => provinces.add(station.province));
+    data.forEach(station => {
+        provinces.add(station.province);
+    });
+
     const provinceSelect = document.getElementById('province');
     provinces.forEach(province => {
         const option = document.createElement('option');
         option.value = province;
         option.text = province;
         provinceSelect.add(option);
+    });
+
+    // Add event listener to update titles when province is selected
+    provinceSelect.addEventListener('change', () => {
+        const selectedProvince = provinceSelect.value.toLowerCase();
+        const titles = new Set();
+        data.forEach(station => {
+            if (station.province.toLowerCase() === selectedProvince) {
+                titles.add(station.title);
+            }
+        });
+
+        const titleSelect = document.getElementById('title');
+        titleSelect.innerHTML = '<option value>Select Title</option>'; // Clear existing titles
+        titles.forEach(title => {
+            const option = document.createElement('option');
+            option.value = title;
+            option.text = title;
+            titleSelect.add(option);
+        });
+
+        // Repopulate icon containers based on selected province
+        populateIconContainersAndDropdown(data);
     });
 }
 
@@ -81,6 +124,7 @@ function toggleIconSelection(event) {
 // Apply filter function
 function applyFilter() {
     const province = document.getElementById('province').value.toLowerCase();
+    const title = document.getElementById('title').value.toLowerCase();
     const selectedProducts = getSelectedItems('product-icons').map(item => item.toLowerCase());
     const selectedOtherProducts = getSelectedItems('other-product-icons').map(item => item.toLowerCase());
     const selectedServices = getSelectedItems('service-icons').map(item => item.toLowerCase());
@@ -95,6 +139,9 @@ function applyFilter() {
         if (province && entry.data.province.toLowerCase().indexOf(province) === -1) {
             match = false;
         }
+        if (title && entry.data.title.toLowerCase().indexOf(title) === -1) {
+            match = false;
+        }
         if (selectedDescriptions.length && !selectedDescriptions.some(item => entry.data.description.map(desc => desc.toLowerCase()).includes(item))) {
             match = false;
         }
@@ -104,7 +151,6 @@ function applyFilter() {
         if (selectedProducts.length && !selectedProducts.some(item => entry.data.product.map(prod => prod.toLowerCase()).includes(item))) {
             match = false;
         }
-        // Filter out empty strings in other_product
         const otherProducts = (entry.data.other_product || []).filter(op => op.trim() !== "").map(op => op.toLowerCase());
         if (selectedOtherProducts.length && !selectedOtherProducts.some(item => otherProducts.includes(item))) {
             match = false;
