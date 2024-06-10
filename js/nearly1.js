@@ -32,87 +32,93 @@ function calculateDistance(lat1, lng1, lat2, lng2) {
   
 // Event listener for nearby stations button
 document.getElementById("nearbyStationsBtn").addEventListener("click", function () {
-  getCurrentLocation()
+    getCurrentLocation()
       .then((currentLocation) => {
-          fetch("https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers.json")
-              .then((response) => response.json())
-              .then((data) => {
-                  const stations = data.STATION;
-                  const nearbyStations = findNearbyStations(currentLocation, stations);
-
-                  const nearbyStationsList = document.getElementById("nearbyStationsList");
-                  nearbyStationsList.innerHTML = ""; // Clear the list
-
-                  if (nearbyStations.length > 0) {
-                      nearbyStations.forEach((station) => {
-                          const listItem = document.createElement("li");
-                          listItem.classList.add("list-group-item");
-
-                          let descriptionsHTML = '';
-                          if (station.description && station.description.filter(desc => desc).length) {
-                              descriptionsHTML = `
-                                  <div class="icons">
-                                      ${station.description.filter(desc => desc).map(desc => `<img src="${getItemIcon(desc)}" alt="${desc}">`).join('')}
-                                  </div>`;
-                          }
-
-                          let productsHTML = '';
-                          if (station.product && station.product.filter(product => product).length) {
-                              productsHTML = `
-                                  <div class="icons">
-                                      ${station.product.filter(product => product).map(product => `<img src="${getProductIcon(product)}" alt="${product}">`).join('')}
-                                  </div>`;
-                          }
-
-                          let otherProductsHTML = '';
-                          if (station.other_product && station.other_product.filter(otherProduct => otherProduct).length) {
-                              otherProductsHTML = `
-                                  <div class="icons">
-                                      ${station.other_product.filter(otherProduct => otherProduct).map(otherProduct => `<img src="${getProductIcon(otherProduct)}" alt="${otherProduct}">`).join('')}
-                                  </div>`;
-                          }
-
-                          let servicesHTML = '';
-                          if (station.service && station.service.filter(service => service).length) {
-                              servicesHTML = `
-                                  <div class="icons">
-                                      ${station.service.filter(service => service).map(service => `<img src="${getItemIcon(service)}" alt="${service}">`).join('')}
-                                  </div>`;
-                          }
-
-                          listItem.innerHTML = `
-                              <img src="https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/${station.picture}" alt="${station.title}">
-                              <div class="station-details">
-                                  <h6>${station.title}</h6>
-                                  <p>${station.address}</p>
-                                  ${descriptionsHTML}
-                                  ${productsHTML}
-                                  ${otherProductsHTML}
-                                  ${servicesHTML}
-                              </div>
-                          `;
-                          listItem.addEventListener("click", () => {
-                              map.setView([station.latitude, station.longitude], 15);
-                              const marker = allMarkers.find((m) => m.data === station).marker;
-                              marker.openPopup();
-                              const nearbyStationsOffcanvas = bootstrap.Offcanvas.getInstance(document.getElementById("nearbyStationsOffcanvas"));
-                              nearbyStationsOffcanvas.hide();
-                          });
-                          nearbyStationsList.appendChild(listItem);
-                      });
+        fetch("https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers.json")
+          .then((response) => response.json())
+          .then((data) => {
+            const stations = data.STATION;
+            const nearbyStations = findNearbyStations(currentLocation, stations);
+  
+            const nearbyStationsList = document.getElementById("nearbyStationsList");
+            nearbyStationsList.innerHTML = ""; // Clear the list
+  
+            if (nearbyStations.length > 0) {
+              nearbyStations.forEach((station) => {
+                const listItem = document.createElement("li");
+                listItem.classList.add("list-group-item");
+  
+                let descriptionsHTML = '';
+                if (station.description && station.description.filter(desc => desc).length) {
+                  descriptionsHTML = `
+                    <div class="icons">
+                      ${station.description.filter(desc => desc).map(desc => `<img src="${getItemIcon(desc)}" alt="${desc}">`).join('')}
+                    </div>`;
+                }
+  
+                let productsHTML = '';
+                if (station.product && station.product.filter(product => product).length) {
+                  productsHTML = `
+                    <div class="icons">
+                      ${station.product.filter(product => product).map(product => `<img src="${getProductIcon(product)}" alt="${product}">`).join('')}
+                    </div>`;
+                }
+  
+                let otherProductsHTML = '';
+                if (station.other_product && station.other_product.filter(otherProduct => otherProduct).length) {
+                  otherProductsHTML = `
+                    <div class="icons">
+                      ${station.other_product.filter(otherProduct => otherProduct).map(otherProduct => `<img src="${getProductIcon(otherProduct)}" alt="${otherProduct}">`).join('')}
+                    </div>`;
+                }
+  
+                let servicesHTML = '';
+                if (station.service && station.service.filter(service => service).length) {
+                  servicesHTML = `
+                    <div class="icons">
+                      ${station.service.filter(service => service).map(service => `<img src="${getItemIcon(service)}" alt="${service}">`).join('')}
+                    </div>`;
+                }
+  
+                listItem.innerHTML = `
+                  <img src="https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/${station.picture}" alt="${station.title}">
+                  <div class="station-details">
+                    <h6>${station.title}</h6>
+                    <p>${station.address}</p>
+                    ${descriptionsHTML}
+                    ${productsHTML}
+                    ${otherProductsHTML}
+                    ${servicesHTML}
+                  </div>
+                `;
+                listItem.addEventListener("click", () => {
+                  map.setView([parseFloat(station.latitude), parseFloat(station.longitude)], 15);
+                  const markerData = allMarkers.find((m) => parseFloat(m.data.latitude) === parseFloat(station.latitude) && parseFloat(m.data.longitude) === parseFloat(station.longitude));
+                  if (markerData) {
+                    markerData.marker.openPopup(); // Open the marker popup
+                    showMarkerModal(station, `https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/${station.picture}`); // Show the marker modal
                   } else {
-                      nearbyStationsList.innerHTML = "<li class='list-group-item'>No nearby stations found.</li>";
+                    console.error("Marker not found for station:", station);
                   }
-
-                  var nearbyStationsOffcanvas = new bootstrap.Offcanvas(document.getElementById("nearbyStationsOffcanvas"));
-                  nearbyStationsOffcanvas.show();
-              })
-              .catch((error) => {
-                  console.error("Error fetching data:", error);
+                  const nearbyStationsOffcanvas = bootstrap.Offcanvas.getInstance(document.getElementById("nearbyStationsOffcanvas"));
+                  nearbyStationsOffcanvas.hide();
+                });
+                nearbyStationsList.appendChild(listItem);
               });
+            } else {
+              nearbyStationsList.innerHTML = "<li class='list-group-item'>No nearby stations found.</li>";
+            }
+  
+            var nearbyStationsOffcanvas = new bootstrap.Offcanvas(document.getElementById("nearbyStationsOffcanvas"));
+            nearbyStationsOffcanvas.show();
+          })
+          .catch((error) => {
+            console.error("Error fetching data:", error);
+          });
       })
       .catch((error) => {
-          console.error("Error getting current location:", error);
-          alert("Error getting your location. Please try again later.");
+        console.error("Error getting current location:", error);
+        alert("Error getting your location. Please try again later.");
       });
-});
+  });
+  
