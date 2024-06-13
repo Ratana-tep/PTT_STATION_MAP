@@ -56,6 +56,8 @@ function setMapToCurrentLocation() {
     });
 }
 
+let isZooming = false; // Flag to indicate if the map is zooming
+
 // Fetch data from JSON file
 fetch("https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers.json")
   .then((response) => response.json())
@@ -83,23 +85,22 @@ fetch("https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers.json")
 
       // Add click event to marker to show modal
       marker.on("click", function () {
-        showMarkerModal(station, imageUrl); // Show modal first
-        getCurrentLocation()
-          .then((currentLocation) => {
-            getBingRoute(currentLocation.lat, currentLocation.lng, station.latitude, station.longitude)
-              .then((result) => {
-                const { distance, travelTime } = result;
-                updateModalWithRoute(distance, travelTime, station.status);
-              })
-              .catch((error) => {
-                console.error("Error getting route from Bing Maps:", error);
-                updateModalWithRoute("N/A", "N/A", station.status); // Use placeholders if there's an error
-              });
-          })
-          .catch((error) => {
-            console.error("Error getting current location:", error);
-            updateModalWithRoute("N/A", "N/A", station.status); // Use placeholders if location is unavailable
-          });
+        if (isZooming) return; // Disable click event if zooming is in progress
+
+        isZooming = true; // Set the flag to true to indicate zooming is in progress
+
+        // Zoom in to the marker
+        map.flyTo([station.latitude, station.longitude], 15, {
+          animate: true,
+          duration: 1 // Adjust the duration of the zoom animation here
+        });
+
+        // Show the modal after zooming in
+        setTimeout(() => {
+          showMarkerModal(station, imageUrl);
+          updateModalWithRoute("N/A", "N/A", station.status); // Update with appropriate data
+          isZooming = false; // Reset the flag after the zoom is complete
+        }, 1000); // Adjust the delay to match the zoom animation duration
       });
 
       // Add marker to marker cluster group
@@ -122,6 +123,106 @@ fetch("https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers.json")
 document.getElementById("myLocationBtn").addEventListener("click", function () {
   setMapToCurrentLocation();
 });
+
+// Function to get route information from Bing Maps API (optional, can be removed if not needed)
+function getBingRoute(startLat, startLng, endLat, endLng) {
+  const bingMapsKey = "AhQxc3Nm4Sfv53x7JRXUoj76QZnlm7VWkT5qAigmHQo8gjeYFthvGgEqVcjO5c7C"; // Replace with your Bing Maps API Key
+  const url = `https://dev.virtualearth.net/REST/V1/Routes/Driving?wp.0=${startLat},${startLng}&wp.1=${endLat},${endLng}&optmz=timeWithTraffic&routeAttributes=routePath&key=${bingMapsKey}`;
+
+  return fetch(url)
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Bing Maps API response:", data); // Log response for debugging
+      if (data.resourceSets[0].resources.length > 0) {
+        const route = data.resourceSets[0].resources[0];
+        const distance = route.travelDistance; // in kilometers
+        const travelTime = route.travelDurationTraffic / 60; // in minutes
+        const routePath = route.routePath.line.coordinates;
+        const routeCoordinates = routePath.map(coord => ({ lat: coord[0], lng: coord[1] }));
+
+        return {
+          distance: distance.toFixed(1) + " km",
+          travelTime: Math.floor(travelTime / 60) + " hr. " + Math.round(travelTime % 60) + " min",
+          routeCoordinates: routeCoordinates
+        };
+      } else {
+        throw new Error("No route found");
+      }
+    })
+    .catch((error) => {
+      console.error("Error getting route from Bing Maps:", error);
+      throw error;
+    });
+}
+
+// Function to set the map to the current location
+function setMapToCurrentLocation() {
+  getCurrentLocation()
+    .then((currentLocation) => {
+      const { lat, lng } = currentLocation;
+      map.setView([lat, lng], 15); // Set a reasonable zoom level, like 15
+
+      // Remove existing marker and circle if they exist
+      if (currentLocationMarker) {
+        map.removeLayer(currentLocationMarker);
+      }
+      if (currentLocationCircle) {
+        map.removeLayer(currentLocationCircle);
+      }
+
+      // Add animated circle to represent current location
+      currentLocationCircle = L.circle([lat, lng], {
+        color: "blue",
+        fillColor: "blue",
+        fillOpacity: 0.2,
+        radius: 200,
+        className: "pulse-circle",
+      }).addTo(map);
+
+      // Create a custom icon for the current location marker
+      var customIcon = L.icon({
+        iconUrl: "./pictures/mylocal.png",
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41],
+      });
+
+      // Add marker with custom icon
+      currentLocationMarker = L.marker([lat, lng], { icon: customIcon }).addTo(map);
+      currentLocationMarker.bindPopup("You are here.").openPopup();
+    })
+    .catch((error) => {
+      console.error("Error getting current location:", error);
+      alert("Error getting your location. Please try again later.");
+    });
+}
+
+// Helper function to get the current location
+function getCurrentLocation() {
+  return new Promise((resolve, reject) => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        function (position) {
+          resolve({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+        },
+        function (error) {
+          reject(error);
+        },
+        {
+          enableHighAccuracy: true, // Request high accuracy
+          timeout: 5000, // Set timeout to 5 seconds
+          maximumAge: 0, // Do not use cached location
+        }
+      );
+    } else {
+      reject(new Error("Geolocation is not supported by your browser."));
+    }
+  });
+}
 
 // Helper functions
 function getCurrentLocation() {
@@ -165,7 +266,7 @@ function getIconUrl(status) {
 
   if (underConstruction) {
     console.log("Status: Under Construction");
-    return "./pictures/under_construction.png"; // Path to the under construction icon
+    return "./pictures/61.png"; // Path to the under construction icon
   } else if (open24Hours) {
     console.log("Status: Open 24 Hours");
     return "./pictures/61.png"; // Path to the 24h icon
@@ -408,7 +509,7 @@ function getProductIcon(product) {
 function getItemIcon(item) {
   const itemImages = {
       "Fleet card": "./pictures/fleet.png", // Path to the Fleet card image
-      "ABA": "./pictures/aba.png", // Path to the ABA image
+      "ABA": "./pictures/KHQR.png", // Path to the ABA image
       "Cash": "./pictures/cash.png", // Path to the Cash image
       "Amazon": "./pictures/amazon.png", // Path to the Amazon image
       "7-Eleven": "./pictures/7eleven.png", // Path to the 7-Eleven image

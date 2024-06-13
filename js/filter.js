@@ -3,7 +3,7 @@ const imageMapping = {
     "Amazon": "amazon.png",
     "7-Eleven": "7eleven.png",
     "Fleet card": "fleet.png",
-    "ABA": "aba.png",
+    "ABA": "KHQR.png",
     "Cash": "cash.png",
     "EV": "ev.png",
     "Onion": "onion.png",
@@ -79,8 +79,11 @@ function populateProvinceDropdown(data) {
         provinces.add(station.province);
     });
 
+    // Sort provinces alphabetically
+    const sortedProvinces = Array.from(provinces).sort((a, b) => a.localeCompare(b));
+
     const provinceSelect = document.getElementById('province');
-    provinces.forEach(province => {
+    sortedProvinces.forEach(province => {
         const option = document.createElement('option');
         option.value = province;
         option.text = province;
@@ -98,7 +101,7 @@ function populateProvinceDropdown(data) {
         });
 
         const titleSelect = document.getElementById('title');
-        titleSelect.innerHTML = '<option value>Select Title</option>'; // Clear existing titles
+        titleSelect.innerHTML = '<option value>All</option>'; // Clear existing titles
         titles.forEach(title => {
             const option = document.createElement('option');
             option.value = title;
@@ -127,6 +130,7 @@ function applyFilter() {
     const selectedPromotions = getSelectedItems('promotion-icons').map(item => item.toLowerCase());
 
     markers.clearLayers(); // Clear existing markers
+    let filteredMarkers = []; // Array to hold filtered markers
 
     allMarkers.forEach(entry => {
         let match = true;
@@ -152,11 +156,20 @@ function applyFilter() {
         }
         if (match) {
             markers.addLayer(entry.marker);
+            filteredMarkers.push(entry.marker); // Add the filtered marker to the array
         }
     });
 
     map.addLayer(markers);
-    map.fitBounds(markers.getBounds());
+
+    if (filteredMarkers.length > 0) {
+        const group = new L.featureGroup(filteredMarkers);
+        const bounds = group.getBounds();
+        map.flyToBounds(bounds, {
+          animate: true,
+          duration: 1 // Adjust the duration of the zoom animation here
+        }); // Animate map to fit the bounds of the filtered markers
+    }
 
     // Hide the modal
     var filterModalElement = document.getElementById('filterModal');
