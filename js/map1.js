@@ -509,7 +509,7 @@ function getProductIcon(product) {
 function getItemIcon(item) {
   const itemImages = {
       "Fleet card": "./pictures/fleet.png", // Path to the Fleet card image
-      "ABA": "./pictures/KHQR.png", // Path to the ABA image
+      "KHQR": "./pictures/KHQR.png", // Path to the KHQR image
       "Cash": "./pictures/cash.png", // Path to the Cash image
       "Amazon": "./pictures/amazon.png", // Path to the Amazon image
       "7-Eleven": "./pictures/7eleven.png", // Path to the 7-Eleven image

@@ -3,7 +3,7 @@ const imageMapping = {
     "Amazon": "amazon.png",
     "7-Eleven": "7eleven.png",
     "Fleet card": "fleet.png",
-    "ABA": "KHQR.png",
+    "KHQR": "KHQR.png",
     "Cash": "cash.png",
     "EV": "ev.png",
     "Onion": "onion.png",
