@@ -196,3 +196,39 @@ document.getElementById('filterForm').addEventListener('submit', function(event)
     event.preventDefault();
     applyFilter();
 });
+
+// Function to clear all selections and show all markers
+function clearAllSelections() {
+    document.getElementById('province').value = '';
+    document.getElementById('title').innerHTML = '<option value>All</option>';
+    const iconContainers = document.querySelectorAll('.icon-container');
+    iconContainers.forEach(container => {
+        const icons = container.querySelectorAll('.filter-icon');
+        icons.forEach(icon => {
+            icon.classList.remove('selected');
+        });
+    });
+
+    markers.clearLayers(); // Clear existing markers
+
+    // Add all markers back to the map
+    allMarkers.forEach(entry => {
+        markers.addLayer(entry.marker);
+    });
+
+    map.addLayer(markers); // Reset the map to show all markers
+
+    // Optionally, fit the map bounds to all markers
+    const allMarkersArray = allMarkers.map(entry => entry.marker);
+    if (allMarkersArray.length > 0) {
+        const group = new L.featureGroup(allMarkersArray);
+        const bounds = group.getBounds();
+        map.flyToBounds(bounds, {
+          animate: true,
+          duration: 1 // Adjust the duration of the zoom animation here
+        }); // Animate map to fit the bounds of all markers
+    }
+}
+
+// Add event listener to clear all button
+document.getElementById('clearAllButton').addEventListener('click', clearAllSelections);
