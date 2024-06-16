@@ -13,6 +13,8 @@ var allMarkers = []; // Array to hold all markers for filtering
 let currentLocationMarker = null;
 let currentLocationCircle = null;
 
+let isZooming = false; // Flag to indicate if the map is zooming
+
 // Function to get current location and set map view
 function setMapToCurrentLocation() {
   getCurrentLocation()
@@ -81,26 +83,56 @@ fetch("https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers.json")
       // Create image URL
       var imageUrl = `https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/${station.picture}`;
 
-      // Add click event to marker to show modal
-      marker.on("click", function () {
-        showMarkerModal(station, imageUrl); // Show modal first
-        getCurrentLocation()
-          .then((currentLocation) => {
-            getBingRoute(currentLocation.lat, currentLocation.lng, station.latitude, station.longitude)
-              .then((result) => {
-                const { distance, travelTime } = result;
-                updateModalWithRoute(distance, travelTime, station.status);
-              })
-              .catch((error) => {
-                console.error("Error getting route from Bing Maps:", error);
-                updateModalWithRoute("N/A", "N/A", station.status); // Use placeholders if there's an error
-              });
+  // Add click event to marker to show modal
+marker.on("click", function () {
+  if (map.getZoom() < 15) { // Only animate zoom if the map is not already zoomed in
+    map.flyTo([station.latitude, station.longitude], 15, {
+      animate: true,
+      duration: 1 // Adjust the duration of the zoom animation here
+    });
+
+    // Show the modal after zooming in
+    setTimeout(() => {
+      showMarkerModal(station, imageUrl);
+      getCurrentLocation()
+        .then((currentLocation) => {
+          getBingRoute(currentLocation.lat, currentLocation.lng, station.latitude, station.longitude)
+            .then((result) => {
+              const { distance, travelTime } = result;
+              updateModalWithRoute(distance, travelTime, station.status);
+            })
+            .catch((error) => {
+              console.error("Error getting route from Bing Maps:", error);
+              updateModalWithRoute("N/A", "N/A", station.status); // Use placeholders if there's an error
+            });
+        })
+        .catch((error) => {
+          console.error("Error getting current location:", error);
+          updateModalWithRoute("N/A", "N/A", station.status); // Use placeholders if location is unavailable
+        });
+    }, 1000); // Adjust the delay to match the zoom animation duration
+  } else {
+    // Directly show the modal if already zoomed in
+    showMarkerModal(station, imageUrl);
+    getCurrentLocation()
+      .then((currentLocation) => {
+        getBingRoute(currentLocation.lat, currentLocation.lng, station.latitude, station.longitude)
+          .then((result) => {
+            const { distance, travelTime } = result;
+            updateModalWithRoute(distance, travelTime, station.status);
           })
           .catch((error) => {
-            console.error("Error getting current location:", error);
-            updateModalWithRoute("N/A", "N/A", station.status); // Use placeholders if location is unavailable
+            console.error("Error getting route from Bing Maps:", error);
+            updateModalWithRoute("N/A", "N/A", station.status); // Use placeholders if there's an error
           });
+      })
+      .catch((error) => {
+        console.error("Error getting current location:", error);
+        updateModalWithRoute("N/A", "N/A", station.status); // Use placeholders if location is unavailable
       });
+  }
+});
+
 
       // Add marker to marker cluster group
       markers.addLayer(marker);
@@ -190,7 +222,7 @@ function getIconUrl(status) {
   }
 }
 
-// Function to get route information from Bing Maps API
+// Function to get route information from Bing Maps API (optional, can be removed if not needed)
 function getBingRoute(startLat, startLng, endLat, endLng) {
   const bingMapsKey = "AhQxc3Nm4Sfv53x7JRXUoj76QZnlm7VWkT5qAigmHQo8gjeYFthvGgEqVcjO5c7C"; // Replace with your Bing Maps API Key
   const url = `https://dev.virtualearth.net/REST/V1/Routes/Driving?wp.0=${startLat},${startLng}&wp.1=${endLat},${endLng}&optmz=timeWithTraffic&key=${bingMapsKey}`;
@@ -392,6 +424,7 @@ function showImagePreview(imageUrl) {
   });
   imagePreviewModal.show();
 }
+
 // Function to get the image URL based on the product name
 function getProductIcon(product) {
   const productImages = {

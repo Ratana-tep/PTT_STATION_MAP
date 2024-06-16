@@ -83,25 +83,55 @@ fetch("https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers.json")
       // Create image URL
       var imageUrl = `https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/${station.picture}`;
 
-      // Add click event to marker to show modal
-      marker.on("click", function () {
-        if (isZooming) return; // Disable click event if zooming is in progress
+// Add click event to marker to show modal
+marker.on("click", function () {
+  if (map.getZoom() < 15) { // Only animate zoom if the map is not already zoomed in
+    map.flyTo([station.latitude, station.longitude], 15, {
+      animate: true,
+      duration: 1 // Adjust the duration of the zoom animation here
+    });
 
-        isZooming = true; // Set the flag to true to indicate zooming is in progress
-
-        // Zoom in to the marker
-        map.flyTo([station.latitude, station.longitude], 15, {
-          animate: true,
-          duration: 1 // Adjust the duration of the zoom animation here
+    // Show the modal after zooming in
+    setTimeout(() => {
+      showMarkerModal(station, imageUrl);
+      getCurrentLocation()
+        .then((currentLocation) => {
+          getBingRoute(currentLocation.lat, currentLocation.lng, station.latitude, station.longitude)
+            .then((result) => {
+              const { distance, travelTime } = result;
+              updateModalWithRoute(distance, travelTime, station.status);
+            })
+            .catch((error) => {
+              console.error("Error getting route from Bing Maps:", error);
+              updateModalWithRoute("N/A", "N/A", station.status); // Use placeholders if there's an error
+            });
+        })
+        .catch((error) => {
+          console.error("Error getting current location:", error);
+          updateModalWithRoute("N/A", "N/A", station.status); // Use placeholders if location is unavailable
         });
-
-        // Show the modal after zooming in
-        setTimeout(() => {
-          showMarkerModal(station, imageUrl);
-          updateModalWithRoute("N/A", "N/A", station.status); // Update with appropriate data
-          isZooming = false; // Reset the flag after the zoom is complete
-        }, 1000); // Adjust the delay to match the zoom animation duration
+    }, 1000); // Adjust the delay to match the zoom animation duration
+  } else {
+    // Directly show the modal if already zoomed in
+    showMarkerModal(station, imageUrl);
+    getCurrentLocation()
+      .then((currentLocation) => {
+        getBingRoute(currentLocation.lat, currentLocation.lng, station.latitude, station.longitude)
+          .then((result) => {
+            const { distance, travelTime } = result;
+            updateModalWithRoute(distance, travelTime, station.status);
+          })
+          .catch((error) => {
+            console.error("Error getting route from Bing Maps:", error);
+            updateModalWithRoute("N/A", "N/A", station.status); // Use placeholders if there's an error
+          });
+      })
+      .catch((error) => {
+        console.error("Error getting current location:", error);
+        updateModalWithRoute("N/A", "N/A", station.status); // Use placeholders if location is unavailable
       });
+  }
+});
 
       // Add marker to marker cluster group
       markers.addLayer(marker);
