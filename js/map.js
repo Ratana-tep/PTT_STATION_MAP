@@ -14,48 +14,71 @@ let currentLocationMarker = null;
 let currentLocationCircle = null;
 
 let isZooming = false; // Flag to indicate if the map is zooming
-
+let watchId;
 // Function to get current location and set map view
 function setMapToCurrentLocation() {
-  getCurrentLocation()
-    .then((currentLocation) => {
-      const { lat, lng } = currentLocation;
-      map.setView([lat, lng], 15);  // Set a reasonable zoom level, like 15
+  if (navigator.geolocation) {
+    // Use watchPosition for continuous tracking
+    watchId = navigator.geolocation.watchPosition(
+      (position) => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
 
-      // Remove existing marker and circle if they exist
-      if (currentLocationMarker) {
-        map.removeLayer(currentLocationMarker);
+        map.setView([lat, lng], 15); // Set a reasonable zoom level, like 15
+
+        // Remove existing marker and circle if they exist
+        if (currentLocationMarker) {
+          map.removeLayer(currentLocationMarker);
+        }
+        if (currentLocationCircle) {
+          map.removeLayer(currentLocationCircle);
+        }
+
+        // Add animated circle to represent current location
+        currentLocationCircle = L.circle([lat, lng], {
+          color: "blue",
+          fillColor: "blue",
+          fillOpacity: 0.2,
+          radius: 100,
+          className: "pulse-circle",
+        }).addTo(map);
+
+        // Create a custom icon for the current location marker
+        const customIcon = L.icon({
+          iconUrl: "./pictures/mylocal.png",
+          iconSize: [25, 41],
+          iconAnchor: [12, 41],
+          popupAnchor: [1, -34],
+          shadowSize: [41, 41],
+        });
+
+        // Add marker with custom icon
+        currentLocationMarker = L.marker([lat, lng], { icon: customIcon }).addTo(map);
+        currentLocationMarker.bindPopup("You are here.").openPopup();
+      },
+      (error) => {
+        console.error("Error getting current location:", error);
+        alert("Error getting your location. Please try again later.");
+      },
+      {
+        enableHighAccuracy: true,
+        maximumAge: 0,
+        timeout: 5000,
       }
-      if (currentLocationCircle) {
-        map.removeLayer(currentLocationCircle);
-      }
+    );
+  } else {
+    alert("Geolocation is not supported by this browser.");
+  }
+}
 
-      // Add animated circle to represent current location
-      currentLocationCircle = L.circle([lat, lng], {
-        color: "blue",
-        fillColor: "blue",
-        fillOpacity: 0.2,
-        radius: 200,
-        className: "pulse-circle",
-      }).addTo(map);
+// Call the function to start tracking
+setMapToCurrentLocation();
 
-      // Create a custom icon for the current location marker
-      var customIcon = L.icon({
-        iconUrl: "./pictures/mylocal.png",
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34],
-        shadowSize: [41, 41],
-      });
-
-      // Add marker with custom icon
-      currentLocationMarker = L.marker([lat, lng], { icon: customIcon }).addTo(map);
-      currentLocationMarker.bindPopup("You are here.").openPopup();
-    })
-    .catch((error) => {
-      console.error("Error getting current location:", error);
-      alert("Error getting your location. Please try again later.");
-    });
+// Optionally, to stop tracking when it's no longer needed
+function stopTracking() {
+  if (navigator.geolocation && watchId) {
+    navigator.geolocation.clearWatch(watchId);
+  }
 }
 
 // Fetch data from JSON file
