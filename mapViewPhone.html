@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    
     <link rel="manifest" href="/manifest.json">
     <link rel="apple-touch-icon" href="./pictures/logo2.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,8 +13,10 @@
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <!-- Leaflet.markercluster CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.1/MarkerCluster.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.1/MarkerCluster.Default.css" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.1/MarkerCluster.css" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.1/MarkerCluster.Default.css" />
     <link rel="stylesheet" href="./css/currentStyle.css">
     <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
@@ -42,16 +45,12 @@
             height: 100%;
             margin: 0;
             padding: 0;
-            overflow: hidden;
             font-family: 'Helvetica', sans-serif;
         }
 
         #map {
-            height: 100vh;
-            width: 100vw;
-            position: absolute;
-            top: 0;
-            left: 0;
+            height: 100%;
+            width: 100%;
             z-index: 0;
         }
 
@@ -71,7 +70,6 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
-            z-index: 1000; /* Ensure buttons are above the map */
         }
 
         .right-buttons .btn {
@@ -89,6 +87,7 @@
 
         .footer-buttons {
             display: none;
+            /* Hide footer buttons */
         }
 
         .modal-dialog {
@@ -116,6 +115,7 @@
 
         .rounded-image {
             border-radius: 20px;
+            /* Adjust the value as needed */
         }
 
         .badge {
@@ -150,7 +150,9 @@
 
         .info {
             font-size: 14px;
+            /* Adjust font size to match the image */
             color: #7d7d7d;
+            /* Adjust font color to match the image */
             display: flex;
             align-items: center;
             margin-bottom: 0.5rem;
@@ -158,8 +160,10 @@
 
         .info .icon {
             color: #ff0000;
+            /* Adjust icon color to match the image */
             margin-right: 8px;
             font-size: 1.25rem;
+            /* Adjust icon size to match the font size */
         }
 
         .go-button {
@@ -173,6 +177,7 @@
 
         .icon-background {
             background-color: #d4d4d4;
+            /* Adjust color as needed */
             color: #003cff;
             border-radius: 50%;
             width: 30px;
@@ -185,10 +190,12 @@
         .share-icon,
         .navigate-icon {
             font-size: 18px;
+            /* Adjust font size as needed */
         }
 
         .badge .icon-background {
             background-color: #0a4bcc;
+            /* Adjust color as needed */
             color: #fff;
             border-radius: 50%;
             padding: 5px;
@@ -263,15 +270,20 @@
         }
 
         .fade-enter,
-        .fade-leave-to {
+        .fade-leave-to
+
+        /* .fade-leave-active in <2.1.8 */
+            {
             opacity: 0;
         }
 
+        /* Subtle pulsing border animation for Under Construction */
         .blink-border {
             animation: pulse-border 2s infinite;
         }
 
         @keyframes pulse-border {
+
             0%,
             100% {
                 border: 2px solid #ff0000;
@@ -282,17 +294,20 @@
             }
         }
 
+        /* General styles for status badges */
         .status-badge {
             display: flex;
             align-items: center;
             gap: 5px;
         }
 
+        /* Pulsing animation */
         .go-button.pulse {
             animation: pulse 1.5s infinite;
         }
 
         @keyframes pulse {
+
             0%,
             100% {
                 box-shadow: 0 0 5px #002fff;
@@ -306,19 +321,27 @@
         .product-icon,
         .item-icon {
             width: 40px;
+            /* Adjust size as needed */
             height: 40px;
+            /* Adjust size as needed */
             margin-right: 8px;
+            /* Add some space between the icon and the text */
         }
 
         .round {
             border-radius: 50%;
+            /* Make the image round */
             object-fit: cover;
+            /* Ensure the image covers the container */
         }
 
         .full {
             width: 32px;
+            /* Ensure consistent size */
             height: auto;
+            /* Ensure consistent size */
             object-fit: cover;
+            /* Ensure the image covers the container */
         }
 
         .product-row,
@@ -327,31 +350,39 @@
         .promotion-row {
             display: flex;
             flex-wrap: wrap;
+            /* Wrap items if they don't fit in one line */
             gap: 10px;
+            /* Space between items */
         }
 
         .info {
             display: flex;
             align-items: center;
+            /* Vertically center the image and text */
             margin-bottom: 8px;
+            /* Add some space between info items */
         }
     </style>
 </head>
 
 <body>
-    <div id="map"></div>
-    <div class="right-buttons">
-        <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#filterModal">
-            <i class="fa fa-filter"></i>
-        </button>
-        <button type="button" class="btn" id="myLocationBtn">
-            <i class="fa fa-location-arrow"></i>
-        </button>
-        <button type="button" class="btn" id="nearbyStationsBtn">
-            <i class="fa fa-bars"></i>
-        </button>
+    <div class="map-container">
+        <div id="map"></div>
+        <div class="right-buttons">
+            <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#filterModal">
+                <i class="fa fa-filter"></i>
+            </button>
+            <button type="button" class="btn" id="myLocationBtn">
+                <i class="fa fa-location-arrow"></i>
+            </button>
+            <button type="button" class="btn" id="nearbyStationsBtn">
+                <i class="fa fa-bars"></i>
+            </button>
+            
+        </div>
     </div>
 
+    <!-- Modal for Filter -->
     <!-- Modal for Filter -->
     <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -365,15 +396,15 @@
                         <div class="mb-3">
                             <label for="province" class="form-label">Province</label>
                             <select class="form-select" id="province">
-                                <option value="">All</option>
+                                <option value>All</option>
                             </select>
                         </div>
                         <div class="mb-3">
                             <label for="title" class="form-label">Station</label>
                             <select class="form-select" id="title">
-                                <option value="">All</option>
+                                <option value>All</option>
                             </select>
-                        </div>
+                        </div>                        
                         <div class="mb-3">
                             <h5>Product</h5>
                             <div id="product-icons" class="icon-container"></div>
@@ -401,9 +432,47 @@
             </div>
         </div>
     </div>
+    <style>
+        .icon-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
 
+        .filter-icon {
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            border-radius: 25px;
+            object-fit: contain;
+            /* Add this line */
+        }
+
+        .filter-icon.full {
+            border-radius: 0;
+            /* Adjust border radius for full images */
+        }
+
+        .filter-icon.selected {
+            border-color: blue;
+        }
+        /* Shadow for the modal content */
+.modal-content.shadow-lg {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 10px; /* Optional: Add rounded corners */
+  }
+  
+  /* Shadow for the image inside the modal */
+  .img-fluid.shadow {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 10px; /* Optional: Add rounded corners */
+  }
+  
+    </style>
     <!-- Modal for Nearby Stations -->
-    <div class="modal fade" id="nearbyStationsModal" tabindex="-1" aria-labelledby="nearbyStationsModalLabel" aria-hidden="true">
+    <div class="modal fade" id="nearbyStationsModal" tabindex="-1" aria-labelledby="nearbyStationsModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
@@ -418,7 +487,14 @@
             </div>
         </div>
     </div>
-
+    <style>
+        .closed-station {
+          background-color: rgb(241, 173, 173);
+        }
+        .open-station {
+          background-color: white;
+        }
+      </style>
     <!-- Modal for Marker Data -->
     <div class="modal fade" id="markerModal" tabindex="-1" aria-labelledby="markerModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -434,61 +510,48 @@
         </div>
     </div>
 
-    <!-- Modal for Image Preview -->
-    <div class="modal fade" id="imagePreviewModal" tabindex="-1" aria-labelledby="imagePreviewModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content shadow-lg">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="imagePreviewModalLabel">Image Preview</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <img id="imagePreview" src="" alt="Image Preview" class="img-fluid shadow" />
-                </div>
-            </div>
+<!-- Modal for Image Preview -->
+<div class="modal fade" id="imagePreviewModal" tabindex="-1" aria-labelledby="imagePreviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content shadow-lg">
+        <div class="modal-header">
+          <h5 class="modal-title" id="imagePreviewModalLabel">Image Preview</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
+        <div class="modal-body">
+          <img id="imagePreview" src="" alt="Image Preview" class="img-fluid shadow" />
+        </div>
+      </div>
     </div>
-
+  </div>
+  
+  
     <style>
-        .icon-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .filter-icon {
-            width: 50px;
-            height: 50px;
-            cursor: pointer;
-            border: 2px solid transparent;
-            border-radius: 25px;
-            object-fit: contain;
-        }
-
-        .filter-icon.full {
-            border-radius: 0;
-        }
-
-        .filter-icon.selected {
-            border-color: blue;
-        }
-
+        /* Add this CSS to your stylesheet */
         .list-group-item {
             display: flex;
             align-items: center;
             padding: 10px;
             border: none;
+            /* Remove default border */
             border-radius: 15px;
+            /* Add rounded corners */
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            /* Add shadow for depth */
             margin-bottom: 10px;
+            /* Space between items */
         }
 
         .list-group-item img {
             width: 100px;
+            /* Adjust size as needed */
             height: 100px;
+            /* Adjust size as needed */
             margin-right: 10px;
             border-radius: 15px;
+            /* Add rounded corners */
             object-fit: cover;
+            /* Ensure the image covers the container */
         }
 
         .station-details {
@@ -497,13 +560,16 @@
 
         .station-details h6 {
             margin: 0 0 5px 0;
+            /* Adjust spacing as needed */
             font-weight: bold;
         }
 
         .station-details p {
             margin: 0;
             color: #555;
+            /* Adjust color as needed */
             font-size: 12px;
+            /* Make the address smaller */
         }
 
         .station-details .icons {
@@ -511,12 +577,14 @@
             flex-wrap: wrap;
             gap: 5px;
             margin-top: 10px;
+            /* Space between text and icons */
         }
 
         .station-details .icons img {
             width: 25px;
             height: 25px;
             border-radius: 50%;
+            /* Round icons */
         }
     </style>
 
