@@ -20,6 +20,23 @@
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="icon" href="./pictures/logo.png" type="image/png" sizes="10x30">
+    <script>
+        function detectDevice() {
+            var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+            // Regex pattern to detect mobile devices
+            var isMobile = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent.toLowerCase());
+
+            if (isMobile) {
+                // Redirect to mobile page if detected
+                window.location.href = 'mapViewPhone.html';
+            }
+        }
+
+        // Run device detection on page load
+        detectDevice();
+        
+    </script>
     <style>
         /* Adjust offcanvas width for various screen sizes */
         .offcanvas {
