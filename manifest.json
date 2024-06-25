@@ -4,32 +4,32 @@
   "description": "PTT Station Locator Website",
   "icons": [
     {
-      "src": "/pictures/logo2_padded_180x180.png",
+      "src": "./pictures/logo2_padded_180x180.png",
       "sizes": "180x180",
       "type": "image/png"
     },
     {
-      "src": "/pictures/logo2_padded_167x167.png",
+      "src": "./pictures/logo2_padded_167x167.png",
       "sizes": "167x167",
       "type": "image/png"
     },
     {
-      "src": "/pictures/logo2_padded_152x152.png",
+      "src": "./pictures/logo2_padded_152x152.png",
       "sizes": "152x152",
       "type": "image/png"
     },
     {
-      "src": "/pictures/logo2_padded_120x120.png",
+      "src": "./pictures/logo2_padded_120x120.png",
       "sizes": "120x120",
       "type": "image/png"
     },
     {
-      "src": "/pictures/logo2_padded_76x76.png",
+      "src": "./pictures/logo2_padded_76x76.png",
       "sizes": "76x76",
       "type": "image/png"
     }
   ],
-  "start_url": "/index.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#ffffff",
