@@ -4,8 +4,8 @@
   "description": "PTT Station Locator Website",
   "icons": [
     {
-      "src": "./pictures/logo2_padded_180x180.png",
-      "sizes": "180x180",
+      "src": "./pictures/logo2.png",
+      "sizes": "512x512",
       "type": "image/png"
     }
   ],
