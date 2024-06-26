@@ -237,7 +237,7 @@ function getBingRoute(startLat, startLng, endLat, endLng) {
         const distance = route.travelDistance; // in kilometers
         const travelTime = route.travelDurationTraffic / 60; // in minutes
         return {
-          distance: distance.toFixed(1) + " km",
+          distance: distance.toFixed(2) + " km",
           travelTime: Math.floor(travelTime / 60) + " hr. " + Math.round(travelTime % 60) + " min",
         };
       } else {
