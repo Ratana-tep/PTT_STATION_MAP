@@ -147,6 +147,7 @@ marker.on("click", function () {
 
     // Set map to current location on initial load
     setMapToCurrentLocation();
+    
   })
   .catch((error) => console.error("Error fetching data:", error));
 
@@ -299,18 +300,19 @@ function showMarkerModal(station, imageUrl) {
           .join("")
       : "";
 
-  // Generate promotion HTML
-  const promotionHtml =
-    station.promotion && station.promotion[0]
-      ? station.promotion
-          .map(
-            (promo) =>
-              `<div class="info promotion-item">
-              <img src="${getItemIcon(promo)}" class="promotion-icon full reviewable-image" alt="${promo}" data-image="${getItemIcon(promo)}" /> ${promo}
-          </div>`
-          )
-          .join("")
-      : "";
+ // Generate promotion HTML
+ const promotionHtml =
+ station.promotion && station.promotion[0]
+   ? station.promotion
+       .map(
+         (promo) =>
+           `<div class="info promotion-item">
+           <img src="${getPromotionImageUrl_MARKER(promo)}" class="promotion-icon full reviewable-image" alt="${promo}" data-image="${getPromotionImageUrl_MARKER(promo)}" /> ${promo}
+       </div>`
+       )
+       .join("")
+   : "";
+
 
   modalBody.innerHTML = `
       <div class="station-details">
@@ -450,7 +452,21 @@ function getItemIcon(item) {
   };
   return itemImages[item] || "./pictures/default.png"; // Default image if item not found
 }
-
+// Function to get the promotion image URL based on the item name
+function getPromotionImageUrl_MARKER(item) {
+  const promotionImages = {
+      "promotion1": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening1.jpg",
+      "promotion2": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening2.jpg",
+      "promotion3": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening3.jpg",
+      "promotion4": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening4.jpg",
+      "Promotion Opening 1": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening1.jpg",
+      "Promotion Opening 2": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening2.jpg",
+      "Promotion Opening 3": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening3.jpg",
+      "Promotion Opening 5": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening5.jpg",
+      // Add other promotions as needed
+  };
+  return promotionImages[item] || "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/default.png"; // Default image if promotion not found
+}
 // Function to update modal with route information
 function updateModalWithRoute(distance, travelTime, status) {
   var routeInfo = document.getElementById("route-info");
