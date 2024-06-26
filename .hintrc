@@ -6,6 +6,12 @@
     "axe/forms": "off",
     "axe/name-role-value": "off",
     "no-inline-styles": "off",
-    "apple-touch-icons": "off"
+    "apple-touch-icons": "off",
+    "axe/parsing": [
+      "default",
+      {
+        "duplicate-id-active": "off"
+      }
+    ]
   }
 }

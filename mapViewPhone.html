@@ -378,7 +378,9 @@
             <button type="button" class="btn" id="nearbyStationsBtn">
                 <i class="fa fa-bars"></i>
             </button>
-            
+            <button type="button" class="btn" id="promotionBtn" data-bs-toggle="modal" data-bs-target="#imagePreviewModal">
+                <i class="fa fa-bullhorn"></i>
+            </button>
         </div>
     </div>
 
@@ -527,7 +529,20 @@
       </div>
     </div>
   </div>
-  
+   <!-- Modal for Image Preview -->
+   <div class="modal fade" id="imagePreviewModal" tabindex="-1" aria-labelledby="imagePreviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content shadow-lg">
+            <div class="modal-header">
+                <h5 class="modal-title" id="imagePreviewModalLabel">under develop</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <img id="promotionImage" src="./path/to/your/promotion.jpg" alt="Promotion Image" class="img-fluid shadow" />
+            </div>
+        </div>
+    </div>
+</div>
   
     <style>
         /* Add this CSS to your stylesheet */
