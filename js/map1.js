@@ -573,7 +573,7 @@ function updateModalWithRoute(distance, travelTime, status) {
             <i class="fas fa-clock icon-background"></i> ${travelTime}
         </div>
         <div class="badge bg-primary text-white mx-1">
-            <i class="fas fa-location-arrow icon-background"></i> ${distance}
+            <i class="fas fa-location-arrow icon-background"></i>≈ ${distance}
         </div>
         <div class="badge ${statusInfo.badgeClass} text-white mx-1">
             <i class="fas ${statusInfo.iconClass} icon-background"></i> ${statusInfo.displayText}
