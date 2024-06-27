@@ -199,7 +199,7 @@ document
                         <i class="fas ${statusInfo.iconClass} me-1"></i> ${statusInfo.displayText}
                       </div>
                       <div class="badge bg-primary text-white small">
-                        <i class="fas fa-location-arrow me-1"></i>${station.distance.toFixed(2)} km
+                        <i class="fas fa-location-arrow me-1"></i>≈${station.distance.toFixed(2)} km
                       </div>
                     </div>
                   </div>
