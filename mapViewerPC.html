@@ -356,6 +356,33 @@
         .filter-icon.selected {
             border-color: blue;
         }
+        /* CSS for the red dot notification */
+.btn .notification-dot {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 10px;
+    height: 10px;
+    background-color: red;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.5);
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
         </style>
         
 
@@ -374,10 +401,11 @@
             <button type="button" class="btn" id="nearbyStationsBtn">
                 <i class="fa fa-bars"></i>
               </button>
-              
               <button type="button" class="btn" id="promotionBtn" data-bs-toggle="modal" data-bs-target="#promotionModal">
                 <i class="fa fa-bullhorn"></i>
+                <span class="notification-dot" id="promotionNotificationDot" style="display: none;"></span>
             </button>
+            
         </div>
     </div>
 

@@ -65,98 +65,89 @@ fetch("https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers.json")
     var stations = data.STATION;
     populateIconContainersAndDropdown(stations);
 
-    fetch("https://raw.githubusercontent.com/pttpos/map_ptt/main/data/promotions.json")
-      .then(response => response.json())
-      .then(promotionData => {
-        // Merge promotion data with station data
-        stations.forEach((station) => {
-          const stationPromotions = promotionData.PROMOTIONS.find(promo => promo.station_id === station.id);
-          if (stationPromotions) {
-            station.promotion = stationPromotions.promotions;
-          }
+    stations.forEach((station) => {
+      // Get the custom icon URL based on the station status
+      var iconUrl = getIconUrl(station.status);
 
-          // Get the custom icon URL based on the station status
-          var iconUrl = getIconUrl(station.status);
+      // Create custom icon for the marker
+      var customIcon = L.icon({
+        iconUrl: iconUrl, // Use the path returned by getIconUrl
+        iconSize: [41, 62], // Adjust the size to fit your needs
+        iconAnchor: [24, 75],
+        popupAnchor: [1, -1000],
+      });
 
-          // Create custom icon for the marker
-          var customIcon = L.icon({
-            iconUrl: iconUrl, // Use the path returned by getIconUrl
-            iconSize: [41, 62], // Adjust the size to fit your needs
-            iconAnchor: [24, 75],
-            popupAnchor: [1, -1000],
-          });
+      // Create marker with custom icon
+      var marker = L.marker([station.latitude, station.longitude], { icon: customIcon });
 
-          // Create marker with custom icon
-          var marker = L.marker([station.latitude, station.longitude], { icon: customIcon });
+      // Create image URL
+      var imageUrl = `https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/${station.picture}`;
 
-          // Create image URL
-          var imageUrl = `https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/${station.picture}`;
+  // Add click event to marker to show modal
+marker.on("click", function () {
+  if (map.getZoom() < 15) { // Only animate zoom if the map is not already zoomed in
+    map.flyTo([station.latitude, station.longitude], 15, {
+      animate: true,
+      duration: 1 // Adjust the duration of the zoom animation here
+    });
 
-          // Add click event to marker to show modal
-          marker.on("click", function () {
-            if (map.getZoom() < 15) { // Only animate zoom if the map is not already zoomed in
-              map.flyTo([station.latitude, station.longitude], 15, {
-                animate: true,
-                duration: 1 // Adjust the duration of the zoom animation here
-              });
-
-              // Show the modal after zooming in
-              setTimeout(() => {
-                showMarkerModal(station, imageUrl);
-                getCurrentLocation()
-                  .then((currentLocation) => {
-                    getBingRoute(currentLocation.lat, currentLocation.lng, station.latitude, station.longitude)
-                      .then((result) => {
-                        const { distance, travelTime } = result;
-                        updateModalWithRoute(distance, travelTime, station.status);
-                      })
-                      .catch((error) => {
-                        console.error("Error getting route from Bing Maps:", error);
-                        updateModalWithRoute("N/A", "N/A", station.status); // Use placeholders if there's an error
-                      });
-                  })
-                  .catch((error) => {
-                    console.error("Error getting current location:", error);
-                    updateModalWithRoute("N/A", "N/A", station.status); // Use placeholders if location is unavailable
-                  });
-              }, 1000); // Adjust the delay to match the zoom animation duration
-            } else {
-              // Directly show the modal if already zoomed in
-              showMarkerModal(station, imageUrl);
-              getCurrentLocation()
-                .then((currentLocation) => {
-                  getBingRoute(currentLocation.lat, currentLocation.lng, station.latitude, station.longitude)
-                    .then((result) => {
-                      const { distance, travelTime } = result;
-                      updateModalWithRoute(distance, travelTime, station.status);
-                    })
-                    .catch((error) => {
-                      console.error("Error getting route from Bing Maps:", error);
-                      updateModalWithRoute("N/A", "N/A", station.status); // Use placeholders if there's an error
-                    });
-                })
-                .catch((error) => {
-                  console.error("Error getting current location:", error);
-                  updateModalWithRoute("N/A", "N/A", station.status); // Use placeholders if location is unavailable
-                });
-            }
-          });
-
-          // Add marker to marker cluster group
-          markers.addLayer(marker);
-          allMarkers.push({ marker: marker, data: station }); // Store marker and its data
+    // Show the modal after zooming in
+    setTimeout(() => {
+      showMarkerModal(station, imageUrl);
+      getCurrentLocation()
+        .then((currentLocation) => {
+          getBingRoute(currentLocation.lat, currentLocation.lng, station.latitude, station.longitude)
+            .then((result) => {
+              const { distance, travelTime } = result;
+              updateModalWithRoute(distance, travelTime, station.status);
+            })
+            .catch((error) => {
+              console.error("Error getting route from Bing Maps:", error);
+              updateModalWithRoute("N/A", "N/A", station.status); // Use placeholders if there's an error
+            });
+        })
+        .catch((error) => {
+          console.error("Error getting current location:", error);
+          updateModalWithRoute("N/A", "N/A", station.status); // Use placeholders if location is unavailable
         });
-
-        // Add marker cluster group to map
-        map.addLayer(markers);
-
-        // Fit map to markers bounds
-        map.fitBounds(markers.getBounds());
-
-        // Set map to current location on initial load
-        setMapToCurrentLocation();
+    }, 1000); // Adjust the delay to match the zoom animation duration
+  } else {
+    // Directly show the modal if already zoomed in
+    showMarkerModal(station, imageUrl);
+    getCurrentLocation()
+      .then((currentLocation) => {
+        getBingRoute(currentLocation.lat, currentLocation.lng, station.latitude, station.longitude)
+          .then((result) => {
+            const { distance, travelTime } = result;
+            updateModalWithRoute(distance, travelTime, station.status);
+          })
+          .catch((error) => {
+            console.error("Error getting route from Bing Maps:", error);
+            updateModalWithRoute("N/A", "N/A", station.status); // Use placeholders if there's an error
+          });
       })
-      .catch(error => console.error("Error fetching promotion data:", error));
+      .catch((error) => {
+        console.error("Error getting current location:", error);
+        updateModalWithRoute("N/A", "N/A", station.status); // Use placeholders if location is unavailable
+      });
+  }
+});
+
+
+      // Add marker to marker cluster group
+      markers.addLayer(marker);
+      allMarkers.push({ marker: marker, data: station }); // Store marker and its data
+    });
+
+    // Add marker cluster group to map
+    map.addLayer(markers);
+
+    // Fit map to markers bounds
+    map.fitBounds(markers.getBounds());
+
+    // Set map to current location on initial load
+    setMapToCurrentLocation();
+    
   })
   .catch((error) => console.error("Error fetching data:", error));
 
@@ -316,7 +307,7 @@ function showMarkerModal(station, imageUrl) {
        .map(
          (promo) =>
            `<div class="info promotion-item">
-           <img src="${getPromotionImageUrl_MARKER(promo.promotion_id)}" class="promotion-icon full reviewable-image" alt="${promo.promotion_id}" data-image="${getPromotionImageUrl_MARKER(promo.promotion_id)}" /> ${promo.promotion_id} (ends on ${new Date(promo.end_time).toLocaleDateString()})
+           <img src="${getPromotionImageUrl_MARKER(promo)}" class="promotion-icon full reviewable-image" alt="${promo}" data-image="${getPromotionImageUrl_MARKER(promo)}" /> ${promo}
        </div>`
        )
        .join("")
@@ -386,6 +377,7 @@ function showMarkerModal(station, imageUrl) {
                   </div>
               </div>
           </div>
+          
           <div class="text-center mt-3">
             <div class="d-flex justify-content-center align-items-center">
               <div class="icon-background mx-2" onclick="shareLocation(${station.latitude}, ${station.longitude})">
@@ -463,14 +455,14 @@ function getItemIcon(item) {
 // Function to get the promotion image URL based on the item name
 function getPromotionImageUrl_MARKER(item) {
   const promotionImages = {
-      "promotion 1": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening1.jpg",
-      "promotion 2": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening1.jpg",
-      "promotion 3": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening1.jpg",
-      "promotion 4": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening4.jpg",
+      "promotion1": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening1.jpg",
+      "promotion2": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening2.jpg",
+      "promotion3": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening3.jpg",
+      "promotion4": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening4.jpg",
       "Promotion Opening 1": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening1.jpg",
       "Promotion Opening 2": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening2.jpg",
       "Promotion Opening 3": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening3.jpg",
-      "Promotion Opening 4": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening5.jpg",
+      "Promotion Opening 5": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening5.jpg",
       // Add other promotions as needed
   };
   return promotionImages[item] || "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/default.png"; // Default image if promotion not found
@@ -593,4 +585,3 @@ function shareLocation(lat, lon) {
 function populateIconContainersAndDropdown(stations) {
   // Implement your logic here
 }
-

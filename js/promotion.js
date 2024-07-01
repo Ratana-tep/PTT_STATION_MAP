@@ -112,3 +112,26 @@ document.querySelector('#promotionModal .btn-close').addEventListener('click', f
     document.body.classList.remove('modal-open');
     document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
 });
+// Function to populate promotions dynamically
+function populatePromotions(stations) {
+    const promotionButton = document.getElementById('promotionBtn');
+    const promotionNotificationDot = document.getElementById('promotionNotificationDot');
+    const stationWithPromotion = stations.find(station => station.promotion && station.promotion.length > 0 && station.promotion[0] !== "");
+
+    if (stationWithPromotion) {
+        promotionNotificationDot.style.display = 'block'; // Show the red dot if there are promotions
+        promotionNotificationDot.classList.add('pulse-animation'); // Add animation class
+    } else {
+        promotionNotificationDot.style.display = 'none'; // Hide the red dot if there are no promotions
+        promotionNotificationDot.classList.remove('pulse-animation'); // Remove animation class
+    }
+
+    promotionButton.addEventListener('click', function () {
+        if (stationWithPromotion) {
+            showPromotionModal(stationWithPromotion);
+        } else {
+            alert('No promotion available.');
+        }
+    });
+}
+
