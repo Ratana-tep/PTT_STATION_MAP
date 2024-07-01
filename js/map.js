@@ -63,17 +63,18 @@ fetch("https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers.json")
   .then((response) => response.json())
   .then((data) => {
     var stations = data.STATION;
+    populateIconContainersAndDropdown(stations);
 
     fetch("https://raw.githubusercontent.com/pttpos/map_ptt/main/data/promotions.json")
       .then(response => response.json())
       .then(promotionData => {
         // Merge promotion data with station data
         stations.forEach((station) => {
-          const stationPromotions = promotionData.PROMOTIONS.find(promo => promo.station_id == station.id);
+        const stationPromotions = promotionData.PROMOTIONS.find(promo => promo.station_id == station.id);
           if (stationPromotions) {
-            station.promotion = stationPromotions.promotions;
+            station.promotions = stationPromotions.promotions;
           } else {
-            station.promotion = [];
+            station.promotions= [];
           }
 
           // Get the custom icon URL based on the station status
@@ -140,11 +141,6 @@ fetch("https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers.json")
                   console.error("Error getting current location:", error);
                   updateModalWithRoute("N/A", "N/A", station.status); // Use placeholders if location is unavailable
                 });
-            }
-
-            // Show promotion modal if promotions exist
-            if (station.promotion && station.promotion.length > 0) {
-              showPromotionModal(station);
             }
           });
 
@@ -315,96 +311,92 @@ function showMarkerModal(station, imageUrl) {
           .join("")
       : "";
 
- // Generate promotion HTML
- const promotionHtml =
- station.promotion && station.promotion[0]
-   ? station.promotion
-       .map(
-         (promo) =>
-           `<div class="info promotion-item">
-           <img src="${getPromotionImageUrl(promo.promotion_id)}" class="promotion-icon full reviewable-image" alt="${promo.promotion_id}" data-image="${getPromotionImageUrl(promo.promotion_id)}" /> ${promo.promotion_id} (ends on ${new Date(promo.end_time).toLocaleDateString()})
-       </div>`
-       )
-       .join("")
-   : "";
+ // Generate promotions HTML
+ const promotionHtml = station.promotions && station.promotions.length > 0
+ ? station.promotions.map(promo => `
+     <div class="info promotion-item">
+       <img src="${getPromotionImageUrl_MARKER(promo.promotion_id)}" class="promotion-icon full reviewable-image" alt="${promo.promotion_id}" data-image="${getPromotionImageUrl_MARKER(promo.promotion_id)}" /> ${promo.promotion_id} (ends on ${new Date(promo.end_time).toLocaleDateString()})
+     </div>
+   `).join("")
+ : "<p>No promotions available.</p>";
 
 
-  modalBody.innerHTML = `
-      <div class="station-details">
-          <img src="${imageUrl}" alt="${station.title}" class="img-fluid mb-3 rounded-image reviewable-image" data-image="${imageUrl}" />
-          <div class="text-center">
-              <h3 class="station-title mb-3 font-weight-bold">${station.title}</h3>
-          </div>
-          <div class="info"><i class="fas fa-map-marker-alt icon"></i> ${station.address}</div>
-          <div class="separator"></div>
-          <div id="route-info" class="d-flex justify-content-center mb-3"></div> 
-          <div class="separator"></div>
-          <div class="nav-tabs-container">
-              <ul class="nav nav-tabs flex-nowrap" id="myTab" role="tablist">
-                  <li class="nav-item" role="presentation">
-                      <button class="nav-link active" id="products-tab" data-bs-toggle="tab" data-bs-target="#products" type="button" role="tab" aria-controls="products" aria-selected="true">Products</button>
-                  </li>
-                  <li class="nav-item" role="presentation">
-                      <button class="nav-link" id="payment-tab" data-bs-toggle="tab" data-bs-target="#payment" type="button" role="tab" aria-controls="payment" aria-selected="false">Payment</button>
-                  </li>
-                  <li class="nav-item" role="presentation">
-                      <button class="nav-link" id="services-tab" data-bs-toggle="tab" data-bs-target="#services" type="button" role="tab" aria-controls="services" aria-selected="false">Services</button>
-                  </li>
-                  <li class="nav-item" role="presentation">
-                      <button class="nav-link" id="promotion-tab" data-bs-toggle="tab" data-bs-target="#promotion" type="button" role="tab" aria-controls="promotion" aria-selected="false">Promotion</button>
-                  </li>
-              </ul>
-          </div>
-          
-          <!-- Tab panes with smooth animation -->
-          <div class="tab-content mt-3">
-              <div class="tab-pane fade show active" id="products" role="tabpanel" aria-labelledby="products-tab">
-                  <div class="scrollable-content">
-                      <h5>Products</h5>
-                      <div class="product-row">
-                          ${productHtml}
-                      </div>
-                      ${otherProductHtml ? `<div class="separator"></div><h5>Other Products</h5><div class="product-row">${otherProductHtml}</div>` : ""}
-                  </div>
-              </div>
-              <div class="tab-pane fade" id="payment" role="tabpanel" aria-labelledby="payment-tab">
-                  <div class="scrollable-content">
-                      <h5>Payment Methods</h5>
-                      <div class="description-row">
-                          ${paymentHtml}
-                      </div>
-                  </div>
-              </div>
-              <div class="tab-pane fade" id="services" role="tabpanel" aria-labelledby="services-tab">
-                  <div class="scrollable-content">
-                      <h5>Services</h5>
-                      <div class="service-row">
-                          ${servicesHtml}
-                      </div>
-                  </div>
-              </div>
-              <div class="tab-pane fade" id="promotion" role="tabpanel" aria-labelledby="promotion-tab">
-                  <div class="scrollable-content">
-                      <h5>Promotion</h5>
-                      <div class="promotion-row">
-                          ${promotionHtml}
-                      </div>
-                  </div>
-              </div>
-          </div>
-          <div class="text-center mt-3">
-            <div class="d-flex justify-content-center align-items-center">
-              <div class="icon-background mx-2" onclick="shareLocation(${station.latitude}, ${station.longitude})">
-                  <i class="fas fa-share-alt share-icon"></i>
-              </div>
-              <button class="btn btn-primary rounded-circle mx-5 go-button pulse" onclick="openGoogleMaps(${station.latitude}, ${station.longitude})">GO</button>
-              <div class="icon-background">
-                  <i class="fas fa-location-arrow navigate-icon mx-2"></i>
-              </div>
-            </div>
-          </div>
-      </div>
-  `;
+ modalBody.innerHTML = `
+ <div class="station-details">
+     <img src="${imageUrl}" alt="${station.title}" class="img-fluid mb-3 rounded-image reviewable-image" data-image="${imageUrl}" />
+     <div class="text-center">
+         <h3 class="station-title mb-3 font-weight-bold">${station.title}</h3>
+     </div>
+     <div class="info"><i class="fas fa-map-marker-alt icon"></i> ${station.address}</div>
+     <div class="separator"></div>
+     <div id="route-info" class="d-flex justify-content-center mb-3"></div> 
+     <div class="separator"></div>
+     <div class="nav-tabs-container">
+         <ul class="nav nav-tabs flex-nowrap" id="myTab" role="tablist">
+             <li class="nav-item" role="presentation">
+                 <button class="nav-link active" id="products-tab" data-bs-toggle="tab" data-bs-target="#products" type="button" role="tab" aria-controls="products" aria-selected="true">Products</button>
+             </li>
+             <li class="nav-item" role="presentation">
+                 <button class="nav-link" id="payment-tab" data-bs-toggle="tab" data-bs-target="#payment" type="button" role="tab" aria-controls="payment" aria-selected="false">Payment</button>
+             </li>
+             <li class="nav-item" role="presentation">
+                 <button class="nav-link" id="services-tab" data-bs-toggle="tab" data-bs-target="#services" type="button" role="tab" aria-controls="services" aria-selected="false">Services</button>
+             </li>
+             <li class="nav-item" role="presentation">
+                 <button class="nav-link" id="promotion-tab" data-bs-toggle="tab" data-bs-target="#promotion" type="button" role="tab" aria-controls="promotion" aria-selected="false">Promotion</button>
+             </li>
+         </ul>
+     </div>
+     
+     <!-- Tab panes with smooth animation -->
+     <div class="tab-content mt-3">
+         <div class="tab-pane fade show active" id="products" role="tabpanel" aria-labelledby="products-tab">
+             <div class="scrollable-content">
+                 <h5>Products</h5>
+                 <div class="product-row">
+                     ${productHtml}
+                 </div>
+                 ${otherProductHtml ? `<div class="separator"></div><h5>Other Products</h5><div class="product-row">${otherProductHtml}</div>` : ""}
+             </div>
+         </div>
+         <div class="tab-pane fade" id="payment" role="tabpanel" aria-labelledby="payment-tab">
+             <div class="scrollable-content">
+                 <h5>Payment Methods</h5>
+                 <div class="description-row">
+                     ${paymentHtml}
+                 </div>
+             </div>
+         </div>
+         <div class="tab-pane fade" id="services" role="tabpanel" aria-labelledby="services-tab">
+             <div class="scrollable-content">
+                 <h5>Services</h5>
+                 <div class="service-row">
+                     ${servicesHtml}
+                 </div>
+             </div>
+         </div>
+         <div class="tab-pane fade" id="promotion" role="tabpanel" aria-labelledby="promotion-tab">
+             <div class="scrollable-content">
+                 <h5>Promotion</h5>
+                 <div class="promotion-row">
+                     ${promotionHtml}
+                 </div>
+             </div>
+         </div>
+     </div>
+     <div class="text-center mt-3">
+       <div class="d-flex justify-content-center align-items-center">
+         <div class="icon-background mx-2" onclick="shareLocation(${station.latitude}, ${station.longitude})">
+             <i class="fas fa-share-alt share-icon"></i>
+         </div>
+         <button class="btn btn-primary rounded-circle mx-5 go-button pulse" onclick="openGoogleMaps(${station.latitude}, ${station.longitude})">GO</button>
+         <div class="icon-background">
+             <i class="fas fa-location-arrow navigate-icon mx-2"></i>
+         </div>
+       </div>
+     </div>
+ </div>
+`;
 
   var markerModal = new bootstrap.Modal(document.getElementById("markerModal"), {
     keyboard: false,
@@ -467,16 +459,16 @@ function getItemIcon(item) {
   return itemImages[item] || "./pictures/default.png"; // Default image if item not found
 }
 // Function to get the promotion image URL based on the item name
-function getPromotionImageUrl(item) {
+function getPromotionImageUrl_MARKER(item) {
   const promotionImages = {
       "promotion 1": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening1.jpg",
       "promotion 2": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening1.jpg",
-      "promotion 3": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening3.jpg",
+      "promotion 3": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening1.jpg",
       "promotion 4": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening4.jpg",
       "promotion opening 1": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening1.jpg",
       "promotion opening 2": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening2.jpg",
       "promotion opening 3": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening3.jpg",
-      "promotion opening 5": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening5.jpg",
+      "promotion opening 4": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening5.jpg",
       // Add other promotions as needed
   };
   return promotionImages[item] || "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/default.png"; // Default image if promotion not found
@@ -599,3 +591,4 @@ function shareLocation(lat, lon) {
 function populateIconContainersAndDropdown(stations) {
   // Implement your logic here
 }
+
