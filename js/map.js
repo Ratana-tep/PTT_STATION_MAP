@@ -63,16 +63,17 @@ fetch("https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers.json")
   .then((response) => response.json())
   .then((data) => {
     var stations = data.STATION;
-    populateIconContainersAndDropdown(stations);
 
     fetch("https://raw.githubusercontent.com/pttpos/map_ptt/main/data/promotions.json")
       .then(response => response.json())
       .then(promotionData => {
         // Merge promotion data with station data
         stations.forEach((station) => {
-          const stationPromotions = promotionData.PROMOTIONS.find(promo => promo.station_id === station.id);
+          const stationPromotions = promotionData.PROMOTIONS.find(promo => promo.station_id == station.id);
           if (stationPromotions) {
             station.promotion = stationPromotions.promotions;
+          } else {
+            station.promotion = [];
           }
 
           // Get the custom icon URL based on the station status
@@ -139,6 +140,11 @@ fetch("https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers.json")
                   console.error("Error getting current location:", error);
                   updateModalWithRoute("N/A", "N/A", station.status); // Use placeholders if location is unavailable
                 });
+            }
+
+            // Show promotion modal if promotions exist
+            if (station.promotion && station.promotion.length > 0) {
+              showPromotionModal(station);
             }
           });
 
@@ -316,7 +322,7 @@ function showMarkerModal(station, imageUrl) {
        .map(
          (promo) =>
            `<div class="info promotion-item">
-           <img src="${getPromotionImageUrl_MARKER(promo.promotion_id)}" class="promotion-icon full reviewable-image" alt="${promo.promotion_id}" data-image="${getPromotionImageUrl_MARKER(promo.promotion_id)}" /> ${promo.promotion_id} (ends on ${new Date(promo.end_time).toLocaleDateString()})
+           <img src="${getPromotionImageUrl(promo.promotion_id)}" class="promotion-icon full reviewable-image" alt="${promo.promotion_id}" data-image="${getPromotionImageUrl(promo.promotion_id)}" /> ${promo.promotion_id} (ends on ${new Date(promo.end_time).toLocaleDateString()})
        </div>`
        )
        .join("")
@@ -461,16 +467,16 @@ function getItemIcon(item) {
   return itemImages[item] || "./pictures/default.png"; // Default image if item not found
 }
 // Function to get the promotion image URL based on the item name
-function getPromotionImageUrl_MARKER(item) {
+function getPromotionImageUrl(item) {
   const promotionImages = {
       "promotion 1": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening1.jpg",
       "promotion 2": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening1.jpg",
-      "promotion 3": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening1.jpg",
+      "promotion 3": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening3.jpg",
       "promotion 4": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening4.jpg",
-      "Promotion Opening 1": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening1.jpg",
-      "Promotion Opening 2": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening2.jpg",
-      "Promotion Opening 3": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening3.jpg",
-      "Promotion Opening 4": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening5.jpg",
+      "promotion Opening 1": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening1.jpg",
+      "promotion Opening 2": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening2.jpg",
+      "promotion Opening 3": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening3.jpg",
+      "promotion Opening 5": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening5.jpg",
       // Add other promotions as needed
   };
   return promotionImages[item] || "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/default.png"; // Default image if promotion not found
@@ -593,4 +599,3 @@ function shareLocation(lat, lon) {
 function populateIconContainersAndDropdown(stations) {
   // Implement your logic here
 }
-
