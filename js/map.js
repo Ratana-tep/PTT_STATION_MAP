@@ -473,10 +473,10 @@ function getPromotionImageUrl(item) {
       "promotion 2": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening1.jpg",
       "promotion 3": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening3.jpg",
       "promotion 4": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening4.jpg",
-      "promotion Opening 1": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening1.jpg",
-      "promotion Opening 2": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening2.jpg",
-      "promotion Opening 3": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening3.jpg",
-      "promotion Opening 5": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening5.jpg",
+      "promotion opening 1": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening1.jpg",
+      "promotion opening 2": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening2.jpg",
+      "promotion opening 3": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening3.jpg",
+      "promotion opening 5": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening5.jpg",
       // Add other promotions as needed
   };
   return promotionImages[item] || "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/default.png"; // Default image if promotion not found
