@@ -32,10 +32,6 @@ function showPromotionModal(station) {
         alert('No promotion available for this station.');
     }
 }
-function getCacheBustingUrl(url) {
-    const cacheBuster = `?nocache=${new Date().getTime()}`;
-    return url + cacheBuster;
-}
 
 // Helper function to create and append promotion elements
 function createAndAppendPromotionElements(promotion, promotionImageUrl, container) {
@@ -103,11 +99,11 @@ function populatePromotions(stations) {
 }
 
 // Fetch station and promotion data and initialize promotions
-fetch(getCacheBustingUrl("https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers.json"))
+fetch("https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers.json")
     .then(response => response.json())
     .then(data => {
         const stations = data.STATION;
-        fetch(getCacheBustingUrl("https://raw.githubusercontent.com/pttpos/map_ptt/main/data/promotions.json"))
+        fetch("https://raw.githubusercontent.com/pttpos/map_ptt/main/data/promotions.json")
             .then(response => response.json())
             .then(promotionData => {
                 const promotions = promotionData.PROMOTIONS;
@@ -123,7 +119,6 @@ fetch(getCacheBustingUrl("https://raw.githubusercontent.com/pttpos/map_ptt/main/
             .catch(error => console.error('Error loading promotion data:', error));
     })
     .catch(error => console.error('Error loading station data:', error));
-
 
 // Clear modal content on hide
 document.getElementById('promotionModal').addEventListener('hidden.bs.modal', function () {
