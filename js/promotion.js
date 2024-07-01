@@ -59,7 +59,6 @@ function formatPromotionEndTime(endTime) {
     }
     return date.toLocaleDateString();
 }
-
 // Function to get the promotion image URL based on the item name
 function getPromotionImageUrl(item) {
     const itemImages = {
