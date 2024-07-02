@@ -461,10 +461,10 @@ function getItemIcon(item) {
 // Function to get the promotion image URL based on the item name
 function getPromotionImageUrl_MARKER(item) {
   const promotionImages = {
-      "promotion 1": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening1.jpg",
-      "promotion 2": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening1.jpg",
-      "promotion 3": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening1.jpg",
-      "promotion 4": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening4.jpg",
+      "promotion 1": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/promotion1.jpg",
+      "promotion 2": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/promotion2.jpg",
+      "promotion 3": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/promotion3.jpg",
+      "promotion 4": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/promotion4.jpg",
       "promotion opening 1": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening1.jpg",
       "promotion opening 2": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening2.jpg",
       "promotion opening 3": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening3.jpg",
