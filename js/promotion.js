@@ -31,16 +31,43 @@ function showPromotionModal(station) {
     } else {
         alert('No promotion available for this station.');
     }
+
+    // Add event listeners for promotion images within the modal
+    addPromotionImageEventListeners();
 }
 
-// Helper function to create and append promotion elements
+// Function to add event listeners for promotion images
+function addPromotionImageEventListeners() {
+    const promotionImages = document.querySelectorAll(".promotion-image");
+    promotionImages.forEach(image => {
+        image.addEventListener("click", function () {
+            const promotion = this.getAttribute("data-promotion");
+            filterMarkersByPromotion(promotion);
+        });
+    });
+}
+
+// Function to add event listeners for promotion labels
+function addPromotionLabelEventListeners() {
+    const promotionLabels = document.querySelectorAll(".promotion-label");
+    promotionLabels.forEach(label => {
+        label.addEventListener("click", function () {
+            const promotion = this.getAttribute("data-promotion");
+            filterMarkersByPromotion(promotion);
+        });
+    });
+}
+
+// Function to create and append promotion elements
 function createAndAppendPromotionElements(promotion, promotionImageUrl, container) {
     const promotionItem = document.createElement('div');
     promotionItem.classList.add('promotion-item', 'mb-3');
 
     const promotionImage = document.createElement('img');
     promotionImage.src = promotionImageUrl; // Update with the correct image URL
-    promotionImage.classList.add('img-fluid', 'mb-2'); // Add classes for styling
+    promotionImage.classList.add('img-fluid', 'mb-2', 'promotion-image'); // Add classes for styling
+    promotionImage.setAttribute('data-promotion', promotion.description); // Set data-promotion attribute
+
     promotionItem.appendChild(promotionImage); // Append to promotion item
 
     const promotionText = document.createElement('p');
@@ -59,6 +86,7 @@ function formatPromotionEndTime(endTime) {
     }
     return date.toLocaleDateString();
 }
+
 // Function to get the promotion image URL based on the item name
 function getPromotionImageUrl(item) {
     const itemImages = {
@@ -73,6 +101,35 @@ function getPromotionImageUrl(item) {
         // Add other items as needed
     };
     return itemImages[item] || "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/default.png"; // Default image if item not found
+}
+
+// Function to filter markers by promotion
+function filterMarkersByPromotion(promotion) {
+    markers.clearLayers(); // Clear existing markers
+    let filteredMarkers = []; // Array to hold filtered markers
+
+    allMarkers.forEach(entry => {
+        if (entry.data.promotions && entry.data.promotions.some(promo => promo.description === promotion)) {
+            markers.addLayer(entry.marker);
+            filteredMarkers.push(entry.marker); // Add the filtered marker to the array
+        }
+    });
+
+    map.addLayer(markers);
+
+    if (filteredMarkers.length > 0) {
+        const group = new L.featureGroup(filteredMarkers);
+        const bounds = group.getBounds();
+        map.flyToBounds(bounds, {
+            animate: true,
+            duration: 1 // Adjust the duration of the zoom animation here
+        }); // Animate map to fit the bounds of the filtered markers
+    }
+
+    // Hide the promotion modal
+    var promotionModalElement = document.getElementById('promotionModal');
+    var promotionModal = bootstrap.Modal.getInstance(promotionModalElement);
+    promotionModal.hide();
 }
 
 // Function to populate promotions dynamically

@@ -315,205 +315,212 @@ function showMarkerModal(station, imageUrl) {
 
   // Generate product HTML with appropriate round images
   const productHtml = station.product
-    .map(
-      (product) =>
-        `<div class="info product-item">
-          <img src="${getProductIcon(
-            product
-          )}" class="product-icon round reviewable-image" alt="${product}" data-image="${getProductIcon(
-          product
-        )}" /> ${product}
-      </div>`
-    )
-    .join("");
+      .map(
+          (product) =>
+              `<div class="info product-item">
+        <img src="${getProductIcon(
+                  product
+              )}" class="product-icon round reviewable-image" alt="${product}" data-image="${getProductIcon(
+                  product
+              )}" /> ${product}
+    </div>`
+      )
+      .join("");
 
   // Generate other product HTML with appropriate non-round images
   const otherProductHtml =
-    station.other_product && station.other_product[0]
-      ? station.other_product
-          .map(
-            (otherProduct) =>
-              `<div class="info product-item">
-              <img src="${getProductIcon(
-                otherProduct
-              )}" class="product-icon full reviewable-image" alt="${otherProduct}" data-image="${getProductIcon(
-                otherProduct
-              )}" /> ${otherProduct}
-          </div>`
-          )
-          .join("")
-      : "";
+      station.other_product && station.other_product[0]
+          ? station.other_product
+              .map(
+                  (otherProduct) =>
+                      `<div class="info product-item">
+            <img src="${getProductIcon(
+                          otherProduct
+                      )}" class="product-icon full reviewable-image" alt="${otherProduct}" data-image="${getProductIcon(
+                          otherProduct
+                      )}" /> ${otherProduct}
+        </div>`
+              )
+              .join("")
+          : "";
 
   // Generate payment HTML
   const paymentHtml = station.service
-    .map(
-      (service) =>
-        `<div class="info payment-item">
-          <img src="${getItemIcon(
-            service
-          )}" class="payment-icon full reviewable-image" alt="${service}" data-image="${getItemIcon(
-          service
-        )}" /> ${service}
-      </div>`
-    )
-    .join("");
+      .map(
+          (service) =>
+              `<div class="info payment-item">
+        <img src="${getItemIcon(
+                  service
+              )}" class="payment-icon full reviewable-image" alt="${service}" data-image="${getItemIcon(
+                  service
+              )}" /> ${service}
+    </div>`
+      )
+      .join("");
 
   // Generate services HTML
   const servicesHtml =
-    station.description && station.description[0]
-      ? station.description
-          .map(
-            (desc) =>
-              `<div class="info service-item">
-              <img src="${getItemIcon(
-                desc
-              )}" class="service-icon full reviewable-image" alt="${desc}" data-image="${getItemIcon(
-                desc
-              )}" /> ${desc}
-          </div>`
-          )
-          .join("")
-      : "";
+      station.description && station.description[0]
+          ? station.description
+              .map(
+                  (desc) =>
+                      `<div class="info service-item">
+            <img src="${getItemIcon(
+                          desc
+                      )}" class="service-icon full reviewable-image" alt="${desc}" data-image="${getItemIcon(
+                          desc
+                      )}" /> ${desc}
+        </div>`
+              )
+              .join("")
+          : "";
 
-  // Generate promotions HTML
+  // Generate promotions HTML without click event
   const promotionHtml =
-    station.promotions && station.promotions.length > 0
-      ? station.promotions
-          .map(
-            (promo) => `
-        <div class="info promotion-item">
-            <img src="${getPromotionImageUrl_MARKER(
-              promo.promotion_id
-            )}" class="promotion-icon full reviewable-image" alt="${
-              promo.promotion_id
-            }" data-image="${getPromotionImageUrl_MARKER(
-              promo.promotion_id
-            )}" /> 
-(ends on ${new Date(promo.end_time).toLocaleDateString()})
-        </div>
-    `
-          )
-          .join("")
-      : "<p>No promotions available.</p>";
+      station.promotions && station.promotions.length > 0
+          ? station.promotions
+              .map(
+                  (promo) => `
+      <div class="info promotion-item" style="display: flex; align-items: center; margin-bottom: 10px;">
+          <img src="${getPromotionImageUrl_MARKER(
+                      promo.promotion_id
+                  )}" class="promotion-icon full reviewable-image" alt="${
+                      promo.promotion_id
+                  }" data-image="${getPromotionImageUrl_MARKER(
+                      promo.promotion_id
+                  )}" style="margin-right: 10px; width: 50px; height: auto;" />
+          <div>
+              <strong class="promotion-label" data-promotion="${promo.description}">${promo.description}</strong><br>
+              <span>(ends on ${new Date(
+                      promo.end_time
+                  ).toLocaleDateString()})</span>
+          </div>
+      </div>
+  `
+              )
+              .join("")
+          : "<p>No promotions available.</p>";
 
   modalBody.innerHTML = `
- <div class="station-details">
-     <img src="${imageUrl}" alt="${
-    station.title
+<div class="station-details">
+   <img src="${imageUrl}" alt="${
+      station.title
   }" class="img-fluid mb-3 rounded-image reviewable-image" data-image="${imageUrl}" />
-     <div class="text-center">
-         <h3 class="station-title mb-3 font-weight-bold">${station.title}</h3>
-     </div>
-     <div class="info"><i class="fas fa-map-marker-alt icon"></i> ${
-       station.address
-     }</div>
-     <div class="separator"></div>
-     <div id="route-info" class="d-flex justify-content-center mb-3"></div> 
-     <div class="separator"></div>
-     <div class="nav-tabs-container">
-         <ul class="nav nav-tabs flex-nowrap" id="myTab" role="tablist">
-             <li class="nav-item" role="presentation">
-                 <button class="nav-link active" id="products-tab" data-bs-toggle="tab" data-bs-target="#products" type="button" role="tab" aria-controls="products" aria-selected="true">Products</button>
-             </li>
-             <li class="nav-item" role="presentation">
-                 <button class="nav-link" id="payment-tab" data-bs-toggle="tab" data-bs-target="#payment" type="button" role="tab" aria-controls="payment" aria-selected="false">Payment</button>
-             </li>
-             <li class="nav-item" role="presentation">
-                 <button class="nav-link" id="services-tab" data-bs-toggle="tab" data-bs-target="#services" type="button" role="tab" aria-controls="services" aria-selected="false">Services</button>
-             </li>
-             <li class="nav-item" role="presentation">
-                 <button class="nav-link" id="promotion-tab" data-bs-toggle="tab" data-bs-target="#promotion" type="button" role="tab" aria-controls="promotion" aria-selected="false">Promotion</button>
-             </li>
-         </ul>
-     </div>
-     
-     <!-- Tab panes with smooth animation -->
-     <div class="tab-content mt-3">
-         <div class="tab-pane fade show active" id="products" role="tabpanel" aria-labelledby="products-tab">
-             <div class="scrollable-content">
-                 <h5>Products</h5>
-                 <div class="product-row">
-                     ${productHtml}
-                 </div>
-                 ${
-                   otherProductHtml
-                     ? `<div class="separator"></div><h5>Other Products</h5><div class="product-row">${otherProductHtml}</div>`
-                     : ""
-                 }
-             </div>
-         </div>
-         <div class="tab-pane fade" id="payment" role="tabpanel" aria-labelledby="payment-tab">
-             <div class="scrollable-content">
-                 <h5>Payment Methods</h5>
-                 <div class="description-row">
-                     ${paymentHtml}
-                 </div>
-             </div>
-         </div>
-         <div class="tab-pane fade" id="services" role="tabpanel" aria-labelledby="services-tab">
-             <div class="scrollable-content">
-                 <h5>Services</h5>
-                 <div class="service-row">
-                     ${servicesHtml}
-                 </div>
-             </div>
-         </div>
-         <div class="tab-pane fade" id="promotion" role="tabpanel" aria-labelledby="promotion-tab">
-             <div class="scrollable-content">
-                 <h5>Promotion</h5>
-                 <div class="promotion-row">
-                     ${promotionHtml}
-                 </div>
-             </div>
-         </div>
-     </div>
-     <div class="text-center mt-3">
-       <div class="d-flex justify-content-center align-items-center">
-         <div class="icon-background mx-2" onclick="shareLocation(${
-           station.latitude
-         }, ${station.longitude})">
-             <i class="fas fa-share-alt share-icon"></i>
-         </div>
-         <button class="btn btn-primary rounded-circle mx-5 go-button pulse" onclick="openGoogleMaps(${
-           station.latitude
-         }, ${station.longitude})">GO</button>
-         <div class="icon-background">
-             <i class="fas fa-location-arrow navigate-icon mx-2"></i>
-         </div>
+   <div class="text-center">
+       <h3 class="station-title mb-3 font-weight-bold">${station.title}</h3>
+   </div>
+   <div class="info"><i class="fas fa-map-marker-alt icon"></i> ${
+      station.address
+  }</div>
+   <div class="separator"></div>
+   <div id="route-info" class="d-flex justify-content-center mb-3"></div> 
+   <div class="separator"></div>
+   <div class="nav-tabs-container">
+<ul class="nav nav-tabs flex-nowrap" id="myTab" role="tablist">
+  <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="promotion-tab" data-bs-toggle="tab" data-bs-target="#promotion" type="button" role="tab" aria-controls="promotion" aria-selected="true">Promotion</button>
+  </li>
+  <li class="nav-item" role="presentation">
+      <button class="nav-link" id="products-tab" data-bs-toggle="tab" data-bs-target="#products" type="button" role="tab" aria-controls="products" aria-selected="false">Products</button>
+  </li>
+  <li class="nav-item" role="presentation">
+      <button class="nav-link" id="payment-tab" data-bs-toggle="tab" data-bs-target="#payment" type="button" role="tab" aria-controls="payment" aria-selected="false">Payment</button>
+  </li>
+  <li class="nav-item" role="presentation">
+      <button class="nav-link" id="services-tab" data-bs-toggle="tab" data-bs-target="#services" type="button" role="tab" aria-controls="services" aria-selected="false">Services</button>
+  </li>
+</ul>
+
+   </div>
+   
+   <!-- Tab panes with smooth animation -->
+   <div class="tab-content mt-3">
+       <div class="tab-pane fade " id="products" role="tabpanel" aria-labelledby="products-tab">
+           <div class="scrollable-content">
+               <h5>Products</h5>
+               <div class="product-row">
+                   ${productHtml}
+               </div>
+               ${
+      otherProductHtml
+          ? `<div class="separator"></div><h5>Other Products</h5><div class="product-row">${otherProductHtml}</div>`
+          : ""
+  }
+           </div>
+       </div>
+       <div class="tab-pane fade" id="payment" role="tabpanel" aria-labelledby="payment-tab">
+           <div class="scrollable-content">
+               <h5>Payment Methods</h5>
+               <div class="description-row">
+                   ${paymentHtml}
+               </div>
+           </div>
+       </div>
+       <div class="tab-pane fade" id="services" role="tabpanel" aria-labelledby="services-tab">
+           <div class="scrollable-content">
+               <h5>Services</h5>
+               <div class="service-row">
+                   ${servicesHtml}
+               </div>
+           </div>
+       </div>
+       <div class="tab-pane fade show active" id="promotion" role="tabpanel" aria-labelledby="promotion-tab">
+           <div class="scrollable-content">
+               <h5>Promotion</h5>
+               <div class="promotion-row">
+                   ${promotionHtml}
+               </div>
+           </div>
+       </div>
+   </div>
+   <div class="text-center mt-3">
+     <div class="d-flex justify-content-center align-items-center">
+       <div class="icon-background mx-2" onclick="shareLocation(${
+      station.latitude
+  }, ${station.longitude})">
+           <i class="fas fa-share-alt share-icon"></i>
+       </div>
+       <button class="btn btn-primary rounded-circle mx-5 go-button pulse" onclick="openGoogleMaps(${
+      station.latitude
+  }, ${station.longitude})">GO</button>
+       <div class="icon-background">
+           <i class="fas fa-location-arrow navigate-icon mx-2"></i>
        </div>
      </div>
- </div>
+   </div>
+</div>
 `;
 
   var markerModal = new bootstrap.Modal(
-    document.getElementById("markerModal"),
-    {
-      keyboard: false,
-    }
+      document.getElementById("markerModal"),
+      {
+          keyboard: false,
+      }
   );
   markerModal.show();
 
   // Initialize Bootstrap tabs correctly
   var triggerTabList = [].slice.call(
-    document.querySelectorAll("#myTab button")
+      document.querySelectorAll("#myTab button")
   );
   triggerTabList.forEach(function (triggerEl) {
-    var tabTrigger = new bootstrap.Tab(triggerEl);
-    triggerEl.addEventListener("click", function (event) {
-      event.preventDefault();
-      tabTrigger.show();
-    });
+      var tabTrigger = new bootstrap.Tab(triggerEl);
+      triggerEl.addEventListener("click", function (event) {
+          event.preventDefault();
+          tabTrigger.show();
+      });
   });
 
   // Add event listeners for reviewable images
   const reviewableImages = document.querySelectorAll(".reviewable-image");
   reviewableImages.forEach((image) => {
-    image.addEventListener("click", function () {
-      const imageUrl = this.getAttribute("data-image");
-      showImagePreview(imageUrl);
-    });
+      image.addEventListener("click", function () {
+          const imageUrl = this.getAttribute("data-image");
+          showImagePreview(imageUrl);
+      });
   });
 }
+
 
 // Function to show image preview in the modal
 function showImagePreview(imageUrl) {
