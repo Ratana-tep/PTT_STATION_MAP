@@ -13,8 +13,8 @@ function showPromotionModal(station) {
     promotionImagesContainerPromotions.innerHTML = '';
     promotionImagesContainerOpenings.innerHTML = '';
 
-    if (station.promotion && station.promotion.length > 0 && station.promotion[0] !== "") {
-        station.promotion.forEach(promotion => {
+    if (station.promotions && station.promotions.length > 0) {
+        station.promotions.forEach(promotion => {
             const promotionImageUrl = getPromotionImageUrl(promotion.promotion_id); // Get the promotion image URL
 
             // Create and append elements for All tab
@@ -41,17 +41,6 @@ function addPromotionImageEventListeners() {
     const promotionImages = document.querySelectorAll(".promotion-image");
     promotionImages.forEach(image => {
         image.addEventListener("click", function () {
-            const promotion = this.getAttribute("data-promotion");
-            filterMarkersByPromotion(promotion);
-        });
-    });
-}
-
-// Function to add event listeners for promotion labels
-function addPromotionLabelEventListeners() {
-    const promotionLabels = document.querySelectorAll(".promotion-label");
-    promotionLabels.forEach(label => {
-        label.addEventListener("click", function () {
             const promotion = this.getAttribute("data-promotion");
             filterMarkersByPromotion(promotion);
         });
@@ -136,7 +125,7 @@ function filterMarkersByPromotion(promotion) {
 function populatePromotions(stations) {
     const promotionButton = document.getElementById('promotionBtn');
     const promotionNotificationDot = document.getElementById('promotionNotificationDot');
-    const stationWithPromotion = stations.find(station => station.promotion && station.promotion.length > 0 && station.promotion[0] !== "");
+    const stationWithPromotion = stations.find(station => station.promotions && station.promotions.length > 0);
 
     if (stationWithPromotion) {
         promotionNotificationDot.style.display = 'block'; // Show the red dot if there are promotions
@@ -168,7 +157,7 @@ fetch("https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers.json")
                 stations.forEach(station => {
                     const stationPromotions = promotions.find(promo => promo.station_id === parseInt(station.id));
                     if (stationPromotions) {
-                        station.promotion = stationPromotions.promotions;
+                        station.promotions = stationPromotions.promotions;
                     }
                 });
                 populatePromotions(stations);
