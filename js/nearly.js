@@ -250,7 +250,33 @@ document
                       </div>
                     </div>
                   `;
+                            // Determine the current status of the station
+                            const currentTime = new Date().toLocaleTimeString("en-US", { timeZone: "Asia/Phnom_Penh", hour12: false });
+                            const [currentHour, currentMinute] = currentTime.split(":").map(Number);
 
+                            const openingHour = 5; // 5:00 AM
+                            const closingHour = 20; // 8:00 PM
+                            const closingMinute = 30; // 8:30 PM
+
+                            // Log the current time and the hours
+                            console.log(`Current Time: ${currentTime}`);
+                            console.log(`Current Hour: ${currentHour}, Current Minute: ${currentMinute}`);
+                            console.log(`Station ${station.title}: Status - ${station.status}`);
+                            console.log(`Opening Hour: ${openingHour}:00, Closing Hour: ${closingHour}:${closingMinute}`);
+
+                            // Check if the station is open 24 hours
+                            const isOpen24h = station.status === "24h";
+
+                            // Determine if the station is open
+                            const isOpen = isOpen24h || (currentHour > openingHour && (currentHour < closingHour || (currentHour === closingHour && currentMinute < closingMinute)));
+
+                            console.log(`Is Open: ${isOpen}`);
+
+                            if (isOpen) {
+                                listItem.classList.add("open-station");
+                            } else {
+                                listItem.classList.add("closed-station");
+                            }
                     listItem.addEventListener("click", () => {
                       map.setView(
                         [
