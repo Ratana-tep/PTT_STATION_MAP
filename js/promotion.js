@@ -62,14 +62,14 @@ function formatPromotionEndTime(endTime) {
 // Function to get the promotion image URL based on the item name
 function getPromotionImageUrl(item) {
     const itemImages = {
-        "promotion 1": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/promotion1.jpg",
-        "promotion 2": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/promotion1jpg",
-        "promotion 3": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/promotion1.jpg",
-        "promotion 4": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/promotion1.jpg",
-        "promotion opening 1": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening1.jpg",
-        "promotion opening 2": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening2.jpg",
-        "promotion opening 3": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening3.jpg",
-        "promotion opening 5": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening5.jpg",
+        "promotion 1": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/promotion/promotion_1.jpg",
+        "promotion 2": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/promotion/promotion_2.jpg",
+        "promotion 3": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/promotion/promotion_3.jpg",
+        "promotion 4": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/promotion/promotion_4.jpg",
+        "promotion opening 1": "https://raw.githubusercontent.com/pttpos/map_ptt/main/promotion/pictures/promotion_opening_1.jpg",
+        "promotion opening 2": "https://raw.githubusercontent.com/pttpos/map_ptt/main/promotion/pictures/promotion_opening_2.jpg",
+        "promotion opening 3": "https://raw.githubusercontent.com/pttpos/map_ptt/main/promotion/pictures/promotion_opening_3.jpg",
+        "promotion opening 4": "https://raw.githubusercontent.com/pttpos/map_ptt/main/promotion/pictures/promotion_opening_4.jpg",
         // Add other items as needed
     };
     return itemImages[item] || "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/default.png"; // Default image if item not found

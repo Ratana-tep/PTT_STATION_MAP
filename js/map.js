@@ -3,7 +3,8 @@ var map = L.map("map").setView([11.55, 104.91], 7);
 
 // Add OpenStreetMap tiles
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-  attribution: '&copy;<a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  attribution:
+    '&copy;<a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
 }).addTo(map);
 
 // Initialize marker cluster group
@@ -20,7 +21,7 @@ function setMapToCurrentLocation() {
   getCurrentLocation()
     .then((currentLocation) => {
       const { lat, lng } = currentLocation;
-      map.setView([lat, lng], 15);  // Set a reasonable zoom level, like 15
+      map.setView([lat, lng], 15); // Set a reasonable zoom level, like 15
 
       // Remove existing marker and circle if they exist
       if (currentLocationMarker) {
@@ -49,7 +50,9 @@ function setMapToCurrentLocation() {
       });
 
       // Add marker with custom icon
-      currentLocationMarker = L.marker([lat, lng], { icon: customIcon }).addTo(map);
+      currentLocationMarker = L.marker([lat, lng], { icon: customIcon }).addTo(
+        map
+      );
       currentLocationMarker.bindPopup("You are here.").openPopup();
     })
     .catch((error) => {
@@ -65,16 +68,20 @@ fetch("https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers.json")
     var stations = data.STATION;
     populateIconContainersAndDropdown(stations);
 
-    fetch("https://raw.githubusercontent.com/pttpos/map_ptt/main/data/promotions.json")
-      .then(response => response.json())
-      .then(promotionData => {
+    fetch(
+      "https://raw.githubusercontent.com/pttpos/map_ptt/main/data/promotions.json"
+    )
+      .then((response) => response.json())
+      .then((promotionData) => {
         // Merge promotion data with station data
         stations.forEach((station) => {
-        const stationPromotions = promotionData.PROMOTIONS.find(promo => promo.station_id == station.id);
+          const stationPromotions = promotionData.PROMOTIONS.find(
+            (promo) => promo.station_id == station.id
+          );
           if (stationPromotions) {
             station.promotions = stationPromotions.promotions;
           } else {
-            station.promotions= [];
+            station.promotions = [];
           }
 
           // Get the custom icon URL based on the station status
@@ -89,17 +96,20 @@ fetch("https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers.json")
           });
 
           // Create marker with custom icon
-          var marker = L.marker([station.latitude, station.longitude], { icon: customIcon });
+          var marker = L.marker([station.latitude, station.longitude], {
+            icon: customIcon,
+          });
 
           // Create image URL
           var imageUrl = `https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/${station.picture}`;
 
           // Add click event to marker to show modal
           marker.on("click", function () {
-            if (map.getZoom() < 15) { // Only animate zoom if the map is not already zoomed in
+            if (map.getZoom() < 15) {
+              // Only animate zoom if the map is not already zoomed in
               map.flyTo([station.latitude, station.longitude], 15, {
                 animate: true,
-                duration: 1 // Adjust the duration of the zoom animation here
+                duration: 1, // Adjust the duration of the zoom animation here
               });
 
               // Show the modal after zooming in
@@ -107,13 +117,25 @@ fetch("https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers.json")
                 showMarkerModal(station, imageUrl);
                 getCurrentLocation()
                   .then((currentLocation) => {
-                    getBingRoute(currentLocation.lat, currentLocation.lng, station.latitude, station.longitude)
+                    getBingRoute(
+                      currentLocation.lat,
+                      currentLocation.lng,
+                      station.latitude,
+                      station.longitude
+                    )
                       .then((result) => {
                         const { distance, travelTime } = result;
-                        updateModalWithRoute(distance, travelTime, station.status);
+                        updateModalWithRoute(
+                          distance,
+                          travelTime,
+                          station.status
+                        );
                       })
                       .catch((error) => {
-                        console.error("Error getting route from Bing Maps:", error);
+                        console.error(
+                          "Error getting route from Bing Maps:",
+                          error
+                        );
                         updateModalWithRoute("N/A", "N/A", station.status); // Use placeholders if there's an error
                       });
                   })
@@ -127,13 +149,25 @@ fetch("https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers.json")
               showMarkerModal(station, imageUrl);
               getCurrentLocation()
                 .then((currentLocation) => {
-                  getBingRoute(currentLocation.lat, currentLocation.lng, station.latitude, station.longitude)
+                  getBingRoute(
+                    currentLocation.lat,
+                    currentLocation.lng,
+                    station.latitude,
+                    station.longitude
+                  )
                     .then((result) => {
                       const { distance, travelTime } = result;
-                      updateModalWithRoute(distance, travelTime, station.status);
+                      updateModalWithRoute(
+                        distance,
+                        travelTime,
+                        station.status
+                      );
                     })
                     .catch((error) => {
-                      console.error("Error getting route from Bing Maps:", error);
+                      console.error(
+                        "Error getting route from Bing Maps:",
+                        error
+                      );
                       updateModalWithRoute("N/A", "N/A", station.status); // Use placeholders if there's an error
                     });
                 })
@@ -158,7 +192,7 @@ fetch("https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers.json")
         // Set map to current location on initial load
         setMapToCurrentLocation();
       })
-      .catch(error => console.error("Error fetching promotion data:", error));
+      .catch((error) => console.error("Error fetching promotion data:", error));
   })
   .catch((error) => console.error("Error fetching data:", error));
 
@@ -195,13 +229,17 @@ function getCurrentLocation() {
 
 function getIconUrl(status) {
   // Get the current time in Cambodia timezone
-  const cambodiaTimeString = new Date().toLocaleString("en-US", { timeZone: "Asia/Phnom_Penh" });
+  const cambodiaTimeString = new Date().toLocaleString("en-US", {
+    timeZone: "Asia/Phnom_Penh",
+  });
   const cambodiaTime = new Date(cambodiaTimeString);
   const currentHour = cambodiaTime.getHours();
   const currentMinutes = cambodiaTime.getMinutes();
 
   console.log(`Current Cambodia Time: ${cambodiaTime}`);
-  console.log(`Current Hour: ${currentHour}, Current Minutes: ${currentMinutes}`);
+  console.log(
+    `Current Hour: ${currentHour}, Current Minutes: ${currentMinutes}`
+  );
 
   // Handle different status cases
   const open24Hours = status.toLowerCase() === "24h";
@@ -219,10 +257,15 @@ function getIconUrl(status) {
     const closingHour = 20;
     const closingMinutes = 30;
 
-    console.log(`Opening Hour: ${openingHour}, Closing Hour: ${closingHour}, Closing Minutes: ${closingMinutes}`);
+    console.log(
+      `Opening Hour: ${openingHour}, Closing Hour: ${closingHour}, Closing Minutes: ${closingMinutes}`
+    );
 
     // Determine if the station is open
-    const isOpen = (currentHour >= openingHour && (currentHour < closingHour || (currentHour === closingHour && currentMinutes < closingMinutes)));
+    const isOpen =
+      currentHour >= openingHour &&
+      (currentHour < closingHour ||
+        (currentHour === closingHour && currentMinutes < closingMinutes));
 
     if (isOpen) {
       console.log("Status: Open");
@@ -236,7 +279,8 @@ function getIconUrl(status) {
 
 // Function to get route information from Bing Maps API (optional, can be removed if not needed)
 function getBingRoute(startLat, startLng, endLat, endLng) {
-  const bingMapsKey = "AhQxc3Nm4Sfv53x7JRXUoj76QZnlm7VWkT5qAigmHQo8gjeYFthvGgEqVcjO5c7C"; // Replace with your Bing Maps API Key
+  const bingMapsKey =
+    "AhQxc3Nm4Sfv53x7JRXUoj76QZnlm7VWkT5qAigmHQo8gjeYFthvGgEqVcjO5c7C"; // Replace with your Bing Maps API Key
   const url = `https://dev.virtualearth.net/REST/V1/Routes/Driving?wp.0=${startLat},${startLng}&wp.1=${endLat},${endLng}&optmz=timeWithTraffic&key=${bingMapsKey}`;
 
   return fetch(url)
@@ -249,7 +293,11 @@ function getBingRoute(startLat, startLng, endLat, endLng) {
         const travelTime = route.travelDurationTraffic / 60; // in minutes
         return {
           distance: distance.toFixed(2) + " km",
-          travelTime: Math.floor(travelTime / 60) + " hr. " + Math.round(travelTime % 60) + " min",
+          travelTime:
+            Math.floor(travelTime / 60) +
+            " hr. " +
+            Math.round(travelTime % 60) +
+            " min",
         };
       } else {
         throw new Error("No route found");
@@ -270,7 +318,11 @@ function showMarkerModal(station, imageUrl) {
     .map(
       (product) =>
         `<div class="info product-item">
-          <img src="${getProductIcon(product)}" class="product-icon round reviewable-image" alt="${product}" data-image="${getProductIcon(product)}" /> ${product}
+          <img src="${getProductIcon(
+            product
+          )}" class="product-icon round reviewable-image" alt="${product}" data-image="${getProductIcon(
+          product
+        )}" /> ${product}
       </div>`
     )
     .join("");
@@ -282,7 +334,11 @@ function showMarkerModal(station, imageUrl) {
           .map(
             (otherProduct) =>
               `<div class="info product-item">
-              <img src="${getProductIcon(otherProduct)}" class="product-icon full reviewable-image" alt="${otherProduct}" data-image="${getProductIcon(otherProduct)}" /> ${otherProduct}
+              <img src="${getProductIcon(
+                otherProduct
+              )}" class="product-icon full reviewable-image" alt="${otherProduct}" data-image="${getProductIcon(
+                otherProduct
+              )}" /> ${otherProduct}
           </div>`
           )
           .join("")
@@ -293,7 +349,11 @@ function showMarkerModal(station, imageUrl) {
     .map(
       (service) =>
         `<div class="info payment-item">
-          <img src="${getItemIcon(service)}" class="payment-icon full reviewable-image" alt="${service}" data-image="${getItemIcon(service)}" /> ${service}
+          <img src="${getItemIcon(
+            service
+          )}" class="payment-icon full reviewable-image" alt="${service}" data-image="${getItemIcon(
+          service
+        )}" /> ${service}
       </div>`
     )
     .join("");
@@ -305,29 +365,48 @@ function showMarkerModal(station, imageUrl) {
           .map(
             (desc) =>
               `<div class="info service-item">
-              <img src="${getItemIcon(desc)}" class="service-icon full reviewable-image" alt="${desc}" data-image="${getItemIcon(desc)}" /> ${desc}
+              <img src="${getItemIcon(
+                desc
+              )}" class="service-icon full reviewable-image" alt="${desc}" data-image="${getItemIcon(
+                desc
+              )}" /> ${desc}
           </div>`
           )
           .join("")
       : "";
 
- // Generate promotions HTML
- const promotionHtml = station.promotions && station.promotions.length > 0
- ? station.promotions.map(promo => `
-     <div class="info promotion-item">
-       <img src="${getPromotionImageUrl_MARKER(promo.promotion_id)}" class="promotion-icon full reviewable-image" alt="${promo.promotion_id}" data-image="${getPromotionImageUrl_MARKER(promo.promotion_id)}" /> ${promo.promotion_id} (ends on ${new Date(promo.end_time).toLocaleDateString()})
-     </div>
-   `).join("")
- : "<p>No promotions available.</p>";
+  // Generate promotions HTML
+  const promotionHtml =
+    station.promotions && station.promotions.length > 0
+      ? station.promotions
+          .map(
+            (promo) => `
+        <div class="info promotion-item">
+            <img src="${getPromotionImageUrl_MARKER(
+              promo.promotion_id
+            )}" class="promotion-icon full reviewable-image" alt="${
+              promo.promotion_id
+            }" data-image="${getPromotionImageUrl_MARKER(
+              promo.promotion_id
+            )}" /> 
+(ends on ${new Date(promo.end_time).toLocaleDateString()})
+        </div>
+    `
+          )
+          .join("")
+      : "<p>No promotions available.</p>";
 
-
- modalBody.innerHTML = `
+  modalBody.innerHTML = `
  <div class="station-details">
-     <img src="${imageUrl}" alt="${station.title}" class="img-fluid mb-3 rounded-image reviewable-image" data-image="${imageUrl}" />
+     <img src="${imageUrl}" alt="${
+    station.title
+  }" class="img-fluid mb-3 rounded-image reviewable-image" data-image="${imageUrl}" />
      <div class="text-center">
          <h3 class="station-title mb-3 font-weight-bold">${station.title}</h3>
      </div>
-     <div class="info"><i class="fas fa-map-marker-alt icon"></i> ${station.address}</div>
+     <div class="info"><i class="fas fa-map-marker-alt icon"></i> ${
+       station.address
+     }</div>
      <div class="separator"></div>
      <div id="route-info" class="d-flex justify-content-center mb-3"></div> 
      <div class="separator"></div>
@@ -356,7 +435,11 @@ function showMarkerModal(station, imageUrl) {
                  <div class="product-row">
                      ${productHtml}
                  </div>
-                 ${otherProductHtml ? `<div class="separator"></div><h5>Other Products</h5><div class="product-row">${otherProductHtml}</div>` : ""}
+                 ${
+                   otherProductHtml
+                     ? `<div class="separator"></div><h5>Other Products</h5><div class="product-row">${otherProductHtml}</div>`
+                     : ""
+                 }
              </div>
          </div>
          <div class="tab-pane fade" id="payment" role="tabpanel" aria-labelledby="payment-tab">
@@ -386,10 +469,14 @@ function showMarkerModal(station, imageUrl) {
      </div>
      <div class="text-center mt-3">
        <div class="d-flex justify-content-center align-items-center">
-         <div class="icon-background mx-2" onclick="shareLocation(${station.latitude}, ${station.longitude})">
+         <div class="icon-background mx-2" onclick="shareLocation(${
+           station.latitude
+         }, ${station.longitude})">
              <i class="fas fa-share-alt share-icon"></i>
          </div>
-         <button class="btn btn-primary rounded-circle mx-5 go-button pulse" onclick="openGoogleMaps(${station.latitude}, ${station.longitude})">GO</button>
+         <button class="btn btn-primary rounded-circle mx-5 go-button pulse" onclick="openGoogleMaps(${
+           station.latitude
+         }, ${station.longitude})">GO</button>
          <div class="icon-background">
              <i class="fas fa-location-arrow navigate-icon mx-2"></i>
          </div>
@@ -398,13 +485,18 @@ function showMarkerModal(station, imageUrl) {
  </div>
 `;
 
-  var markerModal = new bootstrap.Modal(document.getElementById("markerModal"), {
-    keyboard: false,
-  });
+  var markerModal = new bootstrap.Modal(
+    document.getElementById("markerModal"),
+    {
+      keyboard: false,
+    }
+  );
   markerModal.show();
 
   // Initialize Bootstrap tabs correctly
-  var triggerTabList = [].slice.call(document.querySelectorAll("#myTab button"));
+  var triggerTabList = [].slice.call(
+    document.querySelectorAll("#myTab button")
+  );
   triggerTabList.forEach(function (triggerEl) {
     var tabTrigger = new bootstrap.Tab(triggerEl);
     triggerEl.addEventListener("click", function (event) {
@@ -414,10 +506,10 @@ function showMarkerModal(station, imageUrl) {
   });
 
   // Add event listeners for reviewable images
-  const reviewableImages = document.querySelectorAll('.reviewable-image');
-  reviewableImages.forEach(image => {
-    image.addEventListener('click', function() {
-      const imageUrl = this.getAttribute('data-image');
+  const reviewableImages = document.querySelectorAll(".reviewable-image");
+  reviewableImages.forEach((image) => {
+    image.addEventListener("click", function () {
+      const imageUrl = this.getAttribute("data-image");
       showImagePreview(imageUrl);
     });
   });
@@ -425,11 +517,14 @@ function showMarkerModal(station, imageUrl) {
 
 // Function to show image preview in the modal
 function showImagePreview(imageUrl) {
-  const imagePreview = document.getElementById('imagePreview');
+  const imagePreview = document.getElementById("imagePreview");
   imagePreview.src = imageUrl;
-  const imagePreviewModal = new bootstrap.Modal(document.getElementById('imagePreviewModal'), {
-    keyboard: false,
-  });
+  const imagePreviewModal = new bootstrap.Modal(
+    document.getElementById("imagePreviewModal"),
+    {
+      keyboard: false,
+    }
+  );
   imagePreviewModal.show();
 }
 
@@ -448,36 +543,47 @@ function getProductIcon(product) {
 // Function to get the image URL based on the item name
 function getItemIcon(item) {
   const itemImages = {
-      "Fleet card": "./pictures/fleet.png", // Path to the Fleet card image
-      "KHQR": "./pictures/KHQR.png", // Path to the KHQR image
-      "Cash": "./pictures/cash.png", // Path to the Cash image
-      "Amazon": "./pictures/amazon.png", // Path to the Amazon image
-      "7-Eleven": "./pictures/7eleven.png", // Path to the 7-Eleven image
-      // "promotion1": "./pictures/opening1.jpg" // Path to the promotion1 image
-      // Add other items as needed
+    "Fleet card": "./pictures/fleet.png", // Path to the Fleet card image
+    KHQR: "./pictures/KHQR.png", // Path to the KHQR image
+    Cash: "./pictures/cash.png", // Path to the Cash image
+    Amazon: "./pictures/amazon.png", // Path to the Amazon image
+    "7-Eleven": "./pictures/7eleven.png", // Path to the 7-Eleven image
+    // "promotion1": "./pictures/opening1.jpg" // Path to the promotion1 image
+    // Add other items as needed
   };
   return itemImages[item] || "./pictures/default.png"; // Default image if item not found
 }
 // Function to get the promotion image URL based on the item name
 function getPromotionImageUrl_MARKER(item) {
   const promotionImages = {
-      "promotion 1": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/promotion1.jpg",
-      "promotion 2": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/promotion2.jpg",
-      "promotion 3": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/promotion3.jpg",
-      "promotion 4": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/promotion4.jpg",
-      "promotion opening 1": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening1.jpg",
-      "promotion opening 2": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening2.jpg",
-      "promotion opening 3": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening3.jpg",
-      "promotion opening 4": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/opening5.jpg",
-      // Add other promotions as needed
+    "promotion 1":
+      "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/promotion/promotion_1.jpg",
+    "promotion 2":
+      "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/promotion/promotion_2.jpg",
+    "promotion 3":
+      "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/promotion/promotion_3.jpg",
+    "promotion 4":
+      "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/promotion/promotion_4.jpg",
+    "promotion opening 1":
+      "https://raw.githubusercontent.com/pttpos/map_ptt/main/promotion/pictures/promotion_opening_1.jpg",
+    "promotion opening 2":
+      "https://raw.githubusercontent.com/pttpos/map_ptt/main/promotion/pictures/promotion_opening_2.jpg",
+    "promotion opening 3":
+      "https://raw.githubusercontent.com/pttpos/map_ptt/main/promotion/pictures/promotion_opening_3.jpg",
+    "promotion opening 4":
+      "https://raw.githubusercontent.com/pttpos/map_ptt/main/promotion/pictures/promotion_opening_4.jpg",
+    // Add other promotions as needed
   };
-  return promotionImages[item] || "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/default.png"; // Default image if promotion not found
+  return (
+    promotionImages[item] ||
+    "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/default.png"
+  ); // Default image if promotion not found
 }
 // Function to update modal with route information
 function updateModalWithRoute(distance, travelTime, status) {
   var routeInfo = document.getElementById("route-info");
   const statusInfo = getStatusInfo(status); // Determine the icon and badge class based on status
-  
+
   routeInfo.innerHTML = `
         <div class="badge bg-primary text-white mx-1">
             <i class="fas fa-clock icon-background"></i> ${travelTime}
@@ -493,12 +599,16 @@ function updateModalWithRoute(distance, travelTime, status) {
 
 function getStatusInfo(status) {
   // Calculate Cambodia time directly using UTC offset
-  const cambodiaTime = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Phnom_Penh" }));
+  const cambodiaTime = new Date(
+    new Date().toLocaleString("en-US", { timeZone: "Asia/Phnom_Penh" })
+  );
   const currentHour = cambodiaTime.getHours();
   const currentMinutes = cambodiaTime.getMinutes();
 
   console.log(`Current Cambodia Time: ${cambodiaTime}`);
-  console.log(`Current Hour: ${currentHour}, Current Minutes: ${currentMinutes}`);
+  console.log(
+    `Current Hour: ${currentHour}, Current Minutes: ${currentMinutes}`
+  );
 
   if (status.toLowerCase() === "under construct") {
     return {
@@ -517,12 +627,14 @@ function getStatusInfo(status) {
     const closingHour = 20; // Closing hour is 8 PM
     const closingMinutes = 30; // Closing minutes is 8:30 PM
 
-    console.log(`Opening Hour: ${openingHour}, Closing Hour: ${closingHour}, Closing Minutes: ${closingMinutes}`);
+    console.log(
+      `Opening Hour: ${openingHour}, Closing Hour: ${closingHour}, Closing Minutes: ${closingMinutes}`
+    );
 
     // Determine if the station is closed
     if (
-      (currentHour < openingHour) || // Before 5 AM
-      (currentHour > closingHour) || // After 8 PM
+      currentHour < openingHour || // Before 5 AM
+      currentHour > closingHour || // After 8 PM
       (currentHour === closingHour && currentMinutes >= closingMinutes) || // After 8:30 PM
       (currentHour >= 0 && currentHour < 5) // After midnight and before 5 AM
     ) {
@@ -547,23 +659,25 @@ function getStatusInfo(status) {
 function fetchData(url) {
   const cacheBuster = `?nocache=${new Date().getTime()}`;
   return fetch(url + cacheBuster)
-    .then(response => response.json())
-    .catch(error => {
+    .then((response) => response.json())
+    .catch((error) => {
       console.error("Error fetching data:", error);
       throw error;
     });
 }
 
 // Usage example with fetchData function
-const dataUrl = "https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers.json";
-fetchData(dataUrl).then(data => {
+const dataUrl =
+  "https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers.json";
+fetchData(dataUrl).then((data) => {
   // Handle the data as needed
   console.log(data);
 });
 
 // Function to open Google Maps with the destination
 function openGoogleMaps(lat, lon) {
-  var url = "https://www.google.com/maps/dir/?api=1&destination=" + lat + "," + lon;
+  var url =
+    "https://www.google.com/maps/dir/?api=1&destination=" + lat + "," + lon;
   window.open(url, "_self");
 }
 
@@ -591,4 +705,3 @@ function shareLocation(lat, lon) {
 function populateIconContainersAndDropdown(stations) {
   // Implement your logic here
 }
-
