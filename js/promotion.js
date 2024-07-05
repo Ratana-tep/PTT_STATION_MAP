@@ -1,5 +1,5 @@
 // Function to show promotion modal
-function showPromotionModal(station) {
+function showPromotionModal(promotions) {
     var promotionModal = new bootstrap.Modal(document.getElementById('promotionModal'), {
         keyboard: false
     });
@@ -13,8 +13,8 @@ function showPromotionModal(station) {
     promotionImagesContainerPromotions.innerHTML = '';
     promotionImagesContainerOpenings.innerHTML = '';
 
-    if (station.promotions && station.promotions.length > 0) {
-        station.promotions.forEach(promotion => {
+    if (promotions && promotions.length > 0) {
+        promotions.forEach(promotion => {
             const promotionImageUrl = getPromotionImageUrl(promotion.promotion_id); // Get the promotion image URL
 
             // Create and append elements for All tab
@@ -29,7 +29,7 @@ function showPromotionModal(station) {
         });
         promotionModal.show();
     } else {
-        alert('No promotion available for this station.');
+        alert('No promotion available.');
     }
 
     // Add event listeners for promotion images within the modal
@@ -41,8 +41,8 @@ function addPromotionImageEventListeners() {
     const promotionImages = document.querySelectorAll(".promotion-image");
     promotionImages.forEach(image => {
         image.addEventListener("click", function () {
-            const promotion = this.getAttribute("data-promotion");
-            filterMarkersByPromotion(promotion);
+            const promotionId = this.getAttribute("data-promotion-id");
+            filterMarkersByPromotion(promotionId);
         });
     });
 }
@@ -55,12 +55,12 @@ function createAndAppendPromotionElements(promotion, promotionImageUrl, containe
     const promotionImage = document.createElement('img');
     promotionImage.src = promotionImageUrl; // Update with the correct image URL
     promotionImage.classList.add('img-fluid', 'mb-2', 'promotion-image'); // Add classes for styling
-    promotionImage.setAttribute('data-promotion', promotion.description); // Set data-promotion attribute
+    promotionImage.setAttribute('data-promotion-id', promotion.promotion_id); // Set data-promotion-id attribute
 
     promotionItem.appendChild(promotionImage); // Append to promotion item
 
     const promotionText = document.createElement('p');
-    promotionText.innerText = `${promotion.promotion_id} (ends on ${formatPromotionEndTime(promotion.end_time)})`; // Update with the promotion details
+    promotionText.innerText = `${promotion.promotion_id} (ends on ${formatPromotionEndTime(promotion.end_time)}) - ${promotion.description || 'No description'}`; // Update with the promotion details
     promotionItem.appendChild(promotionText); // Append to promotion item
 
     container.appendChild(promotionItem); // Append promotion item to container
@@ -83,22 +83,22 @@ function getPromotionImageUrl(item) {
         "promotion 2": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/promotion/promotion_2.jpg",
         "promotion 3": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/promotion/promotion_3.jpg",
         "promotion 4": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/promotion/promotion_4.jpg",
-        "promotion opening 1": "https://raw.githubusercontent.com/pttpos/map_ptt/main/promotion/pictures/promotion_opening_1.jpg",
-        "promotion opening 2": "https://raw.githubusercontent.com/pttpos/map_ptt/main/promotion/pictures/promotion_opening_2.jpg",
-        "promotion opening 3": "https://raw.githubusercontent.com/pttpos/map_ptt/main/promotion/pictures/promotion_opening_3.jpg",
-        "promotion opening 4": "https://raw.githubusercontent.com/pttpos/map_ptt/main/promotion/pictures/promotion_opening_4.jpg",
+        "promotion opening 1": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/promotion/promotion_opening_1.jpg",
+        "promotion opening 2": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/promotion/promotion_opening_2.jpg",
+        "promotion opening 3": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/promotion_opening_3.jpg",
+        "promotion opening 4": "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/promotion_opening_4.jpg",
         // Add other items as needed
     };
     return itemImages[item] || "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/default.png"; // Default image if item not found
 }
 
 // Function to filter markers by promotion
-function filterMarkersByPromotion(promotion) {
+function filterMarkersByPromotion(promotionId) {
     markers.clearLayers(); // Clear existing markers
     let filteredMarkers = []; // Array to hold filtered markers
 
     allMarkers.forEach(entry => {
-        if (entry.data.promotions && entry.data.promotions.some(promo => promo.description === promotion)) {
+        if (entry.data.promotions && entry.data.promotions.some(promo => promo.promotion_id === promotionId)) {
             markers.addLayer(entry.marker);
             filteredMarkers.push(entry.marker); // Add the filtered marker to the array
         }
@@ -125,19 +125,21 @@ function filterMarkersByPromotion(promotion) {
 function populatePromotions(stations) {
     const promotionButton = document.getElementById('promotionBtn');
     const promotionNotificationDot = document.getElementById('promotionNotificationDot');
-    const stationWithPromotion = stations.find(station => station.promotions && station.promotions.length > 0);
 
-    if (stationWithPromotion) {
-        promotionNotificationDot.style.display = 'block'; // Show the red dot if there are promotions
-        promotionNotificationDot.classList.add('pulse-animation'); // Add animation class
+    // Show the red dot if there are promotions
+    if (stations.some(station => station.promotions && station.promotions.length > 0)) {
+        promotionNotificationDot.style.display = 'block';
+        promotionNotificationDot.classList.add('pulse-animation');
     } else {
-        promotionNotificationDot.style.display = 'none'; // Hide the red dot if there are no promotions
-        promotionNotificationDot.classList.remove('pulse-animation'); // Remove animation class
+        promotionNotificationDot.style.display = 'none';
+        promotionNotificationDot.classList.remove('pulse-animation');
     }
 
     promotionButton.addEventListener('click', function () {
-        if (stationWithPromotion) {
-            showPromotionModal(stationWithPromotion);
+        const allPromotions = stations.flatMap(station => station.promotions || []);
+        const uniquePromotions = Array.from(new Map(allPromotions.map(promotion => [promotion.promotion_id, promotion])).values());
+        if (uniquePromotions.length > 0) {
+            showPromotionModal(uniquePromotions);
         } else {
             alert('No promotion available.');
         }

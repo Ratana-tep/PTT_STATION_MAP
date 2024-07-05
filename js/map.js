@@ -572,13 +572,13 @@ function getPromotionImageUrl_MARKER(item) {
     "promotion 4":
       "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/promotion/promotion_4.jpg",
     "promotion opening 1":
-      "https://raw.githubusercontent.com/pttpos/map_ptt/main/promotion/pictures/promotion_opening_1.jpg",
+      "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/promotion_opening_1.jpg",
     "promotion opening 2":
-      "https://raw.githubusercontent.com/pttpos/map_ptt/main/promotion/pictures/promotion_opening_2.jpg",
+      "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/promotion_opening_2.jpg",
     "promotion opening 3":
-      "https://raw.githubusercontent.com/pttpos/map_ptt/main/promotion/pictures/promotion_opening_3.jpg",
+      "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/promotion_opening_3.jpg",
     "promotion opening 4":
-      "https://raw.githubusercontent.com/pttpos/map_ptt/main/promotion/pictures/promotion_opening_4.jpg",
+      "https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/promotion_opening_4.jpg",
     // Add other promotions as needed
   };
   return (
