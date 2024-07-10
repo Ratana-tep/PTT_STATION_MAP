@@ -43,7 +43,9 @@ function addPromotionImageEventListeners() {
         image.classList.add('animate');
         image.addEventListener("click", function () {
             const promotionId = this.getAttribute("data-promotion-id");
+            this.classList.toggle('selected'); // Toggle selected class
             filterMarkersByPromotion(promotionId);
+            updateClearFilterButton(); // Update the button visibility
         });
     });
 }
@@ -121,6 +123,7 @@ function filterMarkersByPromotion(promotionId) {
     var promotionModalElement = document.getElementById('promotionModal');
     var promotionModal = bootstrap.Modal.getInstance(promotionModalElement);
     promotionModal.hide();
+    updateClearFilterButton(); // Update the button visibility
 }
 
 // Function to populate promotions dynamically
@@ -129,7 +132,8 @@ function populatePromotions(stations) {
     const promotionNotificationDot = document.getElementById('promotionNotificationDot');
 
     // Show the red dot if there are promotions
-    if (stations.some(station => station.promotions && station.promotions.length > 0)) {
+    if (stations.some(station => station.promotions && station.promotions.length > 0
+    )) {
         promotionNotificationDot.style.display = 'block';
         promotionNotificationDot.classList.add('pulse-animation');
     } else {
@@ -147,6 +151,64 @@ function populatePromotions(stations) {
         }
     });
 }
+
+// Function to check if any promotion filters are applied
+function arePromotionFiltersApplied() {
+    const promotionImages = document.querySelectorAll(".promotion-image.selected");
+    return promotionImages.length > 0;
+}
+
+// Function to update the visibility of the clear filter button
+function updateClearFilterButton() {
+    const clearFilterButton = document.getElementById('clearAllButton');
+    const generalFiltersApplied = typeof areFiltersApplied === 'function' ? areFiltersApplied() : false; // Check general filters if the function exists
+    const promotionFiltersApplied = arePromotionFiltersApplied(); // Check promotion filters
+
+    if (generalFiltersApplied || promotionFiltersApplied) {
+        clearFilterButton.style.display = 'block'; // Show the button
+    } else {
+        clearFilterButton.style.display = 'none'; // Hide the button
+    }
+}
+
+// Function to clear all selections and show all markers
+function clearAllSelections() {
+    // Clear general filters if the function exists
+    if (typeof clearGeneralFilters === 'function') {
+        clearGeneralFilters();
+    }
+
+    // Clear promotion filters
+    const promotionImages = document.querySelectorAll('.promotion-image');
+    promotionImages.forEach(image => {
+        image.classList.remove('selected');
+    });
+
+    markers.clearLayers(); // Clear existing markers
+
+    // Add all markers back to the map
+    allMarkers.forEach(entry => {
+        markers.addLayer(entry.marker);
+    });
+
+    map.addLayer(markers); // Reset the map to show all markers
+
+    // Optionally, fit the map bounds to all markers
+    const allMarkersArray = allMarkers.map(entry => entry.marker);
+    if (allMarkersArray.length > 0) {
+        const group = new L.featureGroup(allMarkersArray);
+        const bounds = group.getBounds();
+        map.flyToBounds(bounds, {
+            animate: true,
+            duration: 1 // Adjust the duration of the zoom animation here
+        }); // Animate map to fit the bounds of all markers
+    }
+
+    updateClearFilterButton(); // Hide the clear filter button
+}
+
+// Add event listener to clear all button
+document.getElementById('clearAllButton').addEventListener('click', clearAllSelections);
 
 // Fetch station and promotion data and initialize promotions
 fetch("https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers.json")

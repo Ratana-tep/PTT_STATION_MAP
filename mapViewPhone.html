@@ -62,29 +62,87 @@
       padding: 0;
       position: relative;
     }
-
-    .right-buttons {
+    .oil-retail-icon {
       position: absolute;
-      top: 50%;
-      right: 10px;
+      top: 97%; /* Adjust as needed */
+      left: 15px; /* Adjust as needed */
       transform: translateY(-50%);
       display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .right-buttons .btn {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      display: flex;
-      justify-content: center;
       align-items: center;
-      font-size: 20px;
-      padding: 0;
-      background-color: #fff;
+      background-color: rgba(255, 255, 255, 0.3); /* Semi-transparent background */
+      padding: 5px;
+      border-radius: 8px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     }
+    
+    .oil-retail-icon img {
+      width: 70px; /* Adjust as needed */
+      height: auto;
+      margin-right: 10px;
+    }
+    .oil-retail-icon .icon-text {
+      font-size: 12px; /* Make font smaller */
+      font-style: italic; /* Make text italic */
+      color: #000; /* Adjust text color as needed */
+    }
+.icon-text {
+    font-weight: bold;
+    font-size: 16px; /* Adjust as needed */
+    color: #333;
+}
+.right-buttons {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.right-buttons .btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  padding: 0;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.clear-filter-button {
+  width: 50px; /* Match width with other buttons */
+  height: 50px; /* Match height with other buttons */
+  border-radius: 50%; /* Match border radius */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  padding: 0;
+  background-color: #ff0000; /* Set background color to red */
+  color: #ff0000; /* Set text color to white */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  display: none; /* Hidden by default */
+}
+
+.clear-filter-button i {
+  margin: 0; /* Remove margin */
+  font-size: 20px;
+}
+
+.clear-filter-button:hover {
+  background-color: #e60000; /* Darker red on hover */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.clear-filter-button.show {
+  display: flex; /* Show the button when filters are applied */
+}
+
 
     .footer-buttons {
       display: none;
@@ -459,6 +517,10 @@
       background-color: #f0f0f0;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
+    #clearAllButton {
+      display: none;
+    }
+    
   </style>
 </head>
 
@@ -466,22 +528,28 @@
     <div class="map-container">
         <div id="map"></div>
         <div class="right-buttons">
-            <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#filterModal">
-                <i class="fa fa-filter"></i>
-            </button>
-            <button type="button" class="btn" id="myLocationBtn">
-                <i class="fa fa-location-arrow"></i>
-            </button>
-            <button type="button" class="btn" id="nearbyStationsBtn">
-                <i class="fa fa-bars"></i>
-            </button>
-            <button type="button" class="btn" id="promotionBtn" data-bs-toggle="modal" data-bs-target="#promotionModal">
-                <i class="fa fa-bullhorn"></i>
-                <span class="notification-dot" id="promotionNotificationDot"></span>
-            </button>
-            
-            
-        </div>
+          <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#filterModal">
+              <i class="fa fa-filter"></i>
+          </button>
+          <button type="button" class="btn" id="myLocationBtn">
+              <i class="fa fa-location-arrow"></i>
+          </button>
+          <button type="button" class="btn" id="nearbyStationsBtn">
+              <i class="fa fa-bars"></i>
+          </button>
+          <button type="button" class="btn" id="promotionBtn" data-bs-toggle="modal" data-bs-target="#promotionModal">
+              <i class="fa fa-bullhorn"></i>
+              <span class="notification-dot" id="promotionNotificationDot"></span>
+          </button>
+          <button type="button" class="btn btn-danger clear-filter-button" id="clearAllButton">
+              <i class="fas fa-times"></i>
+          </button>
+      </div>
+      
+        <div class="oil-retail-icon">
+          <img src="./pictures/logo_Station.png" alt="Oil Retail Icon">
+          <span class="icon-text ">Oil Retail System</span>
+      </div>
     </div>
     <!-- Modal for Filter -->
     <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
@@ -526,7 +594,7 @@
                             <div id="promotion-icons" class="icon-container"></div>
                         </div>
                         <button type="submit" class="btn btn-primary">Apply Filter</button>
-                        <button type="button" class="btn btn-danger" id="clearAllButton"><i class="fas fa-times"></i> Clear All</button>
+                        <button type="button" class="btn btn-danger" id="clearAllButton"><i class="fas fa-times"></i> Clear All</button> 
                     </form>
                 </div>
             </div>
