@@ -40,382 +40,426 @@
         // Run device detection on page load
         detectDevice();
     </script> -->
-    <style>
-        body,
-        html {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            font-family: 'Helvetica', sans-serif;
-        }
+  <style>
+    body,
+    html {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font-family: 'Helvetica', sans-serif;
+    }
 
-        #map {
-            height: 100%;
-            width: 100%;
-            z-index: 0;
-        }
+    #map {
+      height: 100%;
+      width: 100%;
+      z-index: 0;
+    }
 
-        .map-container {
-            height: 100vh;
-            width: 100vw;
-            margin: 0;
-            padding: 0;
-            position: relative;
-        }
+    .map-container {
+      height: 100vh;
+      width: 100vw;
+      margin: 0;
+      padding: 0;
+      position: relative;
+    }
 
-        .right-buttons {
-            position: absolute;
-            top: 50%;
-            right: 10px;
-            transform: translateY(-50%);
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
+    .right-buttons {
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
 
-        .right-buttons .btn {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 20px;
-            padding: 0;
-            background-color: #fff;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
+    .right-buttons .btn {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 20px;
+      padding: 0;
+      background-color: #fff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
 
-        .footer-buttons {
-            display: none;
-            /* Hide footer buttons */
-        }
+    .footer-buttons {
+      display: none;
+      /* Hide footer buttons */
+    }
 
-        .modal-dialog {
-            max-width: 100%;
-        }
+    .modal-dialog {
+      max-width: 100%;
+    }
 
-        .modal-content {
-            border-radius: 20px;
-        }
+    .modal-content {
+      border-radius: 20px;
+    }
 
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-        .modal-header img {
-            max-width: 40%;
-            height: auto;
-        }
+    .modal-header img {
+      max-width: 40%;
+      height: auto;
+    }
 
-        .modal-header.no-border-bottom {
-            border-bottom: none;
-        }
+    .modal-header.no-border-bottom {
+      border-bottom: none;
+    }
 
-        .rounded-image {
-            border-radius: 20px;
-            /* Adjust the value as needed */
-        }
+    .rounded-image {
+      border-radius: 20px;
+      /* Adjust the value as needed */
+    }
 
-        .badge {
-            border-radius: 25px;
-            padding: 15px 25px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            font-weight: 500;
-        }
+    .badge {
+      border-radius: 25px;
+      padding: 15px 25px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 500;
+    }
 
-        .badge i {
-            margin-right: 5px;
-        }
+    .badge i {
+      margin-right: 5px;
+    }
 
-        .separator {
-            border-bottom: 1px solid #dee2e6;
-            margin: 1rem 0;
-        }
+    .separator {
+      border-bottom: 1px solid #dee2e6;
+      margin: 1rem 0;
+    }
 
-        @media (max-width: 576px) {
-            .badge {
-                padding: 3px 3px;
-                font-size: 12px;
-            }
+    @media (max-width: 576px) {
+      .badge {
+        padding: 3px 3px;
+        font-size: 12px;
+      }
 
-            .badge i {
-                margin-right: 3px;
-            }
-        }
+      .badge i {
+        margin-right: 3px;
+      }
+    }
 
-        .info {
-            font-size: 14px;
-            /* Adjust font size to match the image */
-            color: #7d7d7d;
-            /* Adjust font color to match the image */
-            display: flex;
-            align-items: center;
-            margin-bottom: 0.5rem;
-        }
+    .info {
+      font-size: 14px;
+      /* Adjust font size to match the image */
+      color: #7d7d7d;
+      /* Adjust font color to match the image */
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
 
-        .info .icon {
-            color: #ff0000;
-            /* Adjust icon color to match the image */
-            margin-right: 8px;
-            font-size: 1.25rem;
-            /* Adjust icon size to match the font size */
-        }
+    .info .icon {
+      color: #ff0000;
+      /* Adjust icon color to match the image */
+      margin-right: 8px;
+      font-size: 1.25rem;
+      /* Adjust icon size to match the font size */
+    }
 
-        .go-button {
-            width: 55px;
-            height: 55px;
-            font-size: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+    .go-button {
+      width: 55px;
+      height: 55px;
+      font-size: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-        .icon-background {
-            background-color: #d4d4d4;
-            /* Adjust color as needed */
-            color: #003cff;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+    .icon-background {
+      background-color: #d4d4d4;
+      /* Adjust color as needed */
+      color: #003cff;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-        .share-icon,
-        .navigate-icon {
-            font-size: 18px;
-            /* Adjust font size as needed */
-        }
+    .share-icon,
+    .navigate-icon {
+      font-size: 18px;
+      /* Adjust font size as needed */
+    }
 
-        .badge .icon-background {
-            background-color: #0a4bcc;
-            /* Adjust color as needed */
-            color: #fff;
-            border-radius: 50%;
-            padding: 5px;
-            margin-right: 5px;
-        }
+    .badge .icon-background {
+      background-color: #0a4bcc;
+      /* Adjust color as needed */
+      color: #fff;
+      border-radius: 50%;
+      padding: 5px;
+      margin-right: 5px;
+    }
 
-        .nav-tabs-container {
-            overflow-x: auto;
-            white-space: nowrap;
-            border-bottom: 1px solid #ddd;
-            margin-bottom: 20px;
-        }
+    .nav-tabs-container {
+      overflow-x: auto;
+      white-space: nowrap;
+      border-bottom: 1px solid #ddd;
+      margin-bottom: 20px;
+    }
 
-        .nav-tabs {
-            display: flex;
-            border-bottom: none;
-            padding: 10px 0;
-            scroll-behavior: smooth;
-        }
+    .nav-tabs {
+      display: flex;
+      border-bottom: none;
+      padding: 10px 0;
+      scroll-behavior: smooth;
+    }
 
-        .nav-tabs .nav-item {
-            margin-right: 10px;
-        }
+    .nav-tabs .nav-item {
+      margin-right: 10px;
+    }
 
-        .nav-tabs .nav-link {
-            border: none;
-            border-radius: 30px;
-            padding: 10px 20px;
-            background-color: #f8f9fa;
-            color: #007bff;
-            transition: background-color 0.3s, color 0.3s;
-        }
+    .nav-tabs .nav-link {
+      border: none;
+      border-radius: 30px;
+      padding: 10px 20px;
+      background-color: #f8f9fa;
+      color: #007bff;
+      transition: background-color 0.3s, color 0.3s;
+    }
 
-        .nav-tabs .nav-link.active {
-            background-color: #007bff;
-            color: white;
-        }
+    .nav-tabs .nav-link.active {
+      background-color: #007bff;
+      color: white;
+    }
 
-        .nav-tabs .nav-link:hover {
-            background-color: #e2e6ea;
-            color: #0056b3;
-        }
+    .nav-tabs .nav-link:hover {
+      background-color: #e2e6ea;
+      color: #0056b3;
+    }
 
-        .tab-content {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
+    .tab-content {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
 
-        .scrollable-content {
-            max-height: 200px;
-            overflow-y: auto;
-        }
+    .scrollable-content {
+      max-height: 200px;
+      overflow-y: auto;
+    }
 
-        .scrollable-content::-webkit-scrollbar {
-            width: 8px;
-        }
+    .scrollable-content::-webkit-scrollbar {
+      width: 8px;
+    }
 
-        .scrollable-content::-webkit-scrollbar-thumb {
-            background-color: #007bff;
-            border-radius: 10px;
-        }
+    .scrollable-content::-webkit-scrollbar-thumb {
+      background-color: #007bff;
+      border-radius: 10px;
+    }
 
-        .scrollable-content::-webkit-scrollbar-track {
-            background-color: #f8f9fa;
-        }
+    .scrollable-content::-webkit-scrollbar-track {
+      background-color: #f8f9fa;
+    }
 
-        .fade-enter-active,
-        .fade-leave-active {
-            transition: opacity 0.5s;
-        }
+    .fade-enter-active,
+    .fade-leave-active {
+      transition: opacity 0.5s;
+    }
 
-        .fade-enter,
-        .fade-leave-to
+    .fade-enter,
+    .fade-leave-to
+    /* .fade-leave-active in <2.1.8 */
+      {
+      opacity: 0;
+    }
 
-        /* .fade-leave-active in <2.1.8 */
-            {
-            opacity: 0;
-        }
+    /* Subtle pulsing border animation for Under Construction */
+    .blink-border {
+      animation: pulse-border 2s infinite;
+    }
 
-        /* Subtle pulsing border animation for Under Construction */
-        .blink-border {
-            animation: pulse-border 2s infinite;
-        }
+    @keyframes pulse-border {
+      0%,
+      100% {
+        border: 2px solid #ff0000;
+      }
 
-        @keyframes pulse-border {
+      50% {
+        border: 2px solid transparent;
+      }
+    }
 
-            0%,
-            100% {
-                border: 2px solid #ff0000;
-            }
+    /* General styles for status badges */
+    .status-badge {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
 
-            50% {
-                border: 2px solid transparent;
-            }
-        }
+    /* Pulsing animation */
+    .go-button.pulse {
+      animation: pulse 3s infinite;
+    }
 
-        /* General styles for status badges */
-        .status-badge {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
+    @keyframes pulse {
+      0%,
+      100% {
+        box-shadow: 0 0 5px #002fff;
+      }
 
-        /* Pulsing animation */
-        .go-button.pulse {
-            animation: pulse 3s infinite;
-        }
+      50% {
+        box-shadow: 0 0 15px #174c85;
+      }
+    }
 
-        @keyframes pulse {
+    .custom-icon-container {
+      position: relative;
+      display: inline-block;
+    }
 
-            0%,
-            100% {
-                box-shadow: 0 0 5px #002fff;
-            }
+    .station-icon {
+      width: 41px;
+      height: 62px;
+    }
 
-            50% {
-                box-shadow: 0 0 15px #174c85;
-            }
-        }
+    .red-dot {
+      position: absolute;
+      top: 10px;
+      right: -1px;
+      width: 15px;
+      height: 15px;
+      background-color: red;
+      border-radius: 50%;
+      border: 2px solid white;
+    }
 
-        .product-icon,
-        .item-icon {
-            width: 40px;
-            /* Adjust size as needed */
-            height: 40px;
-            /* Adjust size as needed */
-            margin-right: 8px;
-            /* Add some space between the icon and the text */
-        }
-
-        .round {
-            border-radius: 50%;
-            /* Make the image round */
-            object-fit: cover;
-            /* Ensure the image covers the container */
-        }
-
-        .full {
-            width: 32px;
-            /* Ensure consistent size */
-            height: auto;
-            /* Ensure consistent size */
-            object-fit: cover;
-            /* Ensure the image covers the container */
-        }
-
-        .product-row,
-        .service-row,
-        .description-row,
-        .promotion-row {
-            display: flex;
-            flex-wrap: wrap;
-            /* Wrap items if they don't fit in one line */
-            gap: 10px;
-            /* Space between items */
-        }
-
-        .info {
-            display: flex;
-            align-items: center;
-            /* Vertically center the image and text */
-            margin-bottom: 8px;
-            /* Add some space between info items */
-        }
-
-/* Styling for the red dot notification */
-#promotionBtn .notification-dot {
-    position: absolute;
-    top: 3px; /* Adjusted for better alignment */
-    right: 3px; /* Adjusted for better alignment */
-    width: 12px; /* Slightly increased size for better visibility */
-    height: 12px; /* Slightly increased size for better visibility */
-    background-color: red;
-    border-radius: 50%;
-    animation: pulse 2s infinite;
-}
-
-/* Keyframes for pulsing animation */
-@keyframes pulse {
-    0% {
+    @keyframes pulse {
+      0% {
         transform: scale(1);
         opacity: 1;
-    }
-    50% {
+      }
+
+      50% {
         transform: scale(1.5);
         opacity: 0.5;
-    }
-    100% {
+      }
+
+      100% {
         transform: scale(1);
         opacity: 1;
+      }
     }
-}
 
-/* Ensure the button container has relative positioning */
-.right-buttons .btn {
-    position: relative; /* Needed for absolute positioning of the red dot */
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 20px;
-    padding: 0;
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-}
+    .red-dot.animate {
+      animation: pulse 1.5s infinite;
+    }
 
-/* Add hover effect for buttons */
-.right-buttons .btn:hover {
-    background-color: #f0f0f0;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
+    .product-icon,
+    .item-icon {
+      width: 40px;
+      /* Adjust size as needed */
+      height: 40px;
+      /* Adjust size as needed */
+      margin-right: 8px;
+      /* Add some space between the icon and the text */
+    }
 
+    .round {
+      border-radius: 50%;
+      /* Make the image round */
+      object-fit: cover;
+      /* Ensure the image covers the container */
+    }
 
-    </style>
+    .full {
+      width: 32px;
+      /* Ensure consistent size */
+      height: auto;
+      /* Ensure consistent size */
+      object-fit: cover;
+      /* Ensure the image covers the container */
+    }
+
+    .product-row,
+    .service-row,
+    .description-row,
+    .promotion-row {
+      display: flex;
+      flex-wrap: wrap;
+      /* Wrap items if they don't fit in one line */
+      gap: 10px;
+      /* Space between items */
+    }
+
+    .info {
+      display: flex;
+      align-items: center;
+      /* Vertically center the image and text */
+      margin-bottom: 8px;
+      /* Add some space between info items */
+    }
+
+    /* Styling for the red dot notification */
+    #promotionBtn .notification-dot {
+      position: absolute;
+      top: 3px;
+      /* Adjusted for better alignment */
+      right: 3px;
+      /* Adjusted for better alignment */
+      width: 12px;
+      /* Slightly increased size for better visibility */
+      height: 12px;
+      /* Slightly increased size for better visibility */
+      background-color: red;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    /* Keyframes for pulsing animation */
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+        opacity: 1;
+      }
+
+      50% {
+        transform: scale(1.5);
+        opacity: 0.5;
+      }
+
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    /* Ensure the button container has relative positioning */
+    .right-buttons .btn {
+      position: relative;
+      /* Needed for absolute positioning of the red dot */
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 20px;
+      padding: 0;
+      background-color: #fff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    /* Add hover effect for buttons */
+    .right-buttons .btn:hover {
+      background-color: #f0f0f0;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+  </style>
 </head>
 
 <body>
@@ -431,11 +475,11 @@
             <button type="button" class="btn" id="nearbyStationsBtn">
                 <i class="fa fa-bars"></i>
             </button>
-            <!-- <button type="button" class="btn" id="promotionBtn" data-bs-toggle="modal" data-bs-target="#promotionModal">
+            <button type="button" class="btn" id="promotionBtn" data-bs-toggle="modal" data-bs-target="#promotionModal">
                 <i class="fa fa-bullhorn"></i>
                 <span class="notification-dot" id="promotionNotificationDot"></span>
             </button>
-             -->
+            
             
         </div>
     </div>
@@ -685,6 +729,59 @@
             border-radius: 50%;
             /* Round icons */
         }
+        @keyframes zoomInOut {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.9;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        .promotion-image.animate {
+            animation: zoomInOut 5s infinite ease-in-out, highlight 5s infinite ease-in-out; /* Adjusted duration */
+            cursor: pointer;
+            border-radius: 15px;
+            will-change: transform, filter, box-shadow, border;
+            transition: all 0.3s ease-in-out;
+        }
+        
+        .promotion-image {
+            display: block;
+            margin: 20px auto;
+            max-width: 90%;
+            border-radius: 15px;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+            background-color: white;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            padding: 10px;
+            background: linear-gradient(145deg, #f3f3f3, #ffffff);
+            border: 1px solid #ddd;
+        }
+        
+        .promotion-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .promotion-text {
+            font-weight: bold;
+            color: #333;
+            margin-top: 10px;
+            font-size: 1.1em;
+        }
+        
+        
     </style>
     <script src="main.js"></script>
     <!-- Leaflet JS -->

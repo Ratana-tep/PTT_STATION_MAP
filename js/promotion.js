@@ -40,6 +40,7 @@ function showPromotionModal(promotions) {
 function addPromotionImageEventListeners() {
     const promotionImages = document.querySelectorAll(".promotion-image");
     promotionImages.forEach(image => {
+        image.classList.add('animate');
         image.addEventListener("click", function () {
             const promotionId = this.getAttribute("data-promotion-id");
             filterMarkersByPromotion(promotionId);
@@ -57,10 +58,11 @@ function createAndAppendPromotionElements(promotion, promotionImageUrl, containe
     promotionImage.classList.add('img-fluid', 'mb-2', 'promotion-image'); // Add classes for styling
     promotionImage.setAttribute('data-promotion-id', promotion.promotion_id); // Set data-promotion-id attribute
 
-    promotionItem.appendChild(promotionImage); // Append to promotion item
-
     const promotionText = document.createElement('p');
+    promotionText.classList.add('promotion-text');
     promotionText.innerText = `${promotion.promotion_id} (ends on ${formatPromotionEndTime(promotion.end_time)}) - ${promotion.description || 'No description'}`; // Update with the promotion details
+
+    promotionItem.appendChild(promotionImage); // Append to promotion item
     promotionItem.appendChild(promotionText); // Append to promotion item
 
     container.appendChild(promotionItem); // Append promotion item to container

@@ -8,7 +8,28 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
 }).addTo(map);
 
 // Initialize marker cluster group
-var markers = L.markerClusterGroup();
+var markers = L.markerClusterGroup({
+  iconCreateFunction: function(cluster) {
+    var childMarkers = cluster.getAllChildMarkers();
+    var hasPromotions = childMarkers.some(function(marker) {
+      return marker.options.icon.options.html.includes('red-dot');
+    });
+
+    var clusterHtml = `<div class="cluster-icon-container" style="position: relative;">
+                         ${hasPromotions ? '<div class="red-dot animate" style="position: absolute; top: 0; right: 0;"></div>' : ''}
+                         <div class="cluster-number" style="background: rgba(0, 27, 255, 0.8); border-radius: 50%; color: white; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">
+                           ${cluster.getChildCount()}
+                         </div>
+                       </div>`;
+    
+    return L.divIcon({
+      html: clusterHtml,
+      className: 'custom-cluster-icon', // Optional: add custom class for further styling
+      iconSize: L.point(40, 40)
+    });
+  }
+});
+
 var allMarkers = []; // Array to hold all markers for filtering
 // Variables to store the current location marker and circle
 let currentLocationMarker = null;
@@ -68,37 +89,32 @@ fetch("https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers.json")
     var stations = data.STATION;
     populateIconContainersAndDropdown(stations);
 
-    fetch(
-      "https://raw.githubusercontent.com/pttpos/map_ptt/main/data/promotions.json"
-    )
+    fetch("https://raw.githubusercontent.com/pttpos/map_ptt/main/data/promotions.json")
       .then((response) => response.json())
       .then((promotionData) => {
-        // Merge promotion data with station data
         stations.forEach((station) => {
-          const stationPromotions = promotionData.PROMOTIONS.find(
-            (promo) => promo.station_id == station.id
-          );
-          if (stationPromotions) {
-            station.promotions = stationPromotions.promotions;
-          } else {
-            station.promotions = [];
-          }
+          const stationPromotions = promotionData.PROMOTIONS.find((promo) => promo.station_id == station.id);
+          station.promotions = stationPromotions ? stationPromotions.promotions : [];
 
           // Get the custom icon URL based on the station status
           var iconUrl = getIconUrl(station.status);
 
-          // Create custom icon for the marker
-          var customIcon = L.icon({
-            iconUrl: iconUrl, // Use the path returned by getIconUrl
+          // Create custom icon for the marker with a red dot if there are promotions
+          var customIcon = L.divIcon({
+            html: `
+              <div class="custom-icon-container" style="position: relative;">
+                <img src="${iconUrl}" class="station-icon" style="width: 41px; height: 62px;">
+                ${station.promotions.length > 0 ? '<div class="red-dot animate" style="position: absolute; top: 0; right: 0; width: 12px; height: 12px; background-color: red; border-radius: 50%; border: 2px solid white;"></div>' : ''}
+              </div>
+            `,
+            className: '',
             iconSize: [41, 62], // Adjust the size to fit your needs
-            iconAnchor: [24, 75],
-            popupAnchor: [1, -1000],
+            iconAnchor: [24, 62],
+            popupAnchor: [1, -34],
           });
 
           // Create marker with custom icon
-          var marker = L.marker([station.latitude, station.longitude], {
-            icon: customIcon,
-          });
+          var marker = L.marker([station.latitude, station.longitude], { icon: customIcon });
 
           // Create image URL
           var imageUrl = `https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/${station.picture}`;
@@ -125,17 +141,10 @@ fetch("https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers.json")
                     )
                       .then((result) => {
                         const { distance, travelTime } = result;
-                        updateModalWithRoute(
-                          distance,
-                          travelTime,
-                          station.status
-                        );
+                        updateModalWithRoute(distance, travelTime, station.status);
                       })
                       .catch((error) => {
-                        console.error(
-                          "Error getting route from Bing Maps:",
-                          error
-                        );
+                        console.error("Error getting route from Bing Maps:", error);
                         updateModalWithRoute("N/A", "N/A", station.status); // Use placeholders if there's an error
                       });
                   })
@@ -157,17 +166,10 @@ fetch("https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers.json")
                   )
                     .then((result) => {
                       const { distance, travelTime } = result;
-                      updateModalWithRoute(
-                        distance,
-                        travelTime,
-                        station.status
-                      );
+                      updateModalWithRoute(distance, travelTime, station.status);
                     })
                     .catch((error) => {
-                      console.error(
-                        "Error getting route from Bing Maps:",
-                        error
-                      );
+                      console.error("Error getting route from Bing Maps:", error);
                       updateModalWithRoute("N/A", "N/A", station.status); // Use placeholders if there's an error
                     });
                 })
@@ -195,6 +197,7 @@ fetch("https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers.json")
       .catch((error) => console.error("Error fetching promotion data:", error));
   })
   .catch((error) => console.error("Error fetching data:", error));
+
 
 // Function to get current location
 document.getElementById("myLocationBtn").addEventListener("click", function () {
