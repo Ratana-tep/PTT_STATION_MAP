@@ -74,7 +74,7 @@ function createAndAppendPromotionElements(promotion, promotionImageUrl, containe
 function formatPromotionEndTime(endTime) {
     const date = new Date(endTime);
     if (isNaN(date.getTime())) {
-        console.error(`Invalid date: ${endTime}`);
+       error(`Invalid date: ${endTime}`);
         return "Invalid Date";
     }
     return date.toLocaleDateString();
@@ -228,9 +228,9 @@ fetch("https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers.json")
                 });
                 populatePromotions(stations);
             })
-            .catch(error => console.error('Error loading promotion data:', error));
+            .catch(error => error('Error loading promotion data:', error));
     })
-    .catch(error => console.error('Error loading station data:', error));
+    .catch(error => error('Error loading station data:', error));
 
 // Clear modal content on hide
 document.getElementById('promotionModal').addEventListener('hidden.bs.modal', function () {
