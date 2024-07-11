@@ -29,7 +29,7 @@ function showPromotionModal(promotions) {
         });
         promotionModal.show();
     } else {
-        alert('No promotion available.');
+       
     }
 
     // Add event listeners for promotion images within the modal
@@ -146,8 +146,6 @@ function populatePromotions(stations) {
         const uniquePromotions = Array.from(new Map(allPromotions.map(promotion => [promotion.promotion_id, promotion])).values());
         if (uniquePromotions.length > 0) {
             showPromotionModal(uniquePromotions);
-        } else {
-            alert('No promotion available.');
         }
     });
 }
