@@ -1,8 +1,8 @@
 // Initialize the map
 var map = L.map("map").setView([11.55, 104.91], 7);
 
-// Add OpenStreetMap tiles
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 
 // Initialize marker cluster group
@@ -97,19 +97,122 @@ fetch("https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers.json")
           // Get the custom icon URL based on the station status
           var iconUrl = getIconUrl(station.status);
 
-          // Create custom icon for the marker with a red dot if there are promotions
           var customIcon = L.divIcon({
             html: `
-              <div class="custom-icon-container" style="position: relative;">
-                <img src="${iconUrl}" class="station-icon" style="width: 41px; height: 62px;">
-                ${station.promotions.length > 0 ? '<div class="red-dot animate" style="position: absolute; top: 0; right: 0; width: 12px; height: 12px; background-color: red; border-radius: 50%; border: 2px solid white;"></div>' : ''}
+              <style>
+                @keyframes rotate {
+                  0% {
+                    transform: rotate(0deg);
+                  }
+                  100% {
+                    transform: rotate(360deg);
+                  }
+                }
+          
+                @keyframes reverse-rotate {
+                  0% {
+                    transform: rotate(360deg);
+                  }
+                  100% {
+                    transform: rotate(0deg);
+                  }
+                }
+          
+                .beam {
+                  position: absolute;
+                  width: 60px;
+                  height: 5px;
+                  background: linear-gradient(to right, transparent, rgba(255, 215, 0, 2), transparent);
+                  opacity: 0.7;
+                  top: 50%;
+                  left: 50%;
+                  transform-origin: left center;
+                }
+          
+                .beam:nth-child(1) { transform: rotate(0deg); }
+                .beam:nth-child(2) { transform: rotate(30deg); }
+                .beam:nth-child(3) { transform: rotate(60deg); }
+                .beam:nth-child(4) { transform: rotate(90deg); }
+                .beam:nth-child(5) { transform: rotate(120deg); }
+                .beam:nth-child(6) { transform: rotate(150deg); }
+                .beam:nth-child(7) { transform: rotate(180deg); }
+                .beam:nth-child(8) { transform: rotate(210deg); }
+                .beam:nth-child(9) { transform: rotate(240deg); }
+                .beam:nth-child(10) { transform: rotate(270deg); }
+                .beam:nth-child(11) { transform: rotate(300deg); }
+                .beam:nth-child(12) { transform: rotate(330deg); }
+          
+                .promotion-background {
+                  position: absolute;
+                  width: 120px;
+                  height: 120px;
+                  top: -50%;
+                  left: -100%;
+                  transform: translate(-50%, -50%);
+                  animation: rotate 10s linear infinite; /* Slower animation */
+                  z-index: 1;
+                }
+          
+                .promotion-background-reverse {
+                  position: absolute;
+                  width: 120px;
+                  height: 120px;
+                  top: -50%;
+                  left: -100%;
+                  transform: translate(-50%, -50%);
+                  animation: reverse-rotate 10s linear infinite; /* Slower animation */
+                  z-index: 1;
+                }
+          
+                .station-icon {
+                  width: 41px;
+                  height: 62px;
+                  position: relative;
+                  z-index: 2;
+                }
+          
+              </style>
+              <div class="custom-icon-container" style="position: relative; width: 41px; height: 62px;">
+                ${station.promotions.length > 0 ? `
+                  <div class="promotion-background">
+                    <div class="beam"></div>
+                    <div class="beam"></div>
+                    <div class="beam"></div>
+                    <div class="beam"></div>
+                    <div class="beam"></div>
+                    <div class="beam"></div>
+                    <div class="beam"></div>
+                    <div class="beam"></div>
+                    <div class="beam"></div>
+                    <div class="beam"></div>
+                    <div class="beam"></div>
+                    <div class="beam"></div>
+                  </div>
+                  <div class="promotion-background-reverse">
+                    <div class="beam"></div>
+                    <div class="beam"></div>
+                    <div class="beam"></div>
+                    <div class="beam"></div>
+                    <div class="beam"></div>
+                    <div class="beam"></div>
+                    <div class="beam"></div>
+                    <div class="beam"></div>
+                    <div class="beam"></div>
+                    <div class="beam"></div>
+                    <div class="beam"></div>
+                    <div class="beam"></div>
+                  </div>` : ''}
+                <img src="${iconUrl}" class="station-icon">
+                ${station.promotions.length > 0 ? '<div class="red-dot" style="margin-right:5px;"></div>' : ''}
               </div>
             `,
             className: '',
             iconSize: [41, 62], // Adjust the size to fit your needs
-            iconAnchor: [24, 62],
+            iconAnchor: [20, 62],
             popupAnchor: [1, -34],
           });
+          
+          
 
           // Create marker with custom icon
           var marker = L.marker([station.latitude, station.longitude], { icon: customIcon });
@@ -237,16 +340,20 @@ function getIconUrl(status) {
   const currentHour = cambodiaTime.getHours();
   const currentMinutes = cambodiaTime.getMinutes();
 
+  console.log(`Current Cambodia Time: ${cambodiaTime}`);
+  console.log(
+    `Current Hour: ${currentHour}, Current Minutes: ${currentMinutes}`
+  );
 
   // Handle different status cases
   const open24Hours = status.toLowerCase() === "24h";
   const underConstruction = status.toLowerCase() === "under construct";
 
   if (underConstruction) {
-    
+    console.log("Status: Under Construction");
     return "./pictures/61.png"; // Path to the under construction icon
   } else if (open24Hours) {
-   
+    console.log("Status: Open 24 Hours");
     return "./pictures/61.png"; // Path to the 24h icon
   } else {
     // Assume the default open hours are from 5:00 AM to 8:30 PM
@@ -254,7 +361,9 @@ function getIconUrl(status) {
     const closingHour = 20;
     const closingMinutes = 30;
 
-  
+    console.log(
+      `Opening Hour: ${openingHour}, Closing Hour: ${closingHour}, Closing Minutes: ${closingMinutes}`
+    );
 
     // Determine if the station is open
     const isOpen =
@@ -263,10 +372,10 @@ function getIconUrl(status) {
         (currentHour === closingHour && currentMinutes < closingMinutes));
 
     if (isOpen) {
-
+      console.log("Status: Open");
       return "./pictures/61.png"; // Path to the open icon
     } else {
-
+      console.log("Status: Closed");
       return "./pictures/time_close1.png"; // Path to the closed icon
     }
   }
@@ -281,7 +390,7 @@ function getBingRoute(startLat, startLng, endLat, endLng) {
   return fetch(url)
     .then((response) => response.json())
     .then((data) => {
-     
+      console.log("Bing Maps API response:", data); // Log response for debugging
       if (data.resourceSets[0].resources.length > 0) {
         const route = data.resourceSets[0].resources[0];
         const distance = route.travelDistance; // in kilometers
@@ -538,7 +647,6 @@ function getProductIcon(product) {
     HSD: "./pictures/HSD.png", // Path to the HSD image
     EV: "./pictures/ev.png", // Path to the EV image
     Onion: "./pictures/onion.png", // Path to the Onion image
-    Otr: "./pictures/OTR.png",
   };
   return productImages[product] || "./pictures/default.png"; // Default image if product not found
 }
@@ -608,6 +716,10 @@ function getStatusInfo(status) {
   const currentHour = cambodiaTime.getHours();
   const currentMinutes = cambodiaTime.getMinutes();
 
+  console.log(`Current Cambodia Time: ${cambodiaTime}`);
+  console.log(
+    `Current Hour: ${currentHour}, Current Minutes: ${currentMinutes}`
+  );
 
   if (status.toLowerCase() === "under construct") {
     return {
@@ -626,7 +738,10 @@ function getStatusInfo(status) {
     const closingHour = 20; // Closing hour is 8 PM
     const closingMinutes = 30; // Closing minutes is 8:30 PM
 
-  
+    console.log(
+      `Opening Hour: ${openingHour}, Closing Hour: ${closingHour}, Closing Minutes: ${closingMinutes}`
+    );
+
     // Determine if the station is closed
     if (
       currentHour < openingHour || // Before 5 AM
@@ -634,14 +749,14 @@ function getStatusInfo(status) {
       (currentHour === closingHour && currentMinutes >= closingMinutes) || // After 8:30 PM
       (currentHour >= 0 && currentHour < 5) // After midnight and before 5 AM
     ) {
-
+      console.log("Station is closed.");
       return {
         iconClass: "fa-times-circle",
         badgeClass: "bg-danger text-white",
         displayText: "Closed",
       };
     } else {
-
+      console.log("Station is open.");
       return {
         iconClass: "fa-gas-pump",
         badgeClass: "bg-success text-white",
@@ -667,7 +782,7 @@ const dataUrl =
   "https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers.json";
 fetchData(dataUrl).then((data) => {
   // Handle the data as needed
-
+  console.log(data);
 });
 
 // Function to open Google Maps with the destination

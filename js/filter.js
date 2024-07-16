@@ -10,7 +10,7 @@ const imageMapping = {
   "ULG 95": "ULG95.png",
   "ULR 91": "ULR91.png",
   "HSD": "HSD.png",
-  "promotion1": "opening1.jpg"
+  "Otr": "OTR.png",
   // Add more mappings as needed
 };
 

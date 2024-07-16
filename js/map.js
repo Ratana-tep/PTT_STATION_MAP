@@ -544,6 +544,7 @@ function getProductIcon(product) {
     HSD: "./pictures/HSD.png", // Path to the HSD image
     EV: "./pictures/ev.png", // Path to the EV image
     Onion: "./pictures/onion.png", // Path to the Onion image
+    Otr: "./pictures/OTR.png",
   };
   return productImages[product] || "./pictures/default.png"; // Default image if product not found
 }
