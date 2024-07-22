@@ -350,10 +350,10 @@
     <script>
       function detectDevice() {
           var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-
-          // Regex pattern to detect mobile devices
-          var isMobile = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent.toLowerCase());
-
+  
+          // Regex pattern to detect mobile devices, excluding iPad and other tablets
+          var isMobile = /android|webos|iphone|ipod|blackberry|iemobile|opera mini/i.test(userAgent.toLowerCase());
+  
           if (isMobile) {
               // Redirect to mobile page
               window.location.href = 'mapViewPhone.html';
@@ -362,9 +362,10 @@
               window.location.href = 'mapViewerPC.html';
           }
       }
-
+  
       // Wait for 3 seconds before redirecting
       setTimeout(detectDevice, 3000); // 3000 milliseconds = 3 seconds
   </script>
+  
 </body>
 </html>
