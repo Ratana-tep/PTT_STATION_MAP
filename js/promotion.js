@@ -62,8 +62,8 @@ function createAndAppendPromotionElements(promotion, promotionImageUrl, containe
 
     const promotionText = document.createElement('p');
     promotionText.classList.add('promotion-text');
-    promotionText.innerText = `${promotion.promotion_id} (ends on ${formatPromotionEndTime(promotion.end_time)}) - ${promotion.description || 'No description'}`; // Update with the promotion details
-
+    //old_ promotionText.innerText = `${promotion.promotion_id} (ends on ${formatPromotionEndTime(promotion.end_time)}) - ${promotion.description || 'No description'}`; // Update with the promotion details
+    promotionText.innerText = `${promotion.promotion_id} ${promotion.description || 'No description'}`; // Update with the promotion details
     promotionItem.appendChild(promotionImage); // Append to promotion item
     promotionItem.appendChild(promotionText); // Append to promotion item
 
