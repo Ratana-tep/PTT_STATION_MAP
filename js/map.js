@@ -377,6 +377,10 @@ function showMarkerModal(station, imageUrl) {
           : "";
 
   // Generate promotions HTML without click event
+//   <span>(ends on ${new Date(
+//     promo.end_time
+// ).toLocaleDateString()})
+// </span>
   const promotionHtml =
       station.promotions && station.promotions.length > 0
           ? station.promotions
@@ -392,9 +396,6 @@ function showMarkerModal(station, imageUrl) {
                   )}" style="margin-right: 10px; width: 50px; height: auto;" />
           <div>
               <strong class="promotion-label" data-promotion="${promo.description}">${promo.description}</strong><br>
-              <span>(ends on ${new Date(
-                      promo.end_time
-                  ).toLocaleDateString()})</span>
           </div>
       </div>
   `
