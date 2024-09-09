@@ -678,7 +678,7 @@ function fetchData(url) {
 
 // Usage example with fetchData function
 const dataUrl =
-  "https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers.json";
+  "../data/markers.json";
 fetchData(dataUrl).then((data) => {
   // Handle the data as needed
   console.log(data);
