@@ -304,7 +304,7 @@ document
                     listItem.innerHTML = `
                       <div class="d-flex align-items-start">
                         <div>
-                          <img src="https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/${
+                          <img src="https://raw.githubusercontent.com/Ratana-tep/PTT_STATION_MAP/master/pictures/${
                             station.picture
                           }" alt="${
                       station.title

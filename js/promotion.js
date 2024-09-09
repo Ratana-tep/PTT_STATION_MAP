@@ -209,11 +209,11 @@ function clearAllSelections() {
 document.getElementById('clearAllButton').addEventListener('click', clearAllSelections);
 
 // Fetch station and promotion data and initialize promotions
-fetch("https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers.json")
+fetch("https://raw.githubusercontent.com/Ratana-tep/PTT_STATION_MAP/master/data/markers.json")
     .then(response => response.json())
     .then(data => {
         const stations = data.STATION;
-        fetch("https://raw.githubusercontent.com/pttpos/map_ptt/main/data/promotions.json")
+        fetch("https://raw.githubusercontent.com/Ratana-tep/PTT_STATION_MAP/master/data/promotions.json")
             .then(response => response.json())
             .then(promotionData => {
                 const promotions = promotionData.PROMOTIONS;
