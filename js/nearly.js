@@ -157,13 +157,13 @@ document
   .addEventListener("click", function () {
     getCurrentLocation().then((currentLocation) => {
       fetch(
-        "https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers.json"
+        "https://raw.githubusercontent.com/Ratana-tep/PTT_STATION_MAP/master/data/markers.json"
       )
         .then((response) => response.json())
         .then((data) => {
           const stations = data.STATION;
           fetch(
-            "https://raw.githubusercontent.com/pttpos/map_ptt/main/data/promotions.json"
+            "https://raw.githubusercontent.com/Ratana-tep/PTT_STATION_MAP/master/data/promotions.json"
           )
             .then((response) => response.json())
             .then((promotionData) => {
@@ -304,7 +304,7 @@ document
                     listItem.innerHTML = `
                       <div class="d-flex align-items-start">
                         <div>
-                          <img src="https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/${
+                          <img src="https://github.com/Ratana-tep/PTT_STATION_MAP/tree/master/pictures/${
                             station.picture
                           }" alt="${
                       station.title
@@ -399,7 +399,7 @@ document
                         markerData.marker.openPopup(); // Open the marker popup
                         showMarkerModal(
                           station,
-                          `https://raw.githubusercontent.com/pttpos/map_ptt/main/pictures/${station.picture}`
+                          `https://github.com/Ratana-tep/PTT_STATION_MAP/tree/58f63f08e1abeafd521efa9d0d23528109fcee3a/pictures/${station.picture}`
                         ); // Show the marker modal
                         // Get route information and update modal
                         getCurrentLocation()
