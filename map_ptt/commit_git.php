@@ -1,6 +1,6 @@
 <?php
 function executeGitCommands($commitMessage, $directoryPath) {
-    $githubToken = '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'; // Replace with your GitHub token
+    $githubToken = ''; // Replace with your GitHub token
     $owner = 'pttpos'; // Replace with your GitHub username
     $repo = 'map_ptt'; // Replace with your repository name
     $branch = 'main'; // Replace with your branch name
