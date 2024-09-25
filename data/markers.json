@@ -3583,35 +3583,6 @@
             "picture": "2.png"
         },
         {
-            "id": 10031131,
-            "latitude": 11.5616944444444,
-            "longitude": 104.914361111111,
-            "title": "PTT OU REUSSEY",
-            "description": [
-                "Amazon"
-            ],
-            "product": [
-                "ULG 95",
-                "ULR 91",
-                "HSD"
-            ],
-            "other_product": [
-                ""
-            ],
-            "service": [
-                "Cash",
-                "KHQR"
-            ],
-            "province": "Phnom Penh",
-            "address": "Sangkat Beung Prolit, Khan 7 Makara, Phnom Penh",
-            "status": "16h",
-            "promotion": [
-                ""
-            ],
-            "old_picture": "",
-            "picture": "2.png"
-        },
-        {
             "id": 10031323,
             "latitude": 10.5336388888888,
             "longitude": 103.617055555555,
