@@ -5390,6 +5390,32 @@
             "promotion": [],
             "old_picture": "",
             "picture": "2.png"
+        },
+        {
+            "id": "10038283",
+            "latitude": "11.54783333",
+            "longitude": "104.8222222",
+            "title": "PTT Prey Tea",
+            "description": [
+                "Amazon",
+            ],
+            "product": [
+                "ULG 95",
+                "ULR 91",
+                "HSD"
+            ],
+            "other_product": [],
+            "service": [
+                "KHQR",
+                "Cash"
+            ],
+            "province": "Phnom Penh",
+            "address": "#Plot no. 761 and Plot no.797, Street no.86K corner of street 123K, Phum Prey Tea 1, Sangkat Chaom Chau Ti 3, Khan Pou Sen Chey (Por Senchey), Phnom Penh.",
+            "status": "16h",
+            "promotion": [],
+            "old_picture": "",
+            "picture": "2.png"
         }
+
     ]
 }
