@@ -5071,7 +5071,8 @@
             ],
             "service": [
                 "Cash",
-                "KHQR"
+                "KHQR",
+                "Fleet card"
             ],
             "province": "Preah Sihanouk",
             "address": "# National Road 4, Kirivon Village, Stoeng Chhay Commune, Kampong Seila District, Sihanouk Ville, Cambodia",
@@ -5201,7 +5202,9 @@
             "longitude": 104.910055555555,
             "title": "PTT Peng Huoth Road 50m",
             "description": [
-                "Amazon"
+                "Amazon",
+                "7-Eleven"
+                
             ],
             "product": [
                 "ULG 95",
