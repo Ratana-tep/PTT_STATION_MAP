@@ -5415,6 +5415,32 @@
             "promotion": [],
             "old_picture": "",
             "picture": "2.png"
+        },
+        {
+            "id": "10038391",
+            "latitude": "13.35430556",
+            "longitude": "103.8400556",
+            "title": "PTT STATION RING ROAD",
+            "description": [
+                "Amazon"
+            ],
+            "product": [
+                "ULG 95",
+                "ULR 91",
+                "HSD"
+            ],
+            "other_product": [],
+            "service": [
+                "KHQR",
+                "Cash",
+                "Fleet card"
+            ],
+            "province": "Siem Reap",
+            "address": "#Ring Road, Phum Svay Dankum, Sangkat Svay Dankum, Siem Reap City, Siem Reap Province",
+            "status": "16h",
+            "promotion": [],
+            "old_picture": "",
+            "picture": "2.png"
         }
     ]
 }
