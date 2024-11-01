@@ -5470,6 +5470,31 @@
             "promotion": [],
             "old_picture": "",
             "picture": "2.png"
+        },
+        {
+            "id": "10037958",
+            "latitude": "11.35402778",
+            "longitude": "105.0105833",
+            "title": "PTT STATION S'ANG PREAK SNANG_SOUTHEAST_KING_DRAGON",
+            "description": [
+                "Amazon"
+            ],
+            "product": [
+                "ULG 95",
+                "ULR 91",
+                "HSD"
+            ],
+            "other_product": [],
+            "service": [
+                "KHQR",
+                "Cash"
+            ],
+            "province": "Kandal",
+            "address": "National Road 21, Preaek Koy, Sambour, Kandal 080908, Cambodia",
+            "status": "16h",
+            "promotion": [],
+            "old_picture": "",
+            "picture": "2.png"
         }
     ]
 }
