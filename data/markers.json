@@ -5445,6 +5445,31 @@
             "promotion": [],
             "old_picture": "",
             "picture": "2.png"
+        },
+        {
+            "id": "10037152",
+            "latitude": "11.61175",
+            "longitude": "104.8068611",
+            "title": "PTT Station Kobsrob Boeung Tamok-GODSRISE",
+            "description": [
+                "Amazon"
+            ],
+            "product": [
+                "ULG 95",
+                "ULR 91",
+                "HSD"
+            ],
+            "other_product": [],
+            "service": [
+                "KHQR",
+                "Cash"
+            ],
+            "province": "Phnom Penh",
+            "address": "Plot land No 379, Street Win Win Blvd, Trapeang Por Village, Sangkat Korkrokar, Khan Prek Pnov, Phnom Penh",
+            "status": "16h",
+            "promotion": [],
+            "old_picture": "",
+            "picture": "2.png"
         }
     ]
 }
