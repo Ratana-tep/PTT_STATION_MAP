@@ -5495,6 +5495,31 @@
             "promotion": [],
             "old_picture": "",
             "picture": "2.png"
+        },
+        {
+            "id": "10038533",
+            "latitude": "11.83652778",
+            "longitude": "104.9803889",
+            "title": "PTT Rokarkong KINGRISE CO.,LTD.",
+            "description": [
+                "Amazon"
+            ],
+            "product": [
+                "ULG 95",
+                "ULR 91",
+                "HSD"
+            ],
+            "other_product": [],
+            "service": [
+                "KHQR",
+                "Cash"
+            ],
+            "province": "Kandal",
+            "address": "Land plot no.229, National Road 6A, Svay Chrum Village, Preaek Dambang Commune, Mukh Kampul District,Kandal Province.",
+            "status": "16h",
+            "promotion": [],
+            "old_picture": "",
+            "picture": "2.png"
         }
     ]
 }
