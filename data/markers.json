@@ -5520,6 +5520,31 @@
             "promotion": [],
             "old_picture": "",
             "picture": "2.png"
+        },
+        {
+            "id": "10038564",
+            "latitude": "11.51616667",
+            "longitude": "104.8978889",
+            "title": "PTT STATION BOENG TAMAT_KONG LY LK INVESTMENT CO.,LTD.",
+            "description": [
+                "Amazon"
+            ],
+            "product": [
+                "ULG 95",
+                "ULR 91",
+                "HSD"
+            ],
+            "other_product": [],
+            "service": [
+                "KHQR",
+                "Cash"
+            ],
+            "province": "Phnom Penh",
+            "address": "#Land plot no. 6674, Street Boeng Ta Mat, Phum Sambour.",
+            "status": "16h",
+            "promotion": [],
+            "old_picture": "",
+            "picture": "2.png"
         }
     ]
 }
