@@ -5502,7 +5502,8 @@
             "longitude": "104.9803889",
             "title": "PTT Rokarkong KINGRISE CO.,LTD.",
             "description": [
-                "Amazon"
+                "Amazon",
+                "7-Eleven"
             ],
             "product": [
                 "ULG 95",
@@ -5516,7 +5517,7 @@
             ],
             "province": "Kandal",
             "address": "Land plot no.229, National Road 6A, Svay Chrum Village, Preaek Dambang Commune, Mukh Kampul District,Kandal Province.",
-            "status": "16h",
+            "status": "24h",
             "promotion": [],
             "old_picture": "",
             "picture": "2.png"
