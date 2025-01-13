@@ -350,22 +350,32 @@
     <script>
       function detectDevice() {
           var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-  
+    
           // Regex pattern to detect mobile devices, excluding iPad and other tablets
           var isMobile = /android|webos|iphone|ipod|blackberry|iemobile|opera mini/i.test(userAgent.toLowerCase());
-  
+    
+          // Check if the URL contains the fleet hash fragment
+          const isFleet = window.location.hash === '#fleet';
+    
           if (isMobile) {
-              // Redirect to mobile page
-              window.location.href = 'mapViewPhone.html';
+              // Redirect to mobile fleet page
+              if (isFleet) {
+                  window.location.href = 'mapViewPhone_fleet.html'; // Redirect to mobile fleet page
+              } else {
+                  window.location.href = 'mapViewPhone.html'; // Default mobile page
+              }
           } else {
-              // Redirect to PC page
-              window.location.href = 'mapViewerPC.html';
+              // Redirect to PC fleet page
+              if (isFleet) {
+                  window.location.href = 'mapViewerPC_fleet.html'; // Redirect to PC fleet page
+              } else {
+                  window.location.href = 'mapViewerPC.html'; // Default PC page
+              }
           }
       }
-  
+    
       // Wait for 3 seconds before redirecting
       setTimeout(detectDevice, 3000); // 3000 milliseconds = 3 seconds
-  </script>
-  
+    </script>
 </body>
 </html>
