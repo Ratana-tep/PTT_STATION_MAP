@@ -1997,7 +1997,8 @@
             ],
             "service": [
                 "Cash",
-                "KHQR"
+                "KHQR",
+                "Fleet card"
             ],
             "province": "Kampong Cham",
             "address": "National road 7, village Chas, Sangkat Val Vong, Kompong Cham town, Kompong Cham province",
@@ -2009,7 +2010,7 @@
             "picture": "2.png"
         },
         {
-            "id": 10021714,
+            "id": 10021688,
             "latitude": 13.10675,
             "longitude": 103.196805555555,
             "title": "PTT O'Char",
@@ -2026,7 +2027,9 @@
             ],
             "service": [
                 "Cash",
-                "KHQR"
+                "KHQR",
+                "Fleet card"
+                
             ],
             "province": "Battambang",
             "address": "National road 5, O\u00e2\u20ac\u2122char village, Sangkat O\u00e2\u20ac\u2122char, Khan Battombong, Battombong province",
@@ -2501,7 +2504,8 @@
             ],
             "service": [
                 "Cash",
-                "KHQR"
+                "KHQR",
+                "Fleet card"
             ],
             "province": "Kampong Speu",
             "address": "Road 4, Phum Rolang Sangkae,Sangkat Sopor Tep,Krung Chbar Morn",
@@ -5130,7 +5134,8 @@
             ],
             "service": [
                 "Cash",
-                "KHQR"
+                "KHQR",
+                "Fleet card"
             ],
             "province": "Phnom Penh",
             "address": "At Koh Norea, Phum Russey Sros, Sangkat Niroth, Khan Chbar Ampov, Phnom Penh. ",
