@@ -5275,7 +5275,8 @@
             ],
             "service": [
                 "Cash",
-                "KHQR"
+                "KHQR",
+                "Fleet card"
             ],
             "province": "Phnom Penh",
             "address": "Veng Sreng Street, Trea 3 village, Sangkat Stueng Meanchey 1, Khan Meanchey, Phnom Penh, Cambodia",
@@ -5386,7 +5387,8 @@
             "other_product": [],
             "service": [
                 "KHQR",
-                "Cash"
+                "Cash",
+                "Fleet card"
             ],
             "province": "Phnom Penh",
             "address": "#Win-Win Blvd, Phum Trapeang Thnong, Sangkat Samraong Kraom, Khan Pou Senchey, Phnom Penh, Cambodia.",
@@ -5411,7 +5413,8 @@
             "other_product": [],
             "service": [
                 "KHQR",
-                "Cash"
+                "Cash",
+                "Fleet card"
             ],
             "province": "Phnom Penh",
             "address": "#Plot no. 761 and Plot no.797, Street no.86K corner of street 123K, Phum Prey Tea 1, Sangkat Chaom Chau Ti 3, Khan Pou Sen Chey (Por Senchey), Phnom Penh.",
