@@ -1430,7 +1430,9 @@
             ],
             "service": [
                 "Cash",
-                "KHQR"
+                "KHQR",
+                "Fleet card"
+                
             ],
             "province": "Phnom Penh",
             "address": "No. 3+4, St. Oknha Tep Phan, Sangkat Boeng Keng Kang 1, Khan Chamkar Morn, Phnom Penh",
@@ -2118,7 +2120,9 @@
             ],
             "service": [
                 "Cash",
-                "KHQR"
+                "KHQR",
+                "Fleet card"
+                
             ],
             "province": "Battambang",
             "address": "National road 5, Bek Chan village, Sangkat Preh Sdach, \nKhan Battombong, Battombong province\n",
