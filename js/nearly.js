@@ -136,20 +136,48 @@ function getBingRouteDistance(startLat, startLng, endLat, endLng) {
 }
 
 // Function to find nearby stations
+// Function to find nearby stations with filtering
+// Function to find nearby stations with filtering
+// Function to find nearby stations with filtering
 function findNearbyStations(currentLocation, stations, maxDistance = 10) {
+  // Get all selected filters from UI
+  const selectedFilters = getSelectedFilters();
+
   return stations
-    .map((station) => {
-      const distance = calculateDistance(
-        parseFloat(currentLocation.lat),
-        parseFloat(currentLocation.lng),
-        parseFloat(station.latitude),
-        parseFloat(station.longitude)
-      );
-      return { ...station, distance };
-    })
-    .filter((station) => station.distance <= maxDistance)
-    .sort((a, b) => a.distance - b.distance);
+      .map(station => {
+          const distance = calculateDistance(
+              parseFloat(currentLocation.lat),
+              parseFloat(currentLocation.lng),
+              parseFloat(station.latitude),
+              parseFloat(station.longitude)
+          );
+
+          return { ...station, distance };
+      })
+      .filter(station => station.distance <= maxDistance) // Keep only nearby stations
+      .filter(station => {
+          if (selectedFilters.length === 0) return true; // If no filter is applied, show all
+
+          // Check if station matches any selected filter in:
+          return (
+              (station.description && station.description.some(desc => selectedFilters.includes(desc))) ||
+              (station.product && station.product.some(prod => selectedFilters.includes(prod))) ||
+              (station.other_product && station.other_product.some(other => selectedFilters.includes(other))) ||
+              (station.service && station.service.some(serv => selectedFilters.includes(serv)))
+          );
+      })
+      .sort((a, b) => a.distance - b.distance); // Sort by distance
 }
+
+
+
+// Function to get selected filters from UI
+// Function to get selected filters from UI
+function getSelectedFilters() {
+  const selectedIcons = document.querySelectorAll('.filter-icon.selected');
+  return Array.from(selectedIcons).map(icon => icon.dataset.item);
+}
+
 
 // Event listener for nearby stations button
 document
