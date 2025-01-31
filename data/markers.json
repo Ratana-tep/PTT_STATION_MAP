@@ -3223,7 +3223,8 @@
             ],
             "service": [
                 "Cash",
-                "KHQR"
+                "KHQR",
+                "Fleet card",
             ],
             "province": "Phnom Penh",
             "address": "Trapeang Pou Village, Sangkat Chaom Chau, Khan Pou Senchey, Phnom Penh",
