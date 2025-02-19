@@ -5,13 +5,18 @@
             "latitude": "11.5704444444444",
             "longitude": "104.905083333333",
             "title": "PTT Station Neak Vorn",
-            "description": [],
+            "description": [
+                "Amazon",
+                "7-Eleven"  
+            ],
             "product": [
                 "ULG 95",
                 "ULR 91",
                 "HSD"
             ],
-            "other_product": [],
+            "other_product": [
+                "EV"
+            ],
             "service": [
                 "Fleet card",
                 "KHQR",
