@@ -1380,7 +1380,7 @@
             ],
             "province": "Phnom Penh",
             "address": "Street 371, Tnut Chrum Village,Sangkat Boeung Tumpun, Khan Meanchey",
-            "status": "16h",
+            "status": "24h",
             "promotion": [
                 ""
             ],
@@ -2576,7 +2576,7 @@
             ],
             "province": "Preah Sihanouk",
             "address": "Phum 4,Sangkat 4,Khan Phreah Sihanuk",
-            "status": "24h",
+            "status": "16h",
             "promotion": [
                 ""
             ],
@@ -3036,7 +3036,8 @@
             "longitude": 105.969888888888,
             "title": "PTT Steung Treng",
             "description": [
-                "Amazon"
+                "Amazon",
+                "7-Eleven"
             ],
             "product": [
                 "ULG 95",
@@ -3053,7 +3054,7 @@
             ],
             "province": "Stung Treng",
             "address": "Phum Prek, Sangkat Stung Treng,Krung Stung Treng, Stung Treng Province, Cambodia",
-            "status": "16h",
+            "status": "24h",
             "promotion": [
                 ""
             ],
@@ -3501,7 +3502,7 @@
             ],
             "province": "Phnom Penh",
             "address": "St. Monireth (217), Damnak 5 Village, Sangkat Steung Meanchey 3, Khan Meanchey, Phnom Penh",
-            "status": "16h",
+            "status": "24h",
             "promotion": [
                 ""
             ],
@@ -4174,7 +4175,8 @@
             "longitude": 105.068666666666,
             "title": "PTT Phsar KorKi",
             "description": [
-                "Amazon"
+                "Amazon",
+                "7-Eleven"
             ],
             "product": [
                 "ULG 95",
@@ -4191,7 +4193,7 @@
             ],
             "province": "Kandal",
             "address": "Located at national road No. 1, Slab Ta Aon Village, Kokir Commune, \nKien Svay District, Kandal Province",
-            "status": "16h",
+            "status": "24h",
             "promotion": [
                 ""
             ],
@@ -4682,7 +4684,8 @@
             "longitude": 103.565777777777,
             "title": "PTT O'Tress",
             "description": [
-                "Amazon"
+                "Amazon",
+                "7-Eleven"
             ],
             "product": [
                 "ULG 95",
@@ -4698,7 +4701,7 @@
             ],
             "province": "Preah Sihanouk",
             "address": "Chom Noat Ream village, Bet Trang commune, Prey Nob distrct, Sihanouk Ville, Cambodia",
-            "status": "16h",
+            "status": "24h",
             "promotion": [
                 ""
             ],
@@ -5043,7 +5046,8 @@
             "longitude": 105.880611111111,
             "title": "PTT PonheaKrek",
             "description": [
-                "Amazon"
+                "Amazon",
+                "7-Eleven"
             ],
             "product": [
                 "ULG 95",
@@ -5060,7 +5064,7 @@
             ],
             "province": "Tboung Khmum",
             "address": "Kranhung Village, Veal Mlu Commune, Ponhea Krek District, Tboung Khmum Province, Cambodia.",
-            "status": "16h",
+            "status": "24h",
             "promotion": [
                 ""
             ],
@@ -5132,7 +5136,8 @@
             "longitude": 104.961333333333,
             "title": "PTT KOH NOREA",
             "description": [
-                "Amazon"
+                "Amazon",
+                "7-Eleven"
             ],
             "product": [
                 "ULG 95",
@@ -5149,7 +5154,7 @@
             ],
             "province": "Phnom Penh",
             "address": "At Koh Norea, Phum Russey Sros, Sangkat Niroth, Khan Chbar Ampov, Phnom Penh. ",
-            "status": "16h",
+            "status": "24h",
             "promotion": [
                 ""
             ],
@@ -5235,7 +5240,7 @@
             ],
             "province": "Phnom Penh",
             "address": "#Land 449, Ring Road 2, Phum Prek Thleng, Sangkat Choeung Ek, Khan Dangkor, Phnom Penh.",
-            "status": "16h",
+            "status": "24h",
             "promotion": [
                 ""
             ],
