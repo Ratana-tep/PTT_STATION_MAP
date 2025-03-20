@@ -7,7 +7,8 @@
             "title": "PTT Station Neak Vorn",
             "description": [
                 "Amazon",
-                "7-Eleven"  
+                "7-Eleven",
+                "Otr"
             ],
             "product": [
                 "ULG 95",
@@ -15,8 +16,7 @@
                 "HSD"
             ],
             "other_product": [
-                "EV",
-                "Otr"
+                "EV"
             ],
             "service": [
                 "Fleet card",
@@ -99,7 +99,8 @@
             "title": "PTT Station Chba Ampov",
             "description": [
                 "Amazon",
-                "7-Eleven"
+                "7-Eleven",
+                "Otr"
             ],
             "product": [
                 "ULG 95",
@@ -109,7 +110,7 @@
             "other_product": [
                 "EV",
                 "Onion",
-                "Otr"
+
             ],
             "service": [
                 "Fleet card",
@@ -2176,7 +2177,8 @@
             "title": "PTT Veng Sreng",
             "description": [
                 "Amazon",
-                "7-Eleven"
+                "7-Eleven",
+                "Otr"
             ],
             "product": [
                 "ULG 95",
@@ -2184,7 +2186,6 @@
                 "HSD"
             ],
             "other_product": [
-                "Otr",
                 "EV"
             ],
             "service": [
