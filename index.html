@@ -347,35 +347,59 @@
 
     <!-- Bootstrap 5 JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
-    <script>
-      function detectDevice() {
-          var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-    
-          // Regex pattern to detect mobile devices, excluding iPad and other tablets
-          var isMobile = /android|webos|iphone|ipod|blackberry|iemobile|opera mini/i.test(userAgent.toLowerCase());
-    
-          // Check if the URL contains the fleet hash fragment
-          const isFleet = window.location.hash === '#fleet';
-    
-          if (isMobile) {
-              // Redirect to mobile fleet page
-              if (isFleet) {
-                  window.location.href = 'mapView_fleet.html'; // Redirect to mobile fleet page
-              } else {
-                  window.location.href = 'mapViewPhone.html'; // Default mobile page
-              }
-          } else {
-              // Redirect to PC fleet page
-              if (isFleet) {
-                  window.location.href = 'mapViewerPC_fleet.html'; // Redirect to PC fleet page
-              } else {
-                  window.location.href = 'mapViewerPC.html'; // Default PC page
-              }
-          }
-      }
-    
-      // Wait for 3 seconds before redirecting
-      setTimeout(detectDevice, 3000); // 3000 milliseconds = 3 seconds
-    </script>
+	<script>
+		function detectDevice() {
+			const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+			const isMobile = /android|webos|iphone|ipod|blackberry|iemobile|opera mini/i.test(userAgent.toLowerCase());
+			const isTablet = /(ipad|tablet|playbook|silk)|(android(?!.*mobile))/i.test(userAgent.toLowerCase());
+			const hash = window.location.hash.toLowerCase();
+			
+			// Base paths for different device types
+			const mobilePaths = {
+				default: 'mapViewPhone.html',
+				fleet: 'mapView_fleet.html',
+				ev: 'mapView_ev.html'
+			};
+			
+			const desktopPaths = {
+				default: 'mapViewerPC.html',
+				fleet: 'mapViewerPC_fleet.html',
+				ev: 'mapViewerPC_ev.html'
+			};
+			
+			
+			// Determine which path set to use
+			let pathSet;
+			if (isMobile && !isTablet) {
+				pathSet = mobilePaths;
+			} else if (isTablet) {
+				pathSet = tabletPaths;
+			} else {
+				pathSet = desktopPaths;
+			}
+			
+			// Determine the specific page to redirect to
+			let redirectPath;
+			switch(hash) {
+				case '#fleet':
+					redirectPath = pathSet.fleet;
+					break;
+				case '#ev':
+					redirectPath = pathSet.ev;
+					break;
+				default:
+					redirectPath = pathSet.default;
+			}
+			
+			// Perform the redirect
+			window.location.href = redirectPath;
+		}
+		
+		// Enhanced timeout with loading indicator option
+		document.addEventListener('DOMContentLoaded', function() {
+			// Optionally show a loading message or spinner here
+			setTimeout(detectDevice, 1500); // Reduced to 1.5s for better UX
+		});
+	</script>
 </body>
 </html>
