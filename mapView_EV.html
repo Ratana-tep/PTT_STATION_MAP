@@ -549,56 +549,322 @@
 <body>
 <div class="map-container">
     <div id="map"></div>
-    <div class="right-buttons">
-        <button
-                type="button"
-                class="btn"
-                data-bs-toggle="modal"
-                data-bs-target="#filterModal"
-        >
-            <i class="fa fa-filter"></i>
-        </button>
-        <button type="button" class="btn" id="myLocationBtn">
-            <i class="fa fa-location-arrow"></i>
-        </button>
-        <button type="button" class="btn" id="nearbyStationsBtn">
-            <i class="fa fa-bars"></i>
-        </button>
-        <button
-                type="button"
-                class="btn"
-                id="promotionBtn"
-                data-bs-toggle="modal"
-                data-bs-target="#promotionModal"
-        >
-            <i class="fa fa-bullhorn"></i>
-            <span class="notification-dot" id="promotionNotificationDot"></span>
-        </button>
-        <button
-                type="button"
-                class="btn"
-
-                onclick="window.location.href='https://ptt-station.netlify.app/#fleet'"
-        >
-            <i class="fas fa-credit-card"></i>
-        </button>
-        <button
-                type="button"
-                class="btn"
-
-                onclick="window.location.href='https://ptt-station.netlify.app/#fleet'"
-        >
-            <i class="fas fa-credit-card"></i>
-        </button>
-        <button
-                type="button"
-                class="btn btn-danger clear-filter-button"
-                id="clearAllButton" F
-        >
-            <i class="fas fa-times"></i>
-        </button>
-    </div>
-
+	<!-- Ultimate Animated Button Group - Blue Gradient Theme -->
+	<div class="right-buttons" style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+		
+		<!-- Filter Button -->
+		<button
+				type="button"
+				class="btn icon-btn"
+				data-bs-toggle="offcanvas"
+				data-bs-target="#filterOffcanvas"
+				style="
+      background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      border: none;
+      color: white;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      box-shadow: 0 4px 15px rgba(58, 123, 213, 0.4);
+    "
+		>
+			<i class="fa fa-filter" style="font-size: 1.3rem; z-index: 2;"></i>
+			<div class="btn-hover-effect" style="
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 70%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    "></div>
+			<div class="btn-active-effect" style="
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255,255,255,0.2);
+      transform: scale(0);
+      border-radius: 50%;
+      transition: transform 0.6s ease;
+    "></div>
+		</button>
+		
+		<!-- Location Button -->
+		<button
+				type="button"
+				class="btn icon-btn"
+				id="myLocationBtn"
+				style="
+      background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      border: none;
+      color: white;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      box-shadow: 0 4px 15px rgba(58, 123, 213, 0.4);
+    "
+		>
+			<i class="fa fa-location-arrow" style="font-size: 1.3rem; z-index: 2;"></i>
+			<div class="btn-hover-effect"></div>
+			<div class="btn-active-effect"></div>
+		</button>
+		
+		<!-- Nearby Stations Button -->
+		<button
+				type="button"
+				class="btn icon-btn"
+				id="nearbyStationsBtn"
+				style="
+      background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      border: none;
+      color: white;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      box-shadow: 0 4px 15px rgba(58, 123, 213, 0.4);
+    "
+		>
+			<i class="fa fa-bars" style="font-size: 1.3rem; z-index: 2;"></i>
+			<div class="btn-hover-effect"></div>
+			<div class="btn-active-effect"></div>
+		</button>
+		
+		<!-- Promotion Button -->
+		<button
+				type="button"
+				class="btn icon-btn"
+				id="promotionBtn"
+				data-bs-toggle="modal"
+				data-bs-target="#promotionModal"
+				style="
+      background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      border: none;
+      color: white;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      box-shadow: 0 4px 15px rgba(58, 123, 213, 0.4);
+    "
+		>
+			<i class="fa fa-bullhorn" style="font-size: 1.3rem; z-index: 2;"></i>
+			<span class="notification-dot" style="
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 10px;
+      height: 10px;
+      background: #FFEB3B;
+      border-radius: 50%;
+      border: 2px solid #3a7bd5;
+      z-index: 3;
+      animation: pulse 1.5s infinite cubic-bezier(0.4, 0, 0.6, 1);
+    "></span>
+			<div class="btn-hover-effect"></div>
+			<div class="btn-active-effect"></div>
+		</button>
+		
+		<!-- Fleet Card Button -->
+		<button
+				type="button"
+				class="btn icon-btn"
+				id="fleetCardBtn"
+				onclick="window.location.href='https://ptt-station.netlify.app/#fleet'"
+				style="
+      background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      border: none;
+      color: white;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      box-shadow: 0 4px 15px rgba(58, 123, 213, 0.4);
+    "
+		>
+			<i class="fas fa-credit-card" style="font-size: 1.3rem; z-index: 2;"></i>
+			<div class="btn-hover-effect"></div>
+			<div class="btn-active-effect"></div>
+		</button>
+		
+		<!-- Charging Station Button -->
+		<button
+				type="button"
+				class="btn icon-btn"
+				id="chargingStationBtn"
+				style="
+      background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      border: none;
+      color: white;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      box-shadow: 0 4px 15px rgba(58, 123, 213, 0.4);
+    "
+		>
+			<i class="fas fa-charging-station" style="
+      font-size: 1.5rem;
+      z-index: 2;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+      animation: float 3s ease-in-out infinite;
+    "></i>
+			<div class="ripple-effect" style="
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.3);
+      transform: scale(0);
+      animation: ripple 4s infinite;
+    "></div>
+			<div class="ripple-delay" style="
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      transform: scale(0);
+      animation: ripple 4s infinite 1s;
+    "></div>
+			<div class="border-glow" style="
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      background: linear-gradient(135deg, #00d2ff, #3a7bd5, #00d2ff);
+      background-size: 200% 200%;
+      -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: destination-out;
+      mask-composite: exclude;
+      animation:
+        borderPulse 3s linear infinite,
+        gradientFlow 6s ease infinite;
+      opacity: 0.7;
+    "></div>
+		</button>
+		
+		<!-- Clear Button -->
+		<button
+				type="button"
+				class="btn icon-btn"
+				id="clearAllButton"
+				style="
+      background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      border: none;
+      color: white;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      box-shadow: 0 4px 15px rgba(58, 123, 213, 0.4);
+    "
+		>
+			<i class="fas fa-times" style="font-size: 1.3rem; z-index: 2;"></i>
+			<div class="btn-hover-effect"></div>
+			<div class="btn-active-effect"></div>
+		</button>
+	</div>
+	
+	<style>
+		/* === Animation Keyframes === */
+		@keyframes float {
+			0%, 100% { transform: translateY(0) rotate(0deg); }
+			50% { transform: translateY(-6px) rotate(5deg); }
+		}
+		
+		@keyframes ripple {
+			0% { opacity: 1; transform: scale(0.3); }
+			100% { opacity: 0; transform: scale(1.8); }
+		}
+		
+		@keyframes gradientFlow {
+			0% { background-position: 0% 50%; }
+			50% { background-position: 100% 50%; }
+			100% { background-position: 0% 50%; }
+		}
+		
+		@keyframes borderPulse {
+			0%, 100% { opacity: 0.7; }
+			50% { opacity: 0.4; }
+		}
+		
+		@keyframes pulse {
+			0%, 100% { transform: scale(1); opacity: 1; }
+			50% { transform: scale(1.2); opacity: 0.8; }
+		}
+		
+		/* === Button Interactions === */
+		.icon-btn:hover {
+			transform: translateY(-4px) scale(1.05) !important;
+			box-shadow: 0 8px 20px rgba(0,0,0,0.2) !important;
+		}
+		
+		.icon-btn:hover .btn-hover-effect {
+			opacity: 1 !important;
+		}
+		
+		.icon-btn:active {
+			transform: translateY(0) scale(0.95) !important;
+		}
+		
+		.icon-btn:active .btn-active-effect {
+			transform: scale(1.5) !important;
+			opacity: 0 !important;
+			transition: transform 0.3s ease, opacity 0.6s ease;
+		}
+	</style>
+	
+	<script>
+		// Initialize button behaviors
+		document.querySelectorAll('.icon-btn').forEach(btn => {
+			// Mouse enter effect
+			btn.addEventListener('mouseenter', function() {
+				this.style.boxShadow = '0 8px 20px rgba(58, 123, 213, 0.5)';
+			});
+			
+			// Mouse leave effect
+			btn.addEventListener('mouseleave', function() {
+				this.style.boxShadow = '0 4px 15px rgba(58, 123, 213, 0.4)';
+			});
+			
+			// Click effect
+			btn.addEventListener('mousedown', function() {
+				this.querySelector('.btn-active-effect').style.transform = 'scale(0)';
+				this.querySelector('.btn-active-effect').style.opacity = '0.5';
+				setTimeout(() => {
+					this.querySelector('.btn-active-effect').style.transform = 'scale(1.5)';
+					this.querySelector('.btn-active-effect').style.opacity = '0';
+				}, 10);
+			});
+		});
+	</script>
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-auto">
