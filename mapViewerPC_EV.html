@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<!--suppress ALL -->
 <html lang="en">
 <head>
-	<meta charset="UTF-8"/>
+	<meta charset="UTF-8" />
 	
-	<link rel="manifest" href="manifest.json"/>
+	<link rel="manifest" href="manifest.json" />
 	
-	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>PTT STATION</title>
 	<!-- Bootstrap CSS -->
 	<link
@@ -14,7 +13,7 @@
 			rel="stylesheet"
 	/>
 	<!-- Leaflet CSS -->
-	<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+	<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 	<!-- Leaflet.markercluster CSS -->
 	<link
 			rel="stylesheet"
@@ -24,7 +23,7 @@
 			rel="stylesheet"
 			href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.1/MarkerCluster.Default.css"
 	/>
-	<link rel="stylesheet" href="./css/currentStyle.css"/>
+	<link rel="stylesheet" href="./css/currentStyle.css" />
 	<!-- Font Awesome for Icons -->
 	<link
 			rel="stylesheet"
@@ -32,7 +31,6 @@
 	/>
 	<!-- Bootstrap JS Bundle with Popper -->
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-	<script src="load-components.js"></script>
 	<link
 			rel="icon"
 			href="./pictures/logo.png"
@@ -70,7 +68,6 @@
 				width: 80%;
 			}
 		}
-		
 		@media (max-width: 576px) {
 			.offcanvas {
 				width: 90%;
@@ -85,13 +82,11 @@
 			padding: 0;
 			font-family: "Helvetica", sans-serif;
 		}
-		
 		#map {
 			height: 100%;
 			width: 100%;
 			z-index: 0;
 		}
-		
 		.map-container {
 			height: 100vh;
 			width: 100vw;
@@ -99,7 +94,6 @@
 			padding: 0;
 			position: relative;
 		}
-		
 		.right-buttons {
 			position: absolute;
 			top: 50%;
@@ -109,7 +103,6 @@
 			flex-direction: column;
 			gap: 10px;
 		}
-		
 		.right-buttons .btn {
 			width: 50px;
 			height: 50px;
@@ -122,7 +115,6 @@
 			background-color: #fff;
 			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 		}
-		
 		.oil-retail-icon {
 			position: absolute;
 			top: 97%; /* Adjust as needed */
@@ -146,40 +138,32 @@
 			height: auto;
 			margin-right: 10px;
 		}
-		
 		.oil-retail-icon .icon-text {
 			font-size: 20px; /* Make font smaller */
 			font-style: italic; /* Make text italic */
 			color: #000; /* Adjust text color as needed */
 		}
-		
 		.footer-buttons {
 			display: none; /* Hide footer buttons */
 		}
-		
 		.modal-content {
 			border-radius: 20px;
 		}
-		
 		.modal-header {
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
 		}
-		
 		.modal-header img {
 			max-width: 40%;
 			height: auto;
 		}
-		
 		.modal-header.no-border-bottom {
 			border-bottom: none;
 		}
-		
 		.rounded-image {
 			border-radius: 20px; /* Adjust the value as needed */
 		}
-		
 		.badge {
 			border-radius: 25px;
 			padding: 15px;
@@ -189,27 +173,22 @@
 			font-size: 14px;
 			font-weight: 500;
 		}
-		
 		.badge i {
 			margin-right: 5px;
 		}
-		
 		.separator {
 			border-bottom: 1px solid #dee2e6;
 			margin: 1rem 0;
 		}
-		
 		@media (max-width: 576px) {
 			.badge {
 				padding: 3px 3px;
 				font-size: 12px;
 			}
-			
 			.badge i {
 				margin-right: 3px;
 			}
 		}
-		
 		.info {
 			font-size: 14px; /* Adjust font size to match the image */
 			color: #7d7d7d; /* Adjust font color to match the image */
@@ -217,13 +196,11 @@
 			align-items: center;
 			margin-bottom: 0.5rem;
 		}
-		
 		.info .icon {
 			color: #ff0000; /* Adjust icon color to match the image */
 			margin-right: 8px;
 			font-size: 1.25rem; /* Adjust icon size to match the font size */
 		}
-		
 		.go-button {
 			width: 70px;
 			height: 70px;
@@ -232,7 +209,6 @@
 			justify-content: center;
 			align-items: center;
 		}
-		
 		.icon-background {
 			background-color: #d4d4d4; /* Adjust color as needed */
 			color: #003cff;
@@ -243,12 +219,10 @@
 			justify-content: center;
 			align-items: center;
 		}
-		
 		.share-icon,
 		.navigate-icon {
 			font-size: 18px; /* Adjust font size as needed */
 		}
-		
 		.badge .icon-background {
 			background-color: #0a4bcc; /* Adjust color as needed */
 			color: #fff;
@@ -256,25 +230,21 @@
 			padding: 5px;
 			margin-right: 5px;
 		}
-		
 		.nav-tabs-container {
 			overflow-x: auto;
 			white-space: nowrap;
 			border-bottom: 1px solid #ddd;
 			margin-bottom: 20px;
 		}
-		
 		.nav-tabs {
 			display: flex;
 			border-bottom: none;
 			padding: 10px 0;
 			scroll-behavior: smooth;
 		}
-		
 		.nav-tabs .nav-item {
 			margin-right: 10px;
 		}
-		
 		.nav-tabs .nav-link {
 			border: none;
 			border-radius: 30px;
@@ -283,58 +253,46 @@
 			color: #007bff;
 			transition: background-color 0.3s, color 0.3s;
 		}
-		
 		.nav-tabs .nav-link.active {
 			background-color: #007bff;
 			color: white;
 		}
-		
 		.nav-tabs .nav-link:hover {
 			background-color: #e2e6ea;
 			color: #0056b3;
 		}
-		
 		.tab-content {
 			background-color: white;
 			padding: 20px;
 			border-radius: 10px;
 			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 		}
-		
 		.scrollable-content {
 			max-height: 200px;
 			overflow-y: auto;
 		}
-		
 		.scrollable-content::-webkit-scrollbar {
 			width: 8px;
 		}
-		
 		.scrollable-content::-webkit-scrollbar-thumb {
 			background-color: #007bff;
 			border-radius: 10px;
 		}
-		
 		.scrollable-content::-webkit-scrollbar-track {
 			background-color: #f8f9fa;
 		}
-		
 		.fade-enter-active,
 		.fade-leave-active {
 			transition: opacity 0.5s;
 		}
-		
 		.fade-enter,
-		.fade-leave-to /* .fade-leave-active in <2.1.8 */
-		{
+		.fade-leave-to /* .fade-leave-active in <2.1.8 */ {
 			opacity: 0;
 		}
-		
 		/* Subtle pulsing border animation for Under Construction */
 		.blink-border {
 			animation: pulse-border 2s infinite;
 		}
-		
 		@keyframes pulse-border {
 			0%,
 			100% {
@@ -344,19 +302,16 @@
 				border: 2px solid transparent;
 			}
 		}
-		
 		/* General styles for status badges */
 		.status-badge {
 			display: flex;
 			align-items: center;
 			gap: 5px;
 		}
-		
 		/* Pulsing animation */
 		.go-button.pulse {
 			animation: pulse 2s infinite;
 		}
-		
 		@keyframes pulse {
 			0%,
 			100% {
@@ -366,25 +321,21 @@
 				box-shadow: 0 0 15px #174c85;
 			}
 		}
-		
 		.product-icon,
 		.item-icon {
 			width: 40px; /* Adjust size as needed */
 			height: 40px; /* Adjust size as needed */
 			margin-right: 8px; /* Add some space between the icon and the text */
 		}
-		
 		.round {
 			border-radius: 50%; /* Make the image round */
 			object-fit: cover; /* Ensure the image covers the container */
 		}
-		
 		.full {
 			width: 32px; /* Ensure consistent size */
 			height: auto; /* Ensure consistent size */
 			object-fit: cover; /* Ensure the image covers the container */
 		}
-		
 		.product-row,
 		.service-row,
 		.description-row,
@@ -393,13 +344,11 @@
 			flex-wrap: wrap; /* Wrap items if they don't fit in one line */
 			gap: 10px; /* Space between items */
 		}
-		
 		.info {
 			display: flex;
 			align-items: center; /* Vertically center the image and text */
 			margin-bottom: 8px; /* Add some space between info items */
 		}
-		
 		/* Add this CSS to your stylesheet */
 		.list-group-item {
 			display: flex;
@@ -410,7 +359,6 @@
 			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
 			margin-bottom: 10px; /* Space between items */
 		}
-		
 		.list-group-item img {
 			width: 100px; /* Adjust size as needed */
 			height: 100px; /* Adjust size as needed */
@@ -418,49 +366,41 @@
 			border-radius: 15px; /* Add rounded corners */
 			object-fit: cover; /* Ensure the image covers the container */
 		}
-		
 		.station-details {
 			flex-grow: 1;
 		}
-		
 		.station-details h6 {
 			margin: 0 0 5px 0; /* Adjust spacing as needed */
 			font-weight: bold;
 		}
-		
 		.station-details p {
 			margin: 0;
 			color: #555; /* Adjust color as needed */
 			font-size: 12px; /* Make the address smaller */
 		}
-		
 		.station-details .icons {
 			display: flex;
 			flex-wrap: wrap;
 			gap: 5px;
 			margin-top: 10px; /* Space between text and icons */
 		}
-		
 		.station-details .icons img {
 			width: 25px;
 			height: 25px;
 			border-radius: 50%; /* Round icons */
 		}
-		
 		/* Media query for laptops and tablets */
 		@media (min-width: 768px) and (max-width: 1024px) {
 			.offcanvas {
 				width: 50%; /* Make offcanvas smaller on laptops and tablets */
 			}
 		}
-		
 		/* Media query for smartphones */
 		@media (max-width: 767px) {
 			.offcanvas {
 				width: 90%; /* Make offcanvas smaller on smartphones */
 			}
 		}
-		
 		.filter-icon {
 			width: 30px; /* Adjust size as needed */
 			height: 30px; /* Adjust size as needed */
@@ -469,15 +409,12 @@
 			border-radius: 25px;
 			object-fit: contain; /* Add this line */
 		}
-		
 		.filter-icon.full {
 			border-radius: 0; /* Adjust border radius for full images */
 		}
-		
 		.filter-icon.selected {
 			border-color: blue;
 		}
-		
 		.red-dot {
 			position: absolute;
 			top: 10px;
@@ -611,7 +548,6 @@
 			background-color: #f0f0f0;
 			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 		}
-		
 		#clearAllButton {
 			display: none;
 		}
@@ -620,326 +556,58 @@
 <body>
 <div class="map-container">
 	<div id="map"></div>
-	<!-- Ultimate Animated Button Group - Blue Gradient Theme -->
-	<div class="right-buttons" style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
-		
-		<!-- Filter Button -->
+	<div class="right-buttons">
 		<button
 				type="button"
-				class="btn icon-btn"
+				class="btn"
 				data-bs-toggle="offcanvas"
 				data-bs-target="#filterOffcanvas"
-				style="
-      background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
-      width: 56px;
-      height: 56px;
-      border-radius: 16px;
-      border: none;
-      color: white;
-      position: relative;
-      overflow: hidden;
-      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-      box-shadow: 0 4px 15px rgba(58, 123, 213, 0.4);
-    "
 		>
-			<i class="fa fa-filter" style="font-size: 1.3rem; z-index: 2;"></i>
-			<div class="btn-hover-effect" style="
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 70%);
-      opacity: 0;
-      transition: opacity 0.4s ease;
-    "></div>
-			<div class="btn-active-effect" style="
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(255,255,255,0.2);
-      transform: scale(0);
-      border-radius: 50%;
-      transition: transform 0.6s ease;
-    "></div>
+			<i class="fa fa-filter"></i>
 		</button>
-		
-		<!-- Location Button -->
+		<button type="button" class="btn" id="myLocationBtn">
+			<i class="fa fa-location-arrow"></i>
+		</button>
+		<button type="button" class="btn" id="nearbyStationsBtn">
+			<i class="fa fa-bars"></i>
+		</button>
 		<button
 				type="button"
-				class="btn icon-btn"
-				id="myLocationBtn"
-				style="
-      background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
-      width: 56px;
-      height: 56px;
-      border-radius: 16px;
-      border: none;
-      color: white;
-      position: relative;
-      overflow: hidden;
-      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-      box-shadow: 0 4px 15px rgba(58, 123, 213, 0.4);
-    "
-		>
-			<i class="fa fa-location-arrow" style="font-size: 1.3rem; z-index: 2;"></i>
-			<div class="btn-hover-effect"></div>
-			<div class="btn-active-effect"></div>
-		</button>
-		
-		<!-- Nearby Stations Button -->
-		<button
-				type="button"
-				class="btn icon-btn"
-				id="nearbyStationsBtn"
-				style="
-      background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
-      width: 56px;
-      height: 56px;
-      border-radius: 16px;
-      border: none;
-      color: white;
-      position: relative;
-      overflow: hidden;
-      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-      box-shadow: 0 4px 15px rgba(58, 123, 213, 0.4);
-    "
-		>
-			<i class="fa fa-bars" style="font-size: 1.3rem; z-index: 2;"></i>
-			<div class="btn-hover-effect"></div>
-			<div class="btn-active-effect"></div>
-		</button>
-		
-		<!-- Promotion Button -->
-		<button
-				type="button"
-				class="btn icon-btn"
+				class="btn"
 				id="promotionBtn"
 				data-bs-toggle="modal"
 				data-bs-target="#promotionModal"
-				style="
-      background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
-      width: 56px;
-      height: 56px;
-      border-radius: 16px;
-      border: none;
-      color: white;
-      position: relative;
-      overflow: hidden;
-      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-      box-shadow: 0 4px 15px rgba(58, 123, 213, 0.4);
-    "
 		>
-			<i class="fa fa-bullhorn" style="font-size: 1.3rem; z-index: 2;"></i>
-			<span class="notification-dot" style="
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      width: 10px;
-      height: 10px;
-      background: #FFEB3B;
-      border-radius: 50%;
-      border: 2px solid #3a7bd5;
-      z-index: 3;
-      animation: pulse 1.5s infinite cubic-bezier(0.4, 0, 0.6, 1);
-    "></span>
-			<div class="btn-hover-effect"></div>
-			<div class="btn-active-effect"></div>
+			<i class="fa fa-bullhorn"></i>
+			<span class="notification-dot" id="promotionNotificationDot"></span>
 		</button>
-		
-		<!-- Fleet Card Button -->
 		<button
 				type="button"
-				class="btn icon-btn"
+				class="btn"
 				id="fleetCardBtn"
 				onclick="window.location.href='https://ptt-station.netlify.app/#fleet'"
-				style="
-      background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
-      width: 56px;
-      height: 56px;
-      border-radius: 16px;
-      border: none;
-      color: white;
-      position: relative;
-      overflow: hidden;
-      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-      box-shadow: 0 4px 15px rgba(58, 123, 213, 0.4);
-    "
 		>
-			<i class="fas fa-credit-card" style="font-size: 1.3rem; z-index: 2;"></i>
-			<div class="btn-hover-effect"></div>
-			<div class="btn-active-effect"></div>
+			<i class="fas fa-credit-card"></i>
 		</button>
-		
-		<!-- Charging Station Button -->
 		<button
 				type="button"
-				class="btn icon-btn"
-				id="chargingStationBtn"
+				class="btn"
+				
 				onclick="window.location.href='https://ptt-station.netlify.app/#ev'"
-				style="
-      background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      border: none;
-      color: white;
-      position: relative;
-      overflow: hidden;
-      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-      box-shadow: 0 4px 15px rgba(58, 123, 213, 0.4);
-    "
 		>
-			<i class="fas fa-charging-station" style="
-      font-size: 1.5rem;
-      z-index: 2;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
-      animation: float 3s ease-in-out infinite;
-    "></i>
-			<div class="ripple-effect" style="
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.3);
-      transform: scale(0);
-      animation: ripple 4s infinite;
-    "></div>
-			<div class="ripple-delay" style="
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.2);
-      transform: scale(0);
-      animation: ripple 4s infinite 1s;
-    "></div>
-			<div class="border-glow" style="
-      position: absolute;
-      top: -2px;
-      left: -2px;
-      right: -2px;
-      bottom: -2px;
-      border-radius: 50%;
-      border: 2px solid transparent;
-      background: linear-gradient(135deg, #00d2ff, #3a7bd5, #00d2ff);
-      background-size: 200% 200%;
-      -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: destination-out;
-      mask-composite: exclude;
-      animation:
-        borderPulse 3s linear infinite,
-        gradientFlow 6s ease infinite;
-      opacity: 0.7;
-    "></div>
+			<i class="fas fa-charging-station"></i>
 		</button>
-		
-		<!-- Clear Button -->
 		<button
 				type="button"
-				class="btn icon-btn"
+				class="btn btn-danger bg-danger clear-filter-button"
 				id="clearAllButton"
-				style="
-      background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
-      width: 56px;
-      height: 56px;
-      border-radius: 16px;
-      border: none;
-      color: white;
-      position: relative;
-      overflow: hidden;
-      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-      box-shadow: 0 4px 15px rgba(58, 123, 213, 0.4);
-    "
 		>
-			<i class="fas fa-times" style="font-size: 1.3rem; z-index: 2;"></i>
-			<div class="btn-hover-effect"></div>
-			<div class="btn-active-effect"></div>
+			<i class="fas fa-times"></i>
 		</button>
 	</div>
 	
-	<style>
-		/* === Animation Keyframes === */
-		@keyframes float {
-			0%, 100% { transform: translateY(0) rotate(0deg); }
-			50% { transform: translateY(-6px) rotate(5deg); }
-		}
-		
-		@keyframes ripple {
-			0% { opacity: 1; transform: scale(0.3); }
-			100% { opacity: 0; transform: scale(1.8); }
-		}
-		
-		@keyframes gradientFlow {
-			0% { background-position: 0% 50%; }
-			50% { background-position: 100% 50%; }
-			100% { background-position: 0% 50%; }
-		}
-		
-		@keyframes borderPulse {
-			0%, 100% { opacity: 0.7; }
-			50% { opacity: 0.4; }
-		}
-		
-		@keyframes pulse {
-			0%, 100% { transform: scale(1); opacity: 1; }
-			50% { transform: scale(1.2); opacity: 0.8; }
-		}
-		
-		/* === Button Interactions === */
-		.icon-btn:hover {
-			transform: translateY(-4px) scale(1.05) !important;
-			box-shadow: 0 8px 20px rgba(0,0,0,0.2) !important;
-		}
-		
-		.icon-btn:hover .btn-hover-effect {
-			opacity: 1 !important;
-		}
-		
-		.icon-btn:active {
-			transform: translateY(0) scale(0.95) !important;
-		}
-		
-		.icon-btn:active .btn-active-effect {
-			transform: scale(1.5) !important;
-			opacity: 0 !important;
-			transition: transform 0.3s ease, opacity 0.6s ease;
-		}
-	</style>
-	
-	<script>
-		// Initialize button behaviors
-		document.querySelectorAll('.icon-btn').forEach(btn => {
-			// Mouse enter effect
-			btn.addEventListener('mouseenter', function() {
-				this.style.boxShadow = '0 8px 20px rgba(58, 123, 213, 0.5)';
-			});
-			
-			// Mouse leave effect
-			btn.addEventListener('mouseleave', function() {
-				this.style.boxShadow = '0 4px 15px rgba(58, 123, 213, 0.4)';
-			});
-			
-			// Click effect
-			btn.addEventListener('mousedown', function() {
-				this.querySelector('.btn-active-effect').style.transform = 'scale(0)';
-				this.querySelector('.btn-active-effect').style.opacity = '0.5';
-				setTimeout(() => {
-					this.querySelector('.btn-active-effect').style.transform = 'scale(1.5)';
-					this.querySelector('.btn-active-effect').style.opacity = '0';
-				}, 10);
-			});
-		});
-	</script>
-	
 	<div class="oil-retail-icon">
-		<img src="./pictures/logo_Station.png" alt="Oil Retail Icon"/>
+		<img src="./pictures/logo_Station.png" alt="Oil Retail Icon" />
 		<span class="icon-text">Oil Retail System</span>
 	</div>
 </div>
@@ -952,7 +620,7 @@
 		aria-labelledby="filterOffcanvasLabel"
 >
 	<div class="offcanvas-header">
-		<img src="./pictures/logo_Station.png" alt="Logo" class="img-fluid"/>
+		<img src="./pictures/logo_Station.png" alt="Logo" class="img-fluid" />
 		<button
 				type="button"
 				class="btn-close"
@@ -1008,7 +676,6 @@
 		flex-wrap: wrap;
 		gap: 10px;
 	}
-	
 	.filter-icon {
 		width: 50px;
 		height: 50px;
@@ -1017,15 +684,12 @@
 		border-radius: 25px;
 		object-fit: contain; /* Add this line */
 	}
-	
 	.filter-icon.full {
 		border-radius: 0; /* Adjust border radius for full images */
 	}
-	
 	.filter-icon.selected {
 		border-color: blue;
 	}
-	
 	/* Shadow for the modal content */
 	.modal-content.shadow-lg {
 		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.1);
@@ -1096,7 +760,6 @@
 	.closed-station {
 		background-color: rgb(241, 173, 173);
 	}
-	
 	.open-station {
 		background-color: white;
 	}
@@ -1283,7 +946,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.1/leaflet.markercluster.js"></script>
 <script src="./js/map_ev.js"></script>
 <script src="./js/filter.js"></script>
-<script src="./js/nearly1.js"></script>
 <script src="./js/promotion.js"></script>
+<script src="./js/nearly1.js"></script>
 </body>
 </html>
