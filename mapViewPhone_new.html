@@ -543,55 +543,276 @@
   <body>
     <div class="map-container">
       <div id="map"></div>
-      <div class="right-buttons">
-        <button
-          type="button"
-          class="btn"
-          data-bs-toggle="modal"
-          data-bs-target="#filterModal"
-        >
-          <i class="fa fa-filter"></i>
-        </button>
-        <button type="button" class="btn" id="myLocationBtn">
-          <i class="fa fa-location-arrow"></i>
-        </button>
-        <button type="button" class="btn" id="nearbyStationsBtn">
-          <i class="fa fa-bars"></i>
-        </button>
-        <button
-          type="button"
-          class="btn"
-          id="promotionBtn"
-          data-bs-toggle="modal"
-          data-bs-target="#promotionModal"
-        >
-          <i class="fa fa-bullhorn"></i>
-          <span class="notification-dot" id="promotionNotificationDot"></span>
-        </button>
-        <button
-          type="button"
-          class="btn"
-
-          onclick="window.location.href='https://ptt-station.netlify.app/#fleet'"
-        >
-          <i class="fas fa-credit-card"></i>
-        </button>
-		  <button
-				  type="button"
-				  class="btn"
-				  
-				  onclick="window.location.href='https://ptt-station.netlify.app/#ev'"
-		  >
-			  <i class="fas fa-charging-station"></i>
-		  </button>
-        <button
-          type="button"
-          class="btn btn-danger clear-filter-button"
-          id="clearAllButton"
-        >
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
+		<div class="right-buttons">
+			<div class="fab-container">
+				<!-- Main floating button -->
+				<button class="fab-main" id="fabMain">
+					<div class="fab-icon">
+						<i class="fas fa-plus"></i>
+					</div>
+					<div class="sonar-wave"></div>
+				</button>
+				
+				<!-- Floating menu items -->
+				<div class="fab-options">
+					<button type="button" class="fab-option" data-bs-toggle="modal" data-bs-target="#filterModal" data-tooltip="Filters">
+						<i class="fa fa-filter"></i>
+					</button>
+					
+					<button type="button" class="fab-option" id="myLocationBtn" data-tooltip="My Location">
+						<i class="fa fa-location-arrow"></i>
+					</button>
+					
+					<button type="button" class="fab-option" id="nearbyStationsBtn" data-tooltip="Nearby Stations">
+						<i class="fa fa-map-marker-alt"></i>
+					</button>
+					
+					<button type="button" class="fab-option" id="promotionBtn" data-bs-toggle="modal" data-bs-target="#promotionModal" data-tooltip="Promotions">
+						<i class="fa fa-bullhorn"></i>
+						<span class="notification-badge"></span>
+					</button>
+					
+					<button type="button" class="fab-option" onclick="window.location.href='https://ptt-station.netlify.app/#fleet'" data-tooltip="Payment">
+						<i class="fas fa-credit-card"></i>
+					</button>
+					
+					<button type="button" class="fab-option" onclick="window.location.href='https://ptt-station.netlify.app/#ev'" data-tooltip="EV Charging">
+						<i class="fas fa-charging-station"></i>
+					</button>
+					
+					<button type="button" class="fab-option" id="clearAllButton" data-tooltip="Clear All">
+						<i class="fas fa-times"></i>
+					</button>
+				</div>
+			</div>
+		</div>
+		
+		<style>
+			:root {
+				--primary: #4a6bff;
+				--primary-light: rgba(74, 107, 255, 0.2);
+				--white: #ffffff;
+				--shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+				--transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+			}
+			
+			/* Floating UI Container */
+			.right-buttons {
+				position: fixed;
+				bottom: 40px;
+				right: 5%;
+				z-index: 1000;
+			}
+			
+			/* Floating Interface */
+			.fab-container {
+				position: relative;
+				display: flex;
+				flex-direction: column-reverse;
+				align-items: flex-end;
+				gap: 20px;
+			}
+			
+			/* Main Floating Button */
+			.fab-main {
+				width: 60px;
+				height: 60px;
+				border-radius: 50%;
+				background: var(--primary);
+				color: var(--white);
+				border: none;
+				box-shadow: 0 10px 25px rgba(74, 107, 255, 0.3);
+				cursor: pointer;
+				transition: var(--transition);
+				position: relative;
+				z-index: 10;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				overflow: hidden;
+			}
+			
+			.fab-icon {
+				position: relative;
+				z-index: 2;
+				transition: transform 0.3s ease;
+			}
+			
+			.fab-main.active .fab-icon {
+				transform: rotate(45deg);
+			}
+			
+			/* Sonar Wave Effect */
+			.sonar-wave {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				border-radius: 50%;
+				background: var(--primary);
+				animation: sonarWave 2.5s infinite linear;
+				opacity: 0;
+				z-index: 1;
+			}
+			
+			/* Floating Menu */
+			.fab-options {
+				display: flex;
+				flex-direction: column-reverse;
+				gap: 15px;
+				margin-bottom: 15px;
+				opacity: 0;
+				visibility: hidden;
+				transform: translateY(20px);
+				transition: var(--transition);
+			}
+			
+			.fab-main.active + .fab-options {
+				opacity: 1;
+				visibility: visible;
+				transform: translateY(0);
+			}
+			
+			/* Floating Buttons */
+			.fab-option {
+				width: 50px;
+				height: 50px;
+				border-radius: 50%;
+				background: var(--white);
+				color: var(--primary);
+				border: none;
+				box-shadow: var(--shadow);
+				cursor: pointer;
+				transition: var(--transition);
+				position: relative;
+				transform: scale(0.5);
+				opacity: 0;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
+			
+			.fab-main.active + .fab-options .fab-option {
+				transform: scale(1);
+				opacity: 1;
+			}
+			
+			/* Hover Effects */
+			.fab-main:hover {
+				transform: scale(1.05);
+				box-shadow: 0 12px 30px rgba(74, 107, 255, 0.4);
+			}
+			
+			.fab-option:hover {
+				transform: scale(1.1) !important;
+				background: var(--primary);
+				color: var(--white);
+				box-shadow: 0 8px 25px rgba(74, 107, 255, 0.4);
+			}
+			
+			/* Notification Badge */
+			.notification-badge {
+				position: absolute;
+				top: 5px;
+				right: 5px;
+				width: 8px;
+				height: 8px;
+				border-radius: 50%;
+				background: #ff4757;
+				box-shadow: 0 0 0 2px var(--white);
+				animation: pulse 1.5s infinite ease-in-out;
+			}
+			
+			/* Tooltips */
+			.fab-option::after {
+				content: attr(data-tooltip);
+				position: absolute;
+				right: 65px;
+				background: rgba(0, 0, 0, 0.7);
+				color: var(--white);
+				padding: 6px 12px;
+				border-radius: 4px;
+				font-size: 12px;
+				white-space: nowrap;
+				opacity: 0;
+				pointer-events: none;
+				transition: var(--transition);
+				transform: translateX(-10px);
+			}
+			
+			.fab-option:hover::after {
+				opacity: 1;
+				transform: translateX(0);
+			}
+			
+			/* Staggered Animation */
+			.fab-option:nth-child(1) { transition-delay: 0.05s; }
+			.fab-option:nth-child(2) { transition-delay: 0.1s; }
+			.fab-option:nth-child(3) { transition-delay: 0.15s; }
+			.fab-option:nth-child(4) { transition-delay: 0.2s; }
+			.fab-option:nth-child(5) { transition-delay: 0.25s; }
+			.fab-option:nth-child(6) { transition-delay: 0.3s; }
+			.fab-option:nth-child(7) { transition-delay: 0.35s; }
+			
+			/* Animations */
+			@keyframes sonarWave {
+				0% { transform: scale(0.8); opacity: 0.7; }
+				100% { transform: scale(1.5); opacity: 0; }
+			}
+			
+			@keyframes pulse {
+				0%, 100% { transform: scale(1); }
+				50% { transform: scale(1.3); }
+			}
+			
+			/* Ripple Effect */
+			.ripple {
+				position: absolute;
+				border-radius: 50%;
+				background: rgba(255, 255, 255, 0.7);
+				transform: scale(0);
+				animation: ripple 0.6s linear;
+				pointer-events: none;
+			}
+			
+			@keyframes ripple {
+				to { transform: scale(4); opacity: 0; }
+			}
+		</style>
+		
+		<script>
+			// Floating UI Interactions
+			document.getElementById('fabMain').addEventListener('click', function() {
+				this.classList.toggle('active');
+			});
+			
+			// Ripple Effect
+			document.querySelectorAll('.fab-option, .fab-main').forEach(btn => {
+				btn.addEventListener('click', function(e) {
+					const ripple = document.createElement('span');
+					ripple.classList.add('ripple');
+					
+					const rect = this.getBoundingClientRect();
+					ripple.style.left = `${e.clientX - rect.left}px`;
+					ripple.style.top = `${e.clientY - rect.top}px`;
+					
+					this.appendChild(ripple);
+					
+					setTimeout(() => ripple.remove(), 600);
+				});
+			});
+			
+			// Hover effects
+			document.querySelectorAll('.fab-option').forEach(btn => {
+				btn.addEventListener('mouseenter', () => {
+					btn.style.transform = 'scale(1.1)';
+				});
+				btn.addEventListener('mouseleave', () => {
+					if (!btn.classList.contains('active')) {
+						btn.style.transform = 'scale(1)';
+					}
+				});
+			});
+		</script>
 
       <div class="container">
         <div class="row justify-content-center">
