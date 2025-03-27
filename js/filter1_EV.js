@@ -177,9 +177,9 @@ document.getElementById('filterForm').addEventListener('submit', function(event)
 // Function to apply the filter
 function applyFilter() {
   console.log("applyFilter called"); // Debugging log
-  const selectedServices = getSelectedItems('other-product-icons').map(item => item.toLowerCase());
+  const selectedOtherProducts = getSelectedItems('other-product-icons').map(item => item.toLowerCase());
 
-  console.log("Selected Services:", selectedServices); // Debugging log
+  console.log("Selected Services:", selectedOtherProducts); // Debugging log
 
   markers.clearLayers(); // Clear existing markers
   let filteredMarkers = []; // Array to hold filtered markers
@@ -188,7 +188,7 @@ function applyFilter() {
     let match = true;
 
     // Check if the marker has "Fleet card" in its services
-    if (selectedServices.length && !selectedServices.some(item => entry.data.other_product.map(serv => serv.toLowerCase()).includes(item))) {
+    if (selectedOtherProducts.length && !selectedOtherProducts.some(item => entry.service.map(serv => serv.toLowerCase()).includes(item))) {
       match = false;
     }
 
