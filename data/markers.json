@@ -1167,7 +1167,8 @@
             ],
             "service": [
                 "Cash",
-                "KHQR"
+                "KHQR",
+                "Fleet card"
             ],
             "province": "Phnom Penh",
             "address": "Prey Sor Street, Thmey Village, Sangkat Dongkor, Khan Dongkor, Phnom Penh",
@@ -5244,7 +5245,8 @@
             ],
             "service": [
                 "Cash",
-                "KHQR"
+                "KHQR",
+                "Fleet card" 
             ],
             "province": "Phnom Penh",
             "address": "#Land 449, Ring Road 2, Phum Prek Thleng, Sangkat Choeung Ek, Khan Dangkor, Phnom Penh.",
