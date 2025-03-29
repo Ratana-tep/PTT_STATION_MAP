@@ -624,8 +624,8 @@ function getItemIcon(item) {
     KHQR: "./pictures/KHQR.png", // Path to the KHQR image
     Cash: "./pictures/cash.png", // Path to the Cash image
     Amazon: "./pictures/amazon.png", // Path to the Amazon image
-    EV: "./pictures/ev.png", // Path to the 7-Eleven image"7-Eleven": "./pictures/7eleven.png", // Path to the 7-Eleven image
-    // "promotion1": "./pictures/opening1.jpg" // Path to the promotion1 image
+    EV: "./pictures/ev.png", // Path to the 7-Eleven
+    "7-Eleven": "./pictures/7eleven.png" // Path to the 7-Eleven image
     // Add other items as needed
   };
   return itemImages[item] || "./pictures/default.png"; // Default image if item not found
