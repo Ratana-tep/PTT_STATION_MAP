@@ -3657,7 +3657,9 @@
             ],
             "service": [
                 "Cash",
-                "KHQR"
+                "KHQR",
+                "Fleet card"
+                
             ],
             "province": "Takeo",
             "address": "National Road 3, Taleu village, Udomsorya commune, Tramkok district, Takeo province",
