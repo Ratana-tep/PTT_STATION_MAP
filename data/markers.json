@@ -2821,7 +2821,9 @@
             ],
             "service": [
                 "Cash",
-                "KHQR"
+                "KHQR",
+                "Fleet card"
+                
             ],
             "province": "Phnom Penh",
             "address": "# 19971 Corner Raod 199, Sangkat Olympic, Khan Chamka Morn, Phnom Penh City",
