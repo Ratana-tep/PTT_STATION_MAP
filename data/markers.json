@@ -3001,7 +3001,9 @@
             ],
             "service": [
                 "Cash",
-                "KHQR"
+                "KHQR",
+                "Fleet card"
+                
             ],
             "province": "Phnom Penh",
             "address": "Phum Kien Khlang, Sangkat Chroychangva, Khan Chroychangva   Phnom Penh",
