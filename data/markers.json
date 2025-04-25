@@ -4263,7 +4263,9 @@
             ],
             "service": [
                 "Cash",
-                "KHQR"
+                "KHQR",
+                "Fleet card"
+                
             ],
             "province": "Phnom Penh",
             "address": "located at street 351 (Trong Morn),\u00e2\u20ac\u2039 Ta Ngov Village, Sangkat Nirouth, \nKhan Chbar Ampov, Phnom Penh",
