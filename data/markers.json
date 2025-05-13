@@ -1105,7 +1105,9 @@
             ],
             "service": [
                 "KHQR",
-                "Cash"
+                "Cash",
+                "Fleet card"
+                
             ],
             "province": "Phnom Penh",
             "address": "St. Tomnob 7 Makara, Road 60m, Phum Baku, Sangkat Dangkor, Khan Dangkor, Phnom Penh",
