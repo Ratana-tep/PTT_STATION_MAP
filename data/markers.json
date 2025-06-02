@@ -5565,6 +5565,106 @@
             "promotion": [],
             "old_picture": "",
             "picture": "2.png"
+        },
+        {
+            "id": "10038834",
+            "latitude": "12.30558333",
+            "longitude": "103.1020833",
+            "title": "PTT Veal Veng PHNOM TOMPOR RETAIL CO.,LTD_10038834",
+            "description": [
+                "Amazon"
+            ],
+            "product": [
+                "ULG 95",
+                "ULR 91",
+                "HSD"
+            ],
+            "other_product": [],
+            "service": [
+                "KHQR",
+                "Cash"
+            ],
+            "province": "Pursat",
+            "address": "#National Road No. 55, Corner of No. 10, Pramaoy Village, Pursat Province",
+            "status": "16h",
+            "promotion": [],
+            "old_picture": "",
+            "picture": "2.png"
+        },
+        {
+            "id": "10038583",
+            "latitude": "14.42688889",
+            "longitude": "103.6960556",
+            "title": "PTT O-Smach_MEANCHEY ENERGY (CAMBODIA) CO.,LDT_10038583",
+            "description": [
+                "Amazon"
+            ],
+            "product": [
+                "ULG 95",
+                "ULR 91",
+                "HSD"
+            ],
+            "other_product": [],
+            "service": [
+                "KHQR",
+                "Cash"
+            ],
+            "province": "Oddar Meanchey",
+            "address": "#Land plot no. 23, NR 68, Ou Smach Village, Oddar Meanchey Province",
+            "status": "16h",
+            "promotion": [],
+            "old_picture": "",
+            "picture": "2.png"
+        },
+        {
+            "id": "10038513",
+            "latitude": "11.45083333",
+            "longitude": "105.0636111",
+            "title": "PTT Sre Ampil Ring Road #3 _META_ENERGY CO.,LTD",
+            "description": [
+                "Amazon"
+            ],
+            "product": [
+                "ULG 95",
+                "ULR 91",
+                "HSD"
+            ],
+            "other_product": [],
+            "service": [
+                "KHQR",
+                "Cash"
+            ],
+            "province": "Kandal",
+            "address": "#2318, Street 60 Meters Ring Road 3, Preaek Doung Village, Kampong Svay Commune, Kien Svay District, Kandal Province",
+            "status": "16h",
+            "promotion": [],
+            "old_picture": "",
+            "picture": "2.png"
+        },
+        {
+            "id": "10038896",
+            "latitude": "11.91669444",
+            "longitude": "104.7075",
+            "title": "PTT Kampong Tralach ROYAL HM TRADING CO.,LTD.",
+            "description": [
+                "Amazon"
+            ],
+            "product": [
+                "ULG 95",
+                "ULR 91",
+                "HSD"
+            ],
+            "other_product": [],
+            "service": [
+                "KHQR",
+                "Cash"
+            ],
+            "province": "Kampong Chhnang",
+            "address": "#379, National Road No.5, Ou Ruessei Village, Ou Ruessei Commune,  Kampong Tralach District, Kampong Chhnang Province.",
+            "status": "16h",
+            "promotion": [],
+            "old_picture": "",
+            "picture": "2.png"
         }
     ]
 }
