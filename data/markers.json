@@ -5665,6 +5665,31 @@
             "promotion": [],
             "old_picture": "",
             "picture": "2.png"
+        },
+        {
+            "id": "10038814",
+            "latitude": "10.96202778",
+            "longitude": "104.6614444",
+            "title": "PTT Bek Kus_PUTHISAK BEKKUS PETROL STATION CO., LTD.",
+            "description": [
+                "Amazon"
+            ],
+            "product": [
+                "ULG 95",
+                "ULR 91",
+                "HSD"
+            ],
+            "other_product": [],
+            "service": [
+                "KHQR",
+                "Cash"
+            ],
+            "province": "Takeo",
+            "address": "#Land plot no. 945, National Road N o.3, Srok Chek Village, Takeo Province",
+            "status": "16h",
+            "promotion": [],
+            "old_picture": "",
+            "picture": "2.png"
         }
     ]
 }
