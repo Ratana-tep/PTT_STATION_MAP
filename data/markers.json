@@ -2912,7 +2912,8 @@
             ],
             "service": [
                 "Cash",
-                "KHQR"
+                "KHQR",
+                "Fleet card"
             ],
             "province": "Preah Sihanouk",
             "address": "Village 3, Sangkat 2, Sihanoukville, Preah Sihanouk Province",
@@ -5506,7 +5507,8 @@
             "other_product": [],
             "service": [
                 "KHQR",
-                "Cash"
+                "Cash",
+                "Fleet card"
             ],
             "province": "Kandal",
             "address": "National Road 21, Preaek Koy, Sambour, Kandal 080908, Cambodia",
