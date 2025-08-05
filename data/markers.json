@@ -967,37 +967,6 @@
             "picture": "2.png"
         },
         {
-            "id": 10034019,
-            "latitude": 11.7262777777777,
-            "longitude": 104.963666666666,
-            "title": "PTT_PREK ANCHANH",
-            "description": [
-                "Amazon",
-                "7-Eleven"
-            ],
-            "product": [
-                "ULG 95",
-                "ULR 91",
-                "HSD"
-            ],
-            "other_product": [
-                ""
-            ],
-            "service": [
-                "Fleet card",
-                "KHQR",
-                "Cash"
-            ],
-            "province": "Phnom Penh",
-            "address": "Land No .5, Road 6A, Phum Prek Taben, Khum Prekanh Chanh, Srok Mokkam Pol, Khet Kandal, Cambodia.",
-            "status": "24h",
-            "promotion": [
-                ""
-            ],
-            "old_picture": "",
-            "picture": "2.png"
-        },
-        {
             "id": 10033146,
             "latitude": 13.2561944444444,
             "longitude": 103.090194444444,
@@ -1381,37 +1350,6 @@
             "province": "Phnom Penh",
             "address": "Street 430 corner of street 450,Sangkat Toul Tompong 2,Khan Chamkarmon",
             "status": "16h",
-            "promotion": [
-                ""
-            ],
-            "old_picture": "",
-            "picture": "2.png"
-        },
-        {
-            "id": 10027728,
-            "latitude": 11.5621666666666,
-            "longitude": 104.895638888888,
-            "title": "PTT TEP PORN",
-            "description": [
-                "Amazon"
-            ],
-            "product": [
-                "ULG 95",
-                "ULR 91",
-                "HSD"
-            ],
-            "other_product": [
-                ""
-            ],
-            "service": [
-                "Cash",
-                "KHQR",
-                "Fleet card"
-                
-            ],
-            "province": "Phnom Penh",
-            "address": "No. 3+4, St. Oknha Tep Phan, Sangkat Boeng Keng Kang 1, Khan Chamkar Morn, Phnom Penh",
-            "status": "24h",
             "promotion": [
                 ""
             ],
@@ -2944,38 +2882,6 @@
             ],
             "province": "Kampong Speu",
             "address": "A Phum Krang Pol Tep, Sangkat Rokar Thom, Khan Chbar  Morn,   Kampong Speu  Province",
-            "status": "24h",
-            "promotion": [
-                ""
-            ],
-            "old_picture": "",
-            "picture": "2.png"
-        },
-        {
-            "id": 10028689,
-            "latitude": 11.6098249999999,
-            "longitude": 104.928205555555,
-            "title": "PTT ChroyChongVa II",
-            "description": [
-                "Amazon",
-                "7-Eleven"
-            ],
-            "product": [
-                "ULG 95",
-                "ULR 91",
-                "HSD"
-            ],
-            "other_product": [
-                ""
-            ],
-            "service": [
-                "Cash",
-                "KHQR",
-                "Fleet card"
-                
-            ],
-            "province": "Phnom Penh",
-            "address": "Phum Kien Khlang, Sangkat Chroychangva, Khan Chroychangva   Phnom Penh",
             "status": "24h",
             "promotion": [
                 ""
