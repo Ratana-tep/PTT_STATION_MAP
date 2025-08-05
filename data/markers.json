@@ -698,37 +698,6 @@
             "picture": "2.png"
         },
         {
-            "id": 10030896,
-            "latitude": 11.8319722222222,
-            "longitude": 104.731777777777,
-            "title": "PTT OUDONG",
-            "description": [
-                "Amazon",
-                "7-Eleven"
-            ],
-            "product": [
-                "ULG 95",
-                "ULR 91",
-                "HSD"
-            ],
-            "other_product": [
-                ""
-            ],
-            "service": [
-                "Fleet card",
-                "KHQR",
-                "Cash"
-            ],
-            "province": "Kampong Chhnang",
-            "address": "No. 0136, Road No. 5, Chhunleak Dei Village, Svay Commune, Samaki Meanchey District, Kompongchhnang Province.",
-            "status": "24h",
-            "promotion": [
-                ""
-            ],
-            "old_picture": "",
-            "picture": "2.png"
-        },
-        {
             "id": 10032893,
             "latitude": 11.6150722222222,
             "longitude": 104.897316666666,
