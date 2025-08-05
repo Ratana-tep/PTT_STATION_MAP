@@ -4123,37 +4123,6 @@
             "picture": "2.png"
         },
         {
-            "id": 30076521,
-            "latitude": 11.6169444444444,
-            "longitude": 102.984194444444,
-            "title": "PTT Dorng Tung",
-            "description": [
-                "Amazon",
-                "7-Eleven"
-            ],
-            "product": [
-                "ULG 95",
-                "ULR 91",
-                "HSD"
-            ],
-            "other_product": [
-                ""
-            ],
-            "service": [
-                "Cash",
-                "KHQR",
-                "Fleet card"
-            ],
-            "province": "Koh Kong",
-            "address": "located road 48, Chi Meal Village, Andoung Tuek Commune, Botum Sakor District, Koh Kong Province",
-            "status": "24h",
-            "promotion": [
-                ""
-            ],
-            "old_picture": "",
-            "picture": "2.png"
-        },
-        {
             "id": 10033986,
             "latitude": 11.5000555555555,
             "longitude": 105.068666666666,
