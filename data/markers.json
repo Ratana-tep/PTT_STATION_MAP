@@ -698,6 +698,37 @@
             "picture": "2.png"
         },
         {
+            "id": 10030896,
+            "latitude": 11.8319722222222,
+            "longitude": 104.731777777777,
+            "title": "PTT OUDONG",
+            "description": [
+                "Amazon",
+                "7-Eleven"
+            ],
+            "product": [
+                "ULG 95",
+                "ULR 91",
+                "HSD"
+            ],
+            "other_product": [
+                ""
+            ],
+            "service": [
+                "Fleet card",
+                "KHQR",
+                "Cash"
+            ],
+            "province": "Kampong Chhnang",
+            "address": "No. 0136, Road No. 5, Chhunleak Dei Village, Svay Commune, Samaki Meanchey District, Kompongchhnang Province.",
+            "status": "24h",
+            "promotion": [
+                ""
+            ],
+            "old_picture": "",
+            "picture": "2.png"
+        },
+        {
             "id": 10032893,
             "latitude": 11.6150722222222,
             "longitude": 104.897316666666,
@@ -960,6 +991,37 @@
             "province": "Phnom Penh",
             "address": " #120, St. Pastor, village 4, Sangkat Chaktoumouk, Khan Doun Penh           Phnom Penh",
             "status": "16h",
+            "promotion": [
+                ""
+            ],
+            "old_picture": "",
+            "picture": "2.png"
+        },
+        {
+            "id": 10034019,
+            "latitude": 11.7262777777777,
+            "longitude": 104.963666666666,
+            "title": "PTT_PREK ANCHANH",
+            "description": [
+                "Amazon",
+                "7-Eleven"
+            ],
+            "product": [
+                "ULG 95",
+                "ULR 91",
+                "HSD"
+            ],
+            "other_product": [
+                ""
+            ],
+            "service": [
+                "Fleet card",
+                "KHQR",
+                "Cash"
+            ],
+            "province": "Phnom Penh",
+            "address": "Land No .5, Road 6A, Phum Prek Taben, Khum Prekanh Chanh, Srok Mokkam Pol, Khet Kandal, Cambodia.",
+            "status": "24h",
             "promotion": [
                 ""
             ],
@@ -1350,6 +1412,37 @@
             "province": "Phnom Penh",
             "address": "Street 430 corner of street 450,Sangkat Toul Tompong 2,Khan Chamkarmon",
             "status": "16h",
+            "promotion": [
+                ""
+            ],
+            "old_picture": "",
+            "picture": "2.png"
+        },
+        {
+            "id": 10027728,
+            "latitude": 11.5621666666666,
+            "longitude": 104.895638888888,
+            "title": "PTT TEP PORN",
+            "description": [
+                "Amazon"
+            ],
+            "product": [
+                "ULG 95",
+                "ULR 91",
+                "HSD"
+            ],
+            "other_product": [
+                ""
+            ],
+            "service": [
+                "Cash",
+                "KHQR",
+                "Fleet card"
+                
+            ],
+            "province": "Phnom Penh",
+            "address": "No. 3+4, St. Oknha Tep Phan, Sangkat Boeng Keng Kang 1, Khan Chamkar Morn, Phnom Penh",
+            "status": "24h",
             "promotion": [
                 ""
             ],
@@ -2890,6 +2983,38 @@
             "picture": "2.png"
         },
         {
+            "id": 10028689,
+            "latitude": 11.6098249999999,
+            "longitude": 104.928205555555,
+            "title": "PTT ChroyChongVa II",
+            "description": [
+                "Amazon",
+                "7-Eleven"
+            ],
+            "product": [
+                "ULG 95",
+                "ULR 91",
+                "HSD"
+            ],
+            "other_product": [
+                ""
+            ],
+            "service": [
+                "Cash",
+                "KHQR",
+                "Fleet card"
+                
+            ],
+            "province": "Phnom Penh",
+            "address": "Phum Kien Khlang, Sangkat Chroychangva, Khan Chroychangva   Phnom Penh",
+            "status": "24h",
+            "promotion": [
+                ""
+            ],
+            "old_picture": "",
+            "picture": "2.png"
+        },
+        {
             "id": 10028776,
             "latitude": 11.5608333333333,
             "longitude": 104.889561111111,
@@ -4022,6 +4147,37 @@
             "province": "Takeo",
             "address": "Street 41, Toul Khlong Vilage, O'saray Communce, Tram Kak District, Tekeo",
             "status": "16h",
+            "promotion": [
+                ""
+            ],
+            "old_picture": "",
+            "picture": "2.png"
+        },
+        {
+            "id": 30076521,
+            "latitude": 11.6169444444444,
+            "longitude": 102.984194444444,
+            "title": "PTT Dorng Tung",
+            "description": [
+                "Amazon",
+                "7-Eleven"
+            ],
+            "product": [
+                "ULG 95",
+                "ULR 91",
+                "HSD"
+            ],
+            "other_product": [
+                ""
+            ],
+            "service": [
+                "Cash",
+                "KHQR",
+                "Fleet card"
+            ],
+            "province": "Koh Kong",
+            "address": "located road 48, Chi Meal Village, Andoung Tuek Commune, Botum Sakor District, Koh Kong Province",
+            "status": "24h",
             "promotion": [
                 ""
             ],
@@ -5532,68 +5688,6 @@
             "address": "#Land plot no. 945, National Road N o.3, Srok Chek Village, Takeo Province",
             "status": "16h",
             "promotion": [],
-            "old_picture": "",
-            "picture": "2.png"
-        },
-        {
-            "id": 10030896,
-            "latitude": 11.8319722222222,
-            "longitude": 104.731777777777,
-            "title": "PTT OUDONG",
-            "description": [
-                "Amazon",
-                "7-Eleven"
-            ],
-            "product": [
-                "ULG 95",
-                "ULR 91",
-                "HSD"
-            ],
-            "other_product": [
-                ""
-            ],
-            "service": [
-                "Fleet card",
-                "KHQR",
-                "Cash"
-            ],
-            "province": "Kampong Chhnang",
-            "address": "No. 0136, Road No. 5, Chhunleak Dei Village, Svay Commune, Samaki Meanchey District, Kompongchhnang Province.",
-            "status": "24h",
-            "promotion": [
-                ""
-            ],
-            "old_picture": "",
-            "picture": "2.png"
-        },
-        {
-            "id": 30076521,
-            "latitude": 11.6169444444444,
-            "longitude": 102.984194444444,
-            "title": "PTT Dorng Tung",
-            "description": [
-                "Amazon",
-                "7-Eleven"
-            ],
-            "product": [
-                "ULG 95",
-                "ULR 91",
-                "HSD"
-            ],
-            "other_product": [
-                ""
-            ],
-            "service": [
-                "Cash",
-                "KHQR",
-                "Fleet card"
-            ],
-            "province": "Koh Kong",
-            "address": "located road 48, Chi Meal Village, Andoung Tuek Commune, Botum Sakor District, Koh Kong Province",
-            "status": "24h",
-            "promotion": [
-                ""
-            ],
             "old_picture": "",
             "picture": "2.png"
         }
