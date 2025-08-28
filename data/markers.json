@@ -2399,8 +2399,7 @@
             ],
             "service": [
                 "Cash",
-                "KHQR",
-                "Fleet card"
+                "KHQR"
             ],
             "province": "Phnom Penh",
             "address": "#73 St. 474, Sangkat Boeng Trabek, Khan Chomkar Mon, Phnom Penh.",
@@ -2727,7 +2726,6 @@
                 ""
             ],
             "service": [
-                "Fleet card",
                 "KHQR",
                 "Cash"
             ],
