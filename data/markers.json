@@ -3220,36 +3220,6 @@
       "picture": "2.png"
     },
     {
-      "id": 10031787,
-      "latitude": 10.617,
-      "longitude": 103.547416666666,
-      "title": "PTT O3",
-      "description": [
-        "Amazon",
-        "7-Eleven"
-      ],
-      "product": [
-        "ULG 95",
-        "ULR 91",
-        "HSD"
-      ],
-      "other_product": [
-        ""
-      ],
-      "service": [
-        "Cash",
-        "KHQR"
-      ],
-      "province": "Preah Sihanouk",
-      "address": "Phum 5, Sangkat lek 4, Sihanouk Ville City, Sihanouk Ville",
-      "status": "24h",
-      "promotion": [
-        ""
-      ],
-      "old_picture": "",
-      "picture": "2.png"
-    },
-    {
       "id": 10031481,
       "latitude": 13.1063611111111,
       "longitude": 103.166527777777,
@@ -3399,35 +3369,6 @@
       "picture": "2.png"
     },
     {
-      "id": 10032399,
-      "latitude": 11.0517222222222,
-      "longitude": 106.091694444444,
-      "title": "PTT Bavit",
-      "description": [
-        "Amazon"
-      ],
-      "product": [
-        "ULG 95",
-        "ULR 91",
-        "HSD"
-      ],
-      "other_product": [
-        ""
-      ],
-      "service": [
-        "Cash",
-        "KHQR"
-      ],
-      "province": "Svay Rieng",
-      "address": "Trapeang Phlong Village, Sangkat Bati, Bavet City, Svay Rieng Province, Cambodia",
-      "status": "16h",
-      "promotion": [
-        ""
-      ],
-      "old_picture": "",
-      "picture": "2.png"
-    },
-    {
       "id": 10032587,
       "latitude": 11.7570277777777,
       "longitude": 105.020111111111,
@@ -3549,65 +3490,6 @@
       "picture": "2.png"
     },
     {
-      "id": 10032943,
-      "latitude": 10.6746111111111,
-      "longitude": 103.800416666666,
-      "title": "PTT Veal Renh",
-      "description": [
-        "Amazon",
-        "7-Eleven"
-      ],
-      "product": [
-        "ULG 95",
-        "ULR 91",
-        "HSD"
-      ],
-      "other_product": [
-        ""
-      ],
-      "service": [
-        "Cash",
-        "KHQR"
-      ],
-      "province": "Preah Sihanouk",
-      "address": "#No. National Road Number 4, Phum Bantheay Prey, Khum Andong thmor, Srok Prey Nop, Sihanouk ville.",
-      "status": "24h",
-      "promotion": [
-        ""
-      ],
-      "old_picture": "",
-      "picture": "2.png"
-    },
-    {
-      "id": 10032355,
-      "latitude": 11.5861944444444,
-      "longitude": 104.677416666666,
-      "title": "PTT Road 51 WE RISE",
-      "description": [
-        "Amazon"
-      ],
-      "product": [
-        "ULG 95",
-        "ULR 91",
-        "HSD"
-      ],
-      "other_product": [
-        ""
-      ],
-      "service": [
-        "Cash",
-        "KHQR"
-      ],
-      "province": "Kampong Speu",
-      "address": "National Road 51, Wat Phnom Village, Phnom Toch Commune, Oudong District, Kampong Spue Province",
-      "status": "16h",
-      "promotion": [
-        ""
-      ],
-      "old_picture": "",
-      "picture": "2.png"
-    },
-    {
       "id": 10032944,
       "latitude": 11.5934722222222,
       "longitude": 104.85125,
@@ -3698,36 +3580,6 @@
       "picture": "2.png"
     },
     {
-      "id": 30076521,
-      "latitude": 11.6169444444444,
-      "longitude": 102.984194444444,
-      "title": "PTT Dorng Tung",
-      "description": [
-        "Amazon",
-        "7-Eleven"
-      ],
-      "product": [
-        "ULG 95",
-        "ULR 91",
-        "HSD"
-      ],
-      "other_product": [
-        ""
-      ],
-      "service": [
-        "Cash",
-        "KHQR"
-      ],
-      "province": "Koh Kong",
-      "address": "located road 48, Chi Meal Village, Andoung Tuek Commune, Botum Sakor District, Koh Kong Province",
-      "status": "24h",
-      "promotion": [
-        ""
-      ],
-      "old_picture": "",
-      "picture": "2.png"
-    },
-    {
       "id": 10033986,
       "latitude": 11.5000555555555,
       "longitude": 105.068666666666,
@@ -3751,36 +3603,6 @@
       ],
       "province": "Kandal",
       "address": "Located at national road No. 1, Slab Ta Aon Village, Kokir Commune, \nKien Svay District, Kandal Province",
-      "status": "24h",
-      "promotion": [
-        ""
-      ],
-      "old_picture": "",
-      "picture": "2.png"
-    },
-    {
-      "id": 10034008,
-      "latitude": 12.4733333333333,
-      "longitude": 104.369944444444,
-      "title": "PTT Kro Kor",
-      "description": [
-        "Amazon",
-        "7-Eleven"
-      ],
-      "product": [
-        "ULG 95",
-        "ULR 91",
-        "HSD"
-      ],
-      "other_product": [
-        ""
-      ],
-      "service": [
-        "KHQR",
-        "Cash"
-      ],
-      "province": "Pursat",
-      "address": "Located at national road No. 5, Kbal Domrei Village, Ansa Chambak Commune, \nKrakor District, Pursat Province",
       "status": "24h",
       "promotion": [
         ""
@@ -3872,35 +3694,6 @@
       ],
       "province": "Kep",
       "address": "located at Plot land 1149, National Road 33, Damnak Chang\u00e2\u20ac\u2122Auer Village, Sangkat \nPrey Thom, Kep Municipal, Kep Province",
-      "status": "16h",
-      "promotion": [
-        ""
-      ],
-      "old_picture": "",
-      "picture": "2.png"
-    },
-    {
-      "id": 10034007,
-      "latitude": 13.1167222222222,
-      "longitude": 103.20025,
-      "title": "PTT Sree 100",
-      "description": [
-        "Amazon"
-      ],
-      "product": [
-        "ULG 95",
-        "ULR 91",
-        "HSD"
-      ],
-      "other_product": [
-        ""
-      ],
-      "service": [
-        "KHQR",
-        "Cash"
-      ],
-      "province": "Battambang",
-      "address": "Located at Ou Ta Nob Village, Sangkat Kdol Doun Teav, Krong Battambang, \nBattambang Province",
       "status": "16h",
       "promotion": [
         ""
@@ -4021,35 +3814,6 @@
       ],
       "province": "Kampong Thom",
       "address": "Trapeang Svay Village, Balang Commune, Baray District, Kampong Thom Province,",
-      "status": "16h",
-      "promotion": [
-        ""
-      ],
-      "old_picture": "",
-      "picture": "2.png"
-    },
-    {
-      "id": 10043893,
-      "latitude": 11.4988611111111,
-      "longitude": 105.339,
-      "title": "PTT Krung Prey Veng",
-      "description": [
-        "Amazon"
-      ],
-      "product": [
-        "ULG 95",
-        "ULR 91",
-        "HSD"
-      ],
-      "other_product": [
-        ""
-      ],
-      "service": [
-        "KHQR",
-        "Cash"
-      ],
-      "province": "Prey Veng",
-      "address": "National Road 11, Ekream Village, Sangkat Cheung Teok, Prey Veng Municipal, Prey Veng Province",
       "status": "16h",
       "promotion": [
         ""
@@ -4236,36 +4000,6 @@
       "picture": "2.png"
     },
     {
-      "id": 10035118,
-      "latitude": 10.5938611111111,
-      "longitude": 103.565777777777,
-      "title": "PTT O'Tress",
-      "description": [
-        "Amazon",
-        "7-Eleven"
-      ],
-      "product": [
-        "ULG 95",
-        "ULR 91",
-        "HSD"
-      ],
-      "other_product": [
-        ""
-      ],
-      "service": [
-        "Cash",
-        "KHQR"
-      ],
-      "province": "Preah Sihanouk",
-      "address": "Chom Noat Ream village, Bet Trang commune, Prey Nob distrct, Sihanouk Ville, Cambodia",
-      "status": "24h",
-      "promotion": [
-        ""
-      ],
-      "old_picture": "",
-      "picture": "2.png"
-    },
-    {
       "id": 10034777,
       "latitude": 11.0381944444444,
       "longitude": 106.005444444444,
@@ -4320,36 +4054,6 @@
       ],
       "province": "Battambang",
       "address": "Road #02 Kompong Krobey Village Sangkat Svay Por, Battambang City.Battambang Provinice",
-      "status": "24h",
-      "promotion": [
-        ""
-      ],
-      "old_picture": "",
-      "picture": "2.png"
-    },
-    {
-      "id": 10035275,
-      "latitude": 13.58925,
-      "longitude": 102.969416666666,
-      "title": "PTT BANTEAY MEANCHEY in CITY",
-      "description": [
-        "Amazon",
-        "7-Eleven"
-      ],
-      "product": [
-        "ULG 95",
-        "ULR 91",
-        "HSD"
-      ],
-      "other_product": [
-        ""
-      ],
-      "service": [
-        "KHQR",
-        "Cash"
-      ],
-      "province": "Banteay Meanchey",
-      "address": "National Road 5, Tarang Ball Village, Sangkat Kampong Svay, Serie Saophoan Municipal, Banteay Meanchey Province",
       "status": "24h",
       "promotion": [
         ""
