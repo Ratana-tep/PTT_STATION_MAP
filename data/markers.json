@@ -2560,36 +2560,6 @@
       "picture": "2.png"
     },
     {
-      "id": 10028453,
-      "latitude": 11.5884722222222,
-      "longitude": 104.858777777777,
-      "title": "PTT Rd.Samdech Chearsim",
-      "description": [
-        "Amazon"
-      ],
-      "product": [
-        "ULG 95",
-        "ULR 91",
-        "HSD"
-      ],
-      "other_product": [
-        ""
-      ],
-      "service": [
-        "Fleet card",
-        "KHQR",
-        "Cash"
-      ],
-      "province": "Phnom Penh",
-      "address": "# 153 Road Samdach Chear Sim, Phum Chress, Sangkat Phnom Penh Thmey, Khan Sen Sok, Phnom Penh.",
-      "status": "16h",
-      "promotion": [
-        ""
-      ],
-      "old_picture": "",
-      "picture": "2.png"
-    },
-    {
       "id": 10028690,
       "latitude": 11.5230277777777,
       "longitude": 104.822083333333,
@@ -3091,37 +3061,6 @@
       "province": "Svay Rieng",
       "address": "Svay Village,Sangkat Chek,SVAY RIENG CITY,Svay Rieng",
       "status": "16h",
-      "promotion": [
-        ""
-      ],
-      "old_picture": "",
-      "picture": "2.png"
-    },
-    {
-      "id": 10030973,
-      "latitude": 12.5296944444444,
-      "longitude": 103.9335,
-      "title": "PTT PURSAT I",
-      "description": [
-        "Amazon",
-        "7-Eleven"
-      ],
-      "product": [
-        "ULG 95",
-        "ULR 91",
-        "HSD"
-      ],
-      "other_product": [
-        ""
-      ],
-      "service": [
-        "Fleet card",
-        "KHQR",
-        "Cash"
-      ],
-      "province": "Pursat",
-      "address": "#181, National Road 5, Morn Jae Village, Prey Nhi Commune, Pursat City",
-      "status": "24h",
       "promotion": [
         ""
       ],
@@ -4443,37 +4382,6 @@
       "province": "Phnom Penh",
       "address": "#Land 449, Ring Road 2, Phum Prek Thleng, Sangkat Choeung Ek, Khan Dangkor, Phnom Penh.",
       "status": "24h",
-      "promotion": [
-        ""
-      ],
-      "old_picture": "",
-      "picture": "2.png"
-    },
-    {
-      "id": 10037284,
-      "latitude": 12.5613611111111,
-      "longitude": 103.852555555555,
-      "title": "PTT Pursat II",
-      "description": [
-        "Amazon"
-      ],
-      "product": [
-        "ULG 95",
-        "ULR 91",
-        "HSD"
-      ],
-      "other_product": [
-        ""
-      ],
-      "service": [
-        "Cash",
-        "KHQR",
-        "Fleet card"
-
-      ],
-      "province": "Pursat",
-      "address": "# Plot land No.42, National Road No.05, Krapeu Rou Village, Snam Preah Commune, Bakan District , Pursat Province, Cambodia.",
-      "status": "16h",
       "promotion": [
         ""
       ],
