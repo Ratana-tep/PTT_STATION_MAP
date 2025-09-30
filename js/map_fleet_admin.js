@@ -247,7 +247,7 @@ function autoSelectFleetCard() {
 }
 
 // Fetch data from JSON file
-fetch("https://raw.githubusercontent.com/Ratana-tep/PTT_STATION_MAP/master/data/markers_admin.json")
+fetch("https://raw.githubusercontent.com/Ratana-tep/PTT_STATION_MAP/master/data/markers_admin_fleet.json")
   .then((response) => response.json())
   .then((data) => {
     var stations = data.STATION;
@@ -281,7 +281,7 @@ fetch("https://raw.githubusercontent.com/Ratana-tep/PTT_STATION_MAP/master/data/
   })
   .catch((error) => console.error("Error fetching data:", error));
   
-function getIconUrl(station) {
+function getIconUrl(status) {
   // Get the current time in Cambodia timezone
   const cambodiaTimeString = new Date().toLocaleString("en-US", {
     timeZone: "Asia/Phnom_Penh",
@@ -290,33 +290,41 @@ function getIconUrl(station) {
   const currentHour = cambodiaTime.getHours();
   const currentMinutes = cambodiaTime.getMinutes();
 
-  // First, check for high-priority service overrides like "off fleet card"
-  const isFleetCardOff = station.service
-    .map(s => s.toLowerCase())
-    .includes("off fleet card");
+  console.log(`Current Cambodia Time: ${cambodiaTime}`);
+  console.log(
+    `Current Hour: ${currentHour}, Current Minutes: ${currentMinutes}`
+  );
 
-  if (isFleetCardOff) {
-    console.log("Service Status: Fleet Card Offline");
-    return "./pictures/fleet_card_off.png"; // Path to your 'Fleet Card Off' icon
-  }
-  
-  // Existing logic now uses station.status
-  const lowerCaseStatus = station.status.toLowerCase();
+  // Standardize the status string to lowercase for case-insensitive matching
+  const lowerCaseStatus = status.toLowerCase();
+
+  // Handle different status cases
   const open24Hours = lowerCaseStatus === "24h";
   const underConstruction = lowerCaseStatus === "under construct";
+  // --- New Condition Added ---
+  const brandChange = lowerCaseStatus === "brand change";
 
   if (underConstruction) {
     console.log("Status: Under Construction");
-    return "./pictures/61.png";
+    return "./pictures/61.png"; // Path to the under construction icon
   } else if (open24Hours) {
     console.log("Status: Open 24 Hours");
-    return "./pictures/61.png";
+    return "./pictures/61.png"; // Path to the 24h icon
+  } else if (brandChange) {
+    // --- New 'else if' block for the brand change status ---
+    console.log("Status: off fleet card");
+    return "./pictures/fleet_card_off.png"; // **Path to your fleet card off icon**
   } else {
-    // Default to time-based open/closed logic
+    // Assume the default open hours are from 5:00 AM to 8:30 PM
     const openingHour = 5;
     const closingHour = 20;
     const closingMinutes = 30;
 
+    console.log(
+      `Opening Hour: ${openingHour}, Closing Hour: ${closingHour}, Closing Minutes: ${closingMinutes}`
+    );
+
+    // Determine if the station is open
     const isOpen =
       currentHour >= openingHour &&
       (currentHour < closingHour ||
@@ -324,10 +332,10 @@ function getIconUrl(station) {
 
     if (isOpen) {
       console.log("Status: Open");
-      return "./pictures/61.png";
+      return "./pictures/61.png"; // Path to the open icon
     } else {
       console.log("Status: Closed");
-      return "./pictures/time_close1.png";
+      return "./pictures/time_close1.png"; // Path to the closed icon
     }
   }
 }
@@ -675,30 +683,7 @@ function updateModalWithRoute(distance, travelTime, status) {
     `;
 }
 
-function getStatusInfo(station) {
-  // It's possible the station object is incomplete, so we handle that.
-  if (!station || !station.status || !station.service) {
-    return {
-      iconClass: "fa-question-circle",
-      badgeClass: "bg-secondary text-white",
-      displayText: "Status Unknown",
-    };
-  }
-
-  // --- New Condition Added ---
-  // First, check for high-priority service overrides like "off fleet card".
-  const isFleetCardOff = station.service
-    .map(s => s.toLowerCase())
-    .includes("off fleet card");
-
-  if (isFleetCardOff) {
-    return {
-      iconClass: "fa-credit-card",
-      badgeClass: "bg-secondary text-white", // Gray badge for offline status
-      displayText: "Fleet Card Offline",
-    };
-  }
-
+function getStatusInfo(status) {
   // Calculate Cambodia time
   const cambodiaTime = new Date(
     new Date().toLocaleString("en-US", { timeZone: "Asia/Phnom_Penh" })
@@ -706,8 +691,13 @@ function getStatusInfo(station) {
   const currentHour = cambodiaTime.getHours();
   const currentMinutes = cambodiaTime.getMinutes();
 
+  console.log(`Current Cambodia Time: ${cambodiaTime}`);
+  console.log(
+    `Current Hour: ${currentHour}, Current Minutes: ${currentMinutes}`
+  );
+
   // Standardize status for case-insensitive comparison
-  const lowerCaseStatus = station.status.toLowerCase();
+  const lowerCaseStatus = status.toLowerCase();
 
   if (lowerCaseStatus === "under construct") {
     return {
@@ -720,6 +710,13 @@ function getStatusInfo(station) {
       iconClass: "fa-gas-pump",
       badgeClass: "bg-success text-white",
       displayText: "Open 24h",
+    };
+  } else if (lowerCaseStatus === "off fleet card") {
+    // --- New Condition Added ---
+    return {
+      iconClass: "fa-info-circle", // An icon for 'information'
+      badgeClass: "bg-primary text-white", // A neutral, informational color (blue)
+      displayText: "Fleet Card Unavailable", // Informative text
     };
   } else {
     // Default logic for stations with standard opening hours
@@ -734,12 +731,14 @@ function getStatusInfo(station) {
         (currentHour === closingHour && currentMinutes < closingMinutes));
 
     if (isOpen) {
+      console.log("Station is open.");
       return {
         iconClass: "fa-gas-pump",
         badgeClass: "bg-success text-white",
         displayText: `Open until 8:30 PM`,
       };
     } else {
+      console.log("Station is closed.");
       return {
         iconClass: "fa-times-circle",
         badgeClass: "bg-danger text-white",
@@ -761,7 +760,7 @@ function fetchData(url) {
 
 // Usage example with fetchData function
 const dataUrl =
-  "https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers_admin.json";
+  "https://raw.githubusercontent.com/pttpos/map_ptt/main/data/markers_admin_fleet.json";
 fetchData(dataUrl).then((data) => {
   // Handle the data as needed
   console.log(data);
