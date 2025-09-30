@@ -83,7 +83,7 @@ function setMapToCurrentLocation() {
 }
 
 // Fetch data from JSON file
-fetch("https://raw.githubusercontent.com/Ratana-tep/PTT_STATION_MAP/master/data/markers.json")
+fetch("https://raw.githubusercontent.com/Ratana-tep/PTT_STATION_MAP/master/data/markers_admin_fleet.json")
   .then((response) => response.json())
   .then((data) => {
     var stations = data.STATION;
@@ -302,7 +302,7 @@ function getIconUrl(status) {
   const open24Hours = lowerCaseStatus === "24h";
   const underConstruction = lowerCaseStatus === "under construct";
   // --- New Condition Added ---
-  const brandChange = lowerCaseStatus === "brand change";
+  const offFleetCard = lowerCaseStatus === "off fleet card";
 
   if (underConstruction) {
     console.log("Status: Under Construction");
@@ -310,8 +310,8 @@ function getIconUrl(status) {
   } else if (open24Hours) {
     console.log("Status: Open 24 Hours");
     return "./pictures/61.png"; // Path to the 24h icon
-  } else if (brandChange) {
-    // --- New 'else if' block for the brand change status ---
+  } else if (offFleetCard) {
+    // --- New 'else if' block for the off fleet card status ---
     console.log("Status: off fleet card");
     return "./pictures/fleet_card_off.png"; // **Path to your fleet card off icon**
   } else {
