@@ -364,7 +364,9 @@
 			const desktopPaths = {
 				default: 'mapViewerPC.html',
 				fleet: 'mapViewerPC_fleet.html',
-				ev: 'mapViewerPC_EV.html'
+				ev: 'mapViewerPC_EV.html',
+        admin_fleet: 'map_fleet_admin.html',
+        admin:'map.html'
 			};
 			
 			
@@ -387,6 +389,11 @@
 				case '#ev':
 					redirectPath = pathSet.ev;
 					break;
+        case '#admin_flee':
+          redirectPath = pathSet.admin_fleet;
+          break;
+        case '#admin':
+          redirectPath = pathSet.admin;
 				default:
 					redirectPath = pathSet.default;
 			}
