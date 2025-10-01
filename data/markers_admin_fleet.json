@@ -3633,7 +3633,8 @@
             ],
             "service": [
                 "Cash",
-                "KHQR"
+                "KHQR",
+                "Fleet card"
             ],
             "province": "Preah Sihanouk",
             "address": "National Road 45, Ork village, Ream commune, Preynub district, Sihanoukville, near Ream roundabout",
@@ -5376,7 +5377,8 @@
             ],
             "service": [
                 "Cash",
-                "KHQR"
+                "KHQR",
+                "Fleet card"
             ],
             "province": "Kandal",
             "address": "Land and Building# 59, National Road 21, Phum Toul Krasang, Sangkat Roka Khpos, Krong Ta Khmao, Kandal Province.\n",
@@ -5559,7 +5561,8 @@
             "other_product": [],
             "service": [
                 "KHQR",
-                "Cash"
+                "Cash",
+                "Fleet card"
             ],
             "province": "Phnom Penh",
             "address": "#Land plot no. 6674, Street Boeng Ta Mat, Phum Sambour.",
