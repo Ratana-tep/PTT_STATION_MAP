@@ -5,184 +5,176 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PTT Station Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        tbody tr { transition: background-color 0.2s ease-in-out; }
+    </style>
 </head>
-<body class="bg-gray-100 text-gray-800">
+<body class="bg-slate-100 text-slate-800">
 
-    <div class="container mx-auto p-4 md:p-8">
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8">
 
-        <header class="mb-8">
-            <h1 class="text-4xl font-bold text-gray-900 mb-2">PTT Station Dashboard</h1>
-            <p class="text-lg text-gray-600">Select a dataset and manage the markers.</p>
+        <header class="mb-10">
+            <h1 class="text-4xl font-bold text-slate-900">Station Management Dashboard</h1>
+            <p class="text-lg text-slate-600 mt-2">A central hub for viewing and managing station data.</p>
         </header>
 
-        <div class="bg-white p-6 rounded-lg shadow-md mb-8">
-            <h2 class="text-2xl font-semibold mb-4">Add New Marker</h2>
-            <form id="add-marker-form" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <input required type="text" id="new-marker-id" placeholder="ID (e.g., 701)" class="p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <input required type="text" id="new-marker-title" placeholder="Title (e.g., PTT Station)" class="p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <input required type="text" id="new-marker-province" placeholder="Province (e.g., Phnom Penh)" class="p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <button type="submit" class="md:col-span-3 w-full bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition duration-300">
-                    Add Marker
-                </button>
-            </form>
-        </div>
-
-        <div class="mb-6 flex items-center">
-            <label for="file-selector" class="mr-4 font-semibold text-lg">Select Dataset:</label>
-            <select id="file-selector" class="p-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                <option value="default" selected>Default Markers (markers.json)</option>
-                <option value="admin">Admin Markers (markers_admin.json)</option>
-                <option value="admin_fleet">Admin Fleet (markers_admin_fleet.json)</option>
-            </select>
-        </div>
-
-        <div id="marker-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div id="analytics-panel" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
             </div>
 
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-xl shadow-sm">
+                 <h2 class="text-xl font-semibold mb-4 text-slate-800 border-b pb-3">Add New Station</h2>
+                 <form id="add-marker-form" class="space-y-4 mt-4">
+                     <input required type="text" id="new-marker-id" placeholder="ID (e.g., 701)" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500">
+                     <input required type="text" id="new-marker-title" placeholder="Title (e.g., PTT Station Riverside)" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500">
+                     <input required type="text" id="new-marker-province" placeholder="Province (e.g., Phnom Penh)" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500">
+                     <button type="submit" class="w-full bg-sky-600 text-white font-bold py-3 px-4 rounded-md hover:bg-sky-700 transition duration-300">Add Station</button>
+                 </form>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-sm">
+                 <h2 class="text-xl font-semibold mb-4 text-slate-800 border-b pb-3">Bulk Update Stations</h2>
+                 <form id="bulk-update-form" class="space-y-4 mt-4">
+                     <textarea id="bulk-ids" rows="3" placeholder="Paste station IDs here..." class="w-full p-3 bg-slate-50 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500"></textarea>
+                     <div id="bulk-id-validation" class="text-xs p-2 bg-slate-50 rounded min-h-[40px]"></div>
+                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                         <input type="text" id="bulk-status" placeholder="New Status (optional)" class="p-3 bg-slate-50 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500">
+                         <input type="text" id="bulk-province" placeholder="New Province (optional)" class="p-3 bg-slate-50 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500">
+                     </div>
+                     <button type="submit" class="w-full bg-amber-500 text-white font-bold py-3 px-4 rounded-md hover:bg-amber-600 transition duration-300">Apply Bulk Update</button>
+                     <div id="bulk-update-result" class="text-center text-sm font-medium mt-2 h-6"></div>
+                 </form>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+            <div class="p-6 flex flex-wrap gap-4 justify-between items-center border-b">
+                <div class="flex items-center gap-4">
+                    <h2 class="text-xl font-semibold text-slate-800">Station Data</h2>
+                    <select id="file-selector" class="p-2 bg-slate-50 border border-slate-200 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <option value="default" selected>Default (markers.json)</option>
+                        <option value="admin">Admin (markers_admin.json)</option>
+                        <option value="admin_fleet">Admin Fleet (markers_admin_fleet.json)</option>
+                    </select>
+                </div>
+                <a id="export-button" href="#" class="inline-block bg-green-600 text-white font-bold py-2 px-4 rounded-md hover:bg-green-700 transition duration-300">
+                    Export to Excel
+                </a>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left text-slate-600">
+                    <thead class="text-xs text-slate-700 uppercase bg-slate-50">
+                        <tr>
+                            <th class="px-6 py-3">ID</th><th class="px-6 py-3">Title</th><th class="px-6 py-3">Province</th><th class="px-6 py-3">Status</th><th class="px-6 py-3 text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="marker-table-body"></tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
     <script>
         // --- DOM Elements ---
         const fileSelector = document.getElementById('file-selector');
-        const markerList = document.getElementById('marker-list');
+        const markerTableBody = document.getElementById('marker-table-body');
+        const analyticsPanel = document.getElementById('analytics-panel');
+        const exportButton = document.getElementById('export-button');
         const addMarkerForm = document.getElementById('add-marker-form');
+        const bulkUpdateForm = document.getElementById('bulk-update-form');
+        const bulkUpdateResult = document.getElementById('bulk-update-result');
+        const bulkIdsTextarea = document.getElementById('bulk-ids');
+        const bulkIdValidation = document.getElementById('bulk-id-validation');
+        let currentMarkers = [];
 
         // --- Core Functions ---
-
-        /**
-         * Fetches markers from the API and renders them.
-         * @param {string} fileKey - The key for the JSON file (e.g., 'default').
-         */
         const fetchAndRenderMarkers = async (fileKey) => {
             try {
                 const response = await fetch(`/api/markers/${fileKey}`);
-                if (!response.ok) throw new Error('Network response was not ok.');
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                currentMarkers = await response.json();
                 
-                const markers = await response.json();
-                renderMarkers(markers, fileKey);
+                renderMarkers(currentMarkers, fileKey);
+                calculateAndRenderStats(currentMarkers); // This function is now updated
+                validateBulkIds();
+                
+                exportButton.href = `/api/export/${fileKey}`;
             } catch (error) {
-                console.error('Error fetching markers:', error);
-                markerList.innerHTML = `<p class="text-red-500 col-span-full">Error loading data. Please check the console (F12).</p>`;
+                console.error("Fetch Error:", error);
+                markerTableBody.innerHTML = `<tr><td colspan="5" class="text-center p-8 text-red-500">Error loading data. Is the server running?</td></tr>`;
             }
         };
 
-        /**
-         * Renders the list of markers as cards on the page.
-         * @param {Array} markers - The array of marker objects.
-         * @param {string} fileKey - The key for the current JSON file.
-         */
-        const renderMarkers = (markers, fileKey) => {
-            markerList.innerHTML = ''; // Clear previous list
+        // --- UPDATED Analytics Function ---
+        const calculateAndRenderStats = (markers) => {
+            if (!markers) return;
 
-            if (!markers || markers.length === 0) {
-                markerList.innerHTML = `<p class="text-gray-500 col-span-full">No markers found in this dataset.</p>`;
-                return;
-            }
+            const countItems = (key) => markers.flatMap(m => m[key] || []).reduce((acc, item) => {
+                acc[item] = (acc[item] || 0) + 1;
+                return acc;
+            }, {});
 
-            markers.forEach(marker => {
-                const card = document.createElement('div');
-                card.className = 'bg-white p-5 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300';
-                card.innerHTML = `
-                    <div class="flex justify-between items-start mb-3">
-                        <div>
-                            <h3 class="text-xl font-bold text-indigo-700">${marker.title || 'No Title'}</h3>
-                            <p class="text-sm text-gray-500">ID: ${marker.id}</p>
-                        </div>
-                        <button onclick="handleDelete('${fileKey}', '${marker.id}')" class="text-red-500 hover:text-red-700 font-bold py-1 px-2 rounded">&times;</button>
-                    </div>
-                    <div class="text-gray-700">
-                        <p><span class="font-semibold">Province:</span> ${marker.province || 'N/A'}</p>
-                        <p><span class="font-semibold">Address:</span> ${marker.address || 'N/A'}</p>
-                    </div>
-                `;
-                markerList.appendChild(card);
-            });
-        };
-
-        /**
-         * Handles the form submission to add a new marker.
-         * @param {Event} event - The form submission event.
-         */
-        const handleAddMarker = async (event) => {
-            event.preventDefault(); // Prevent page reload
-            
-            const fileKey = fileSelector.value;
-            const newMarker = {
-                id: document.getElementById('new-marker-id').value,
-                title: document.getElementById('new-marker-title').value,
-                province: document.getElementById('new-marker-province').value,
-                // Add other fields from your JSON structure here as empty values if needed
-                description: [],
-                product: [],
-                other_product: [],
-                service: [],
-                address: "",
-                status: "active",
-                promotion: [],
-                picture: ""
+            const stats = {
+                total: markers.length,
+                status: markers.reduce((acc, m) => { acc[m.status] = (acc[m.status] || 0) + 1; return acc; }, {}),
+                services: countItems('service'),
+                descriptions: countItems('description'),
             };
 
-            try {
-                const response = await fetch(`/api/markers/${fileKey}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(newMarker),
-                });
+            const createStatCard = (title, value, items = {}) => {
+                let listHtml = Object.entries(items).map(([key, count]) => `<li class="flex justify-between text-xs"><span>${key || 'N/A'}</span><span class="font-bold">${count}</span></li>`).join('');
+                return `<div class="bg-white p-4 rounded-xl shadow-sm"><h3 class="font-semibold text-slate-500 text-sm">${title}</h3><p class="text-3xl font-bold text-slate-900">${value}</p>${listHtml ? `<ul class="mt-2 space-y-1 border-t pt-2">${listHtml}</ul>` : ''}</div>`;
+            };
+            
+            // ** THE FIX IS HERE **
+            // We now get the top 3 items first, and then use their length for the big number.
+            const topStatuses = Object.fromEntries(Object.entries(stats.status).sort(([,a],[,b]) => b-a).slice(0, 3));
+            const topServices = Object.fromEntries(Object.entries(stats.services).sort(([,a],[,b]) => b-a).slice(0, 3));
+            const topAmenities = Object.fromEntries(Object.entries(stats.descriptions).sort(([,a],[,b]) => b-a).slice(0, 3));
 
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.error || 'Failed to add marker');
-                }
-
-                addMarkerForm.reset(); // Clear the form
-                fetchAndRenderMarkers(fileKey); // Refresh the list
-            } catch (error) {
-                alert(`Error: ${error.message}`);
-                console.error('Error adding marker:', error);
-            }
+            analyticsPanel.innerHTML = createStatCard('Total Stations', stats.total)
+                + createStatCard('Top Statuses', Object.keys(topStatuses).length, topStatuses)
+                + createStatCard('Top Services', Object.keys(topServices).length, topServices)
+                + createStatCard('Top Amenities', Object.keys(topAmenities).length, topAmenities);
         };
-
-        /**
-         * Handles the click on a delete button.
-         * @param {string} fileKey - The key for the JSON file.
-         * @param {string} markerId - The ID of the marker to delete.
-         */
+        
+        // --- All other JS functions remain the same ---
+        const renderMarkers = (markers, fileKey) => {
+            markerTableBody.innerHTML = '';
+            if (!markers || markers.length === 0) { markerTableBody.innerHTML = `<tr><td colspan="5" class="text-center p-8 text-slate-500">No markers found.</td></tr>`; return; }
+            markers.forEach(marker => {
+                const row = document.createElement('tr');
+                row.className = 'bg-white border-b hover:bg-slate-50'; row.id = `marker-row-${marker.id}`;
+                row.innerHTML = `<td class="px-6 py-4 font-medium text-slate-900">${marker.id}</td><td class="px-6 py-4">${marker.title || ''}</td><td class="px-6 py-4">${marker.province || ''}</td><td class="px-6 py-4">${marker.status || ''}</td><td class="px-6 py-4 text-right"><button onclick="toggleEditMode('${fileKey}', '${marker.id}')" class="font-medium text-indigo-600 hover:text-indigo-800 mr-4">Edit</button><button onclick="handleDelete('${fileKey}', '${marker.id}')" class="font-medium text-red-600 hover:text-red-800">Delete</button></td>`;
+                markerTableBody.appendChild(row);
+            });
+        };
+        const toggleEditMode = (fileKey, markerId) => {
+            const marker = currentMarkers.find(m => String(m.id) === String(markerId)); const row = document.getElementById(`marker-row-${markerId}`); row.classList.add('bg-indigo-50');
+            row.innerHTML = `<td class="px-6 py-4 font-medium text-slate-900">${marker.id}</td><td class="px-2 py-2"><input type="text" id="edit-title-${markerId}" value="${marker.title || ''}" class="w-full p-2 bg-white border rounded-md"></td><td class="px-2 py-2"><input type="text" id="edit-province-${markerId}" value="${marker.province || ''}" class="w-full p-2 bg-white border rounded-md"></td><td class="px-2 py-2"><input type="text" id="edit-status-${markerId}" value="${marker.status || ''}" class="w-full p-2 bg-white border rounded-md"></td><td class="px-6 py-4 text-right"><button onclick="handleSave('${fileKey}', '${marker.id}')" class="font-medium text-green-600 mr-4">Save</button><button onclick="renderMarkers(currentMarkers, '${fileKey}')" class="font-medium text-slate-600">Cancel</button></td>`;
+        };
+        const handleSave = async (fileKey, markerId) => {
+            const updatedData = { title: document.getElementById(`edit-title-${markerId}`).value, province: document.getElementById(`edit-province-${markerId}`).value, status: document.getElementById(`edit-status-${markerId}`).value };
+            try { await fetch(`/api/markers/${fileKey}/${markerId}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(updatedData) }); await fetchAndRenderMarkers(fileKey); } catch (error) { alert(`Error: ${error.message}`); }
+        };
+        const validateBulkIds = () => {
+            const validIdSet = new Set(currentMarkers.map(m => String(m.id))); const inputIds = bulkIdsTextarea.value.split(/\s+|,/).map(id => id.trim()).filter(id => id); if (inputIds.length === 0) { bulkIdValidation.innerHTML = '<span class="text-slate-400">Paste IDs...</span>'; return; } const foundIds = []; const notFoundIds = []; inputIds.forEach(id => { if (validIdSet.has(id)) { foundIds.push(id); } else { notFoundIds.push(id); } }); let html = ''; if (foundIds.length > 0) { html += `<div class="text-green-600 font-semibold">Found (${foundIds.length}): ${foundIds.join(', ')}</div>`; } if (notFoundIds.length > 0) { html += `<div class="text-red-600 font-semibold mt-1">Not Found (${notFoundIds.length}): ${notFoundIds.join(', ')}</div>`; } bulkIdValidation.innerHTML = html;
+        };
+        const handleAddMarker = async (event) => {
+            event.preventDefault(); const newMarker = { id: document.getElementById('new-marker-id').value, title: document.getElementById('new-marker-title').value, province: document.getElementById('new-marker-province').value, description: [], product: [], service: [], status: "active" }; try { const response = await fetch(`/api/markers/${fileSelector.value}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(newMarker) }); if (!response.ok) { const errorData = await response.json(); throw new Error(errorData.error || 'Failed to add marker'); } addMarkerForm.reset(); await fetchAndRenderMarkers(fileSelector.value); } catch (error) { alert(`Error: ${error.message}`); }
+        };
         const handleDelete = async (fileKey, markerId) => {
-            if (!confirm(`Are you sure you want to delete marker ID ${markerId}?`)) return;
-
-            try {
-                const response = await fetch(`/api/markers/${fileKey}/${markerId}`, {
-                    method: 'DELETE',
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.error || 'Failed to delete marker');
-                }
-                
-                fetchAndRenderMarkers(fileKey); // Refresh the list
-            } catch (error) {
-                alert(`Error: ${error.message}`);
-                console.error('Error deleting marker:', error);
-            }
+            if (!confirm(`Delete marker ID ${markerId}?`)) return; try { await fetch(`/api/markers/${fileKey}/${markerId}`, { method: 'DELETE' }); await fetchAndRenderMarkers(fileKey); } catch (error) { alert(`Error: ${error.message}`); }
         };
-
+        const handleBulkUpdate = async (event) => {
+            event.preventDefault(); bulkUpdateResult.textContent = 'Processing...'; const fileKey = fileSelector.value; const idsToUpdate = bulkIdsTextarea.value.split(/\s+|,/).map(id => id.trim()).filter(id => id); const changes = {}; const newStatus = document.getElementById('bulk-status').value.trim(); const newProvince = document.getElementById('bulk-province').value.trim(); if (newStatus) changes.status = newStatus; if (newProvince) changes.province = newProvince; if (idsToUpdate.length === 0 || Object.keys(changes).length === 0) { bulkUpdateResult.textContent = 'Please provide IDs and at least one change.'; return; } const payload = idsToUpdate.map(id => ({ id, changes })); try { const response = await fetch(`/api/markers/${fileKey}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }); const result = await response.json(); if (!response.ok) throw new Error(result.error || 'Bulk update failed'); bulkUpdateResult.innerHTML = `<span class="text-green-600">Updated: ${result.updated_ids.length}</span> | <span class="text-red-500">Not Found: ${result.not_found_ids.length}</span>`; bulkUpdateForm.reset(); validateBulkIds(); await fetchAndRenderMarkers(fileKey); } catch (error) { bulkUpdateResult.textContent = `Error: ${error.message}`; }
+        };
 
         // --- Event Listeners ---
-        
-        // Listen for changes on the dropdown selector
-        fileSelector.addEventListener('change', (event) => {
-            fetchAndRenderMarkers(event.target.value);
-        });
-
-        // Listen for the form being submitted
+        fileSelector.addEventListener('change', (e) => fetchAndRenderMarkers(e.target.value));
         addMarkerForm.addEventListener('submit', handleAddMarker);
-        
-        // Initial load of the page
-        document.addEventListener('DOMContentLoaded', () => {
-            fetchAndRenderMarkers(fileSelector.value);
-        });
-
+        bulkUpdateForm.addEventListener('submit', handleBulkUpdate);
+        bulkIdsTextarea.addEventListener('input', validateBulkIds);
+        document.addEventListener('DOMContentLoaded', () => fetchAndRenderMarkers(fileSelector.value));
     </script>
 </body>
 </html>
