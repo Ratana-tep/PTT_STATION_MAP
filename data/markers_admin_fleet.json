@@ -110,7 +110,6 @@
             "other_product": [
                 "EV",
                 "Onion"
-
             ],
             "service": [
                 "Fleet card",
@@ -453,7 +452,7 @@
             ],
             "province": "Kandal",
             "address": "Phum Arey Ksat, Khum Arey Ksat, Srok Lave Am, Kandal Province",
-            "status": "16h",
+            "status": "off fleet card",
             "promotion": [
                 ""
             ],
@@ -545,7 +544,7 @@
             ],
             "province": "Kandal",
             "address": "National R. 8, Anlong Village, Prek Tamak Commune, Kandal District, Kandal",
-            "status": "24h",
+            "status": "off fleet card",
             "promotion": [
                 ""
             ],
@@ -959,7 +958,7 @@
                 "KHQR"
             ],
             "province": "Takeo",
-            "address": "House No. N\/A, Road No. 02, Phum Khseung,Sangkat Rokar Khnong,Daun Keo",
+            "address": "House No. N/A, Road No. 02, Phum Khseung,Sangkat Rokar Khnong,Daun Keo",
             "status": "16h",
             "promotion": [
                 ""
@@ -1021,7 +1020,7 @@
             ],
             "province": "Phnom Penh",
             "address": "Land No .5, Road 6A, Phum Prek Taben, Khum Prekanh Chanh, Srok Mokkam Pol, Khet Kandal, Cambodia.",
-            "status": "24h",
+            "status": "off fleet card",
             "promotion": [
                 ""
             ],
@@ -1107,7 +1106,6 @@
                 "KHQR",
                 "Cash",
                 "Fleet card"
-                
             ],
             "province": "Phnom Penh",
             "address": "St. Tomnob 7 Makara, Road 60m, Phum Baku, Sangkat Dangkor, Khan Dangkor, Phnom Penh",
@@ -1235,7 +1233,7 @@
             ],
             "province": "Phnom Penh",
             "address": "located at plot land no. 600 and 601, Street 72 P, Roung Chak Village, Sangkat Khork Khleang, Khan Sen Sok, Phnom Penh",
-            "status": "24h",
+            "status": "off fleet card",
             "promotion": [
                 ""
             ],
@@ -1384,7 +1382,7 @@
             ],
             "province": "Phnom Penh",
             "address": "Street 371, Tnut Chrum Village,Sangkat Boeung Tumpun, Khan Meanchey",
-            "status": "24h",
+            "status": "off fleet card",
             "promotion": [
                 ""
             ],
@@ -1440,11 +1438,10 @@
                 "Cash",
                 "KHQR",
                 "Fleet card"
-                
             ],
             "province": "Phnom Penh",
             "address": "No. 3+4, St. Oknha Tep Phan, Sangkat Boeng Keng Kang 1, Khan Chamkar Morn, Phnom Penh",
-            "status": "24h",
+            "status": "off fleet card",
             "promotion": [
                 ""
             ],
@@ -1474,7 +1471,7 @@
             ],
             "province": "Phnom Penh",
             "address": "National road 2, Sangkat Prek Kompes, Khan Dongkou, Phnom Penh",
-            "status": "16h",
+            "status": "off fleet card",
             "promotion": [
                 ""
             ],
@@ -1592,7 +1589,7 @@
                 "Cash"
             ],
             "province": "Phnom Penh",
-            "address": "#House no. N\/A, Steet no. 6, Phum Keankleang,Sangkat Chroychangva,Khan Chroy Channgva",
+            "address": "#House no. N/A, Steet no. 6, Phum Keankleang,Sangkat Chroychangva,Khan Chroy Channgva",
             "status": "16h",
             "promotion": [
                 ""
@@ -2040,7 +2037,6 @@
                 "Cash",
                 "KHQR",
                 "Fleet card"
-                
             ],
             "province": "Battambang",
             "address": "National road 5, O\u00e2\u20ac\u2122char village, Sangkat O\u00e2\u20ac\u2122char, Khan Battombong, Battombong province",
@@ -2131,11 +2127,10 @@
                 "Cash",
                 "KHQR",
                 "Fleet card"
-                
             ],
             "province": "Battambang",
             "address": "National road 5, Bek Chan village, Sangkat Preh Sdach, \nKhan Battombong, Battombong province\n",
-            "status": "16h",
+            "status": "off fleet card",
             "promotion": [
                 ""
             ],
@@ -2253,7 +2248,7 @@
                 "Cash"
             ],
             "province": "Kratie",
-            "address": "#009\/0217, Ou Ressey village, Kratie district, Kratie province.",
+            "address": "#009/0217, Ou Ressey village, Kratie district, Kratie province.",
             "status": "16h",
             "promotion": [
                 ""
@@ -2341,8 +2336,6 @@
                 "Cash",
                 "KHQR",
                 "Fleet card"
-                
-                
             ],
             "province": "Phnom Penh",
             "address": "129, St 592, Corner St.317, Phum 5, Sangkat Boeungkok 2, Khan Toul Kork, Phnom Penh",
@@ -2373,7 +2366,6 @@
                 "Cash",
                 "KHQR",
                 "Fleet card"
-                
             ],
             "province": "Phnom Penh",
             "address": "#120,St Pastor,Phum 4, Sangkat Chaktoumouk, Khan Doun Penh, Phnom Penh.",
@@ -2646,7 +2638,7 @@
             ],
             "province": "Phnom Penh",
             "address": "#508, St. 271,Sangkat Beung Tompon,Khan Meanchey,Phnom Penh",
-            "status": "16h",
+            "status": "off fleet card",
             "promotion": [
                 ""
             ],
@@ -2737,7 +2729,7 @@
             ],
             "province": "Phnom Penh",
             "address": "#1-3, St. 598 Conner St 1800,Sangkat Toul Sangke,Khan Roussey Keo",
-            "status": "24h",
+            "status": "off fleet card",
             "promotion": [
                 ""
             ],
@@ -2824,11 +2816,10 @@
                 "Cash",
                 "KHQR",
                 "Fleet card"
-                
             ],
             "province": "Phnom Penh",
             "address": "# 19971 Corner Raod 199, Sangkat Olympic, Khan Chamka Morn, Phnom Penh City",
-            "status": "16h",
+            "status": "off fleet card",
             "promotion": [
                 ""
             ],
@@ -2858,7 +2849,7 @@
             ],
             "province": "Phnom Penh",
             "address": "# 153 Road Samdach Chear Sim, Phum Chress, Sangkat Phnom Penh Thmey, Khan Sen Sok, Phnom Penh.",
-            "status": "16h",
+            "status": "off fleet card",
             "promotion": [
                 ""
             ],
@@ -2886,7 +2877,7 @@
                 "KHQR"
             ],
             "province": "Phnom Penh",
-            "address": "No. N\/A, National Road No.3, Phum Preypring KhangTboung, Sangkat Chomchao Khan Posenchey, Phnom Penh, Cambodia",
+            "address": "No. N/A, National Road No.3, Phum Preypring KhangTboung, Sangkat Chomchao Khan Posenchey, Phnom Penh, Cambodia",
             "status": "16h",
             "promotion": [
                 ""
@@ -3005,11 +2996,10 @@
                 "Cash",
                 "KHQR",
                 "Fleet card"
-                
             ],
             "province": "Phnom Penh",
             "address": "Phum Kien Khlang, Sangkat Chroychangva, Khan Chroychangva   Phnom Penh",
-            "status": "24h",
+            "status": "off fleet card",
             "promotion": [
                 ""
             ],
@@ -3069,7 +3059,7 @@
             ],
             "province": "Stung Treng",
             "address": "Phum Prek, Sangkat Stung Treng,Krung Stung Treng, Stung Treng Province, Cambodia",
-            "status": "24h",
+            "status": "off fleet card",
             "promotion": [
                 ""
             ],
@@ -3398,7 +3388,7 @@
             ],
             "province": "Phnom Penh",
             "address": "Lkamboar Village, Sangkat Svay Beak, Khan Russei Keo, Phnom Penh",
-            "status": "16h",
+            "status": "off fleet card",
             "promotion": [
                 ""
             ],
@@ -3428,7 +3418,7 @@
             ],
             "province": "Phnom Penh",
             "address": "Near Caf\u00c3\u00a9 Amazon shop, Street 105K, Sangkat Kakab I, Khan Por Senchey, Phnom Penh",
-            "status": "16h",
+            "status": "off fleet card",
             "promotion": [
                 ""
             ],
@@ -3517,7 +3507,7 @@
             ],
             "province": "Phnom Penh",
             "address": "St. Monireth (217), Damnak 5 Village, Sangkat Steung Meanchey 3, Khan Meanchey, Phnom Penh",
-            "status": "24h",
+            "status": "off fleet card",
             "promotion": [
                 ""
             ],
@@ -3548,7 +3538,7 @@
             ],
             "province": "Pursat",
             "address": "#181, National Road 5, Morn Jae Village, Prey Nhi Commune, Pursat City",
-            "status": "24h",
+            "status": "off fleet card",
             "promotion": [
                 ""
             ],
@@ -3578,7 +3568,7 @@
             ],
             "province": "Phnom Penh",
             "address": "Street 5, Sangkat Svay Pak, Khan Reusey Keo, Phnom Penh",
-            "status": "16h",
+            "status": "off fleet card",
             "promotion": [
                 ""
             ],
@@ -3638,7 +3628,7 @@
             ],
             "province": "Preah Sihanouk",
             "address": "National Road 45, Ork village, Ream commune, Preynub district, Sihanoukville, near Ream roundabout",
-            "status": "16h",
+            "status": "off fleet card",
             "promotion": [
                 ""
             ],
@@ -3666,7 +3656,6 @@
                 "Cash",
                 "KHQR",
                 "Fleet card"
-                
             ],
             "province": "Takeo",
             "address": "National Road 3, Taleu village, Udomsorya commune, Tramkok district, Takeo province",
@@ -3819,7 +3808,7 @@
             ],
             "province": "Takeo",
             "address": "National Road 2, Roleang Krerl Village, Trapeang Sap Commune, Bati District, Takeo Province",
-            "status": "24h",
+            "status": "off fleet card",
             "promotion": [
                 ""
             ],
@@ -3969,7 +3958,7 @@
             ],
             "province": "Phnom Penh",
             "address": "Champous Kaek Village, Sangkat Prek Thmey, Khan Chhba Ampov, Phnom Penh",
-            "status": "16h",
+            "status": "off fleet card",
             "promotion": [
                 ""
             ],
@@ -4149,7 +4138,7 @@
             ],
             "province": "Takeo",
             "address": "Street 41, Toul Khlong Vilage, O'saray Communce, Tram Kak District, Tekeo",
-            "status": "16h",
+            "status": "off fleet card",
             "promotion": [
                 ""
             ],
@@ -4180,7 +4169,7 @@
             ],
             "province": "Koh Kong",
             "address": "located road 48, Chi Meal Village, Andoung Tuek Commune, Botum Sakor District, Koh Kong Province",
-            "status": "24h",
+            "status": "off fleet card",
             "promotion": [
                 ""
             ],
@@ -4242,7 +4231,7 @@
             ],
             "province": "Pursat",
             "address": "Located at national road No. 5, Kbal Domrei Village, Ansa Chambak Commune, \nKrakor District, Pursat Province",
-            "status": "24h",
+            "status": "off fleet card",
             "promotion": [
                 ""
             ],
@@ -4269,7 +4258,6 @@
                 "Cash",
                 "KHQR",
                 "Fleet card"
-                
             ],
             "province": "Phnom Penh",
             "address": "located at street 351 (Trong Morn),\u00e2\u20ac\u2039 Ta Ngov Village, Sangkat Nirouth, \nKhan Chbar Ampov, Phnom Penh",
@@ -4363,7 +4351,7 @@
             ],
             "province": "Battambang",
             "address": "Located at Ou Ta Nob Village, Sangkat Kdol Doun Teav, Krong Battambang, \nBattambang Province",
-            "status": "16h",
+            "status": "off fleet card",
             "promotion": [
                 ""
             ],
@@ -4513,7 +4501,7 @@
             ],
             "province": "Prey Veng",
             "address": "National Road 11, Ekream Village, Sangkat Cheung Teok, Prey Veng Municipal, Prey Veng Province",
-            "status": "16h",
+            "status": "off fleet card",
             "promotion": [
                 ""
             ],
@@ -4814,7 +4802,7 @@
             ],
             "province": "Banteay Meanchey",
             "address": "National Road 5, Tarang Ball Village, Sangkat Kampong Svay, Serie Saophoan Municipal, Banteay Meanchey Province",
-            "status": "24h",
+            "status": "off fleet card",
             "promotion": [
                 ""
             ],
@@ -4874,7 +4862,7 @@
             ],
             "province": "Phnom Penh",
             "address": "National Road No.20A, Thei Village, Sangkat Tean, Khan Dangkor, Phnom Penh, Cambodia.",
-            "status": "16h",
+            "status": "off fleet card",
             "promotion": [
                 ""
             ],
@@ -5084,7 +5072,7 @@
             ],
             "province": "Tboung Khmum",
             "address": "Kranhung Village, Veal Mlu Commune, Ponhea Krek District, Tboung Khmum Province, Cambodia.",
-            "status": "24h",
+            "status": "off fleet card",
             "promotion": [
                 ""
             ],
@@ -5244,7 +5232,6 @@
             "description": [
                 "Amazon",
                 "7-Eleven"
-                
             ],
             "product": [
                 "ULG 95",
@@ -5257,7 +5244,7 @@
             "service": [
                 "Cash",
                 "KHQR",
-                "Fleet card" 
+                "Fleet card"
             ],
             "province": "Phnom Penh",
             "address": "#Land 449, Ring Road 2, Phum Prek Thleng, Sangkat Choeung Ek, Khan Dangkor, Phnom Penh.",
@@ -5288,11 +5275,10 @@
                 "Cash",
                 "KHQR",
                 "Fleet card"
-                
             ],
             "province": "Pursat",
             "address": "# Plot land No.42, National Road No.05, Krapeu Rou Village, Snam Preah Commune, Bakan District , Pursat Province, Cambodia.",
-            "status": "16h",
+            "status": "off fleet card",
             "promotion": [
                 ""
             ],
@@ -5514,7 +5500,7 @@
             ],
             "province": "Kandal",
             "address": "National Road 21, Preaek Koy, Sambour, Kandal 080908, Cambodia",
-            "status": "16h",
+            "status": "off fleet card",
             "promotion": [],
             "old_picture": "",
             "picture": "2.png"
