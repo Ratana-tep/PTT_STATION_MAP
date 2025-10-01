@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PTT Station Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div class="container mx-auto p-4 md:p-8">
+
+        <header class="mb-8">
+            <h1 class="text-4xl font-bold text-gray-900 mb-2">PTT Station Dashboard</h1>
+            <p class="text-lg text-gray-600">Select a dataset and manage the markers.</p>
+        </header>
+
+        <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+            <h2 class="text-2xl font-semibold mb-4">Add New Marker</h2>
+            <form id="add-marker-form" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <input required type="text" id="new-marker-id" placeholder="ID (e.g., 701)" class="p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <input required type="text" id="new-marker-title" placeholder="Title (e.g., PTT Station)" class="p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <input required type="text" id="new-marker-province" placeholder="Province (e.g., Phnom Penh)" class="p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <button type="submit" class="md:col-span-3 w-full bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition duration-300">
+                    Add Marker
+                </button>
+            </form>
+        </div>
+
+        <div class="mb-6 flex items-center">
+            <label for="file-selector" class="mr-4 font-semibold text-lg">Select Dataset:</label>
+            <select id="file-selector" class="p-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <option value="default" selected>Default Markers (markers.json)</option>
+                <option value="admin">Admin Markers (markers_admin.json)</option>
+                <option value="admin_fleet">Admin Fleet (markers_admin_fleet.json)</option>
+            </select>
+        </div>
+
+        <div id="marker-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            </div>
+
+    </div>
+
+    <script>
+        // --- DOM Elements ---
+        const fileSelector = document.getElementById('file-selector');
+        const markerList = document.getElementById('marker-list');
+        const addMarkerForm = document.getElementById('add-marker-form');
+
+        // --- Core Functions ---
+
+        /**
+         * Fetches markers from the API and renders them.
+         * @param {string} fileKey - The key for the JSON file (e.g., 'default').
+         */
+        const fetchAndRenderMarkers = async (fileKey) => {
+            try {
+                const response = await fetch(`/api/markers/${fileKey}`);
+                if (!response.ok) throw new Error('Network response was not ok.');
+                
+                const markers = await response.json();
+                renderMarkers(markers, fileKey);
+            } catch (error) {
+                console.error('Error fetching markers:', error);
+                markerList.innerHTML = `<p class="text-red-500 col-span-full">Error loading data. Please check the console (F12).</p>`;
+            }
+        };
+
+        /**
+         * Renders the list of markers as cards on the page.
+         * @param {Array} markers - The array of marker objects.
+         * @param {string} fileKey - The key for the current JSON file.
+         */
+        const renderMarkers = (markers, fileKey) => {
+            markerList.innerHTML = ''; // Clear previous list
+
+            if (!markers || markers.length === 0) {
+                markerList.innerHTML = `<p class="text-gray-500 col-span-full">No markers found in this dataset.</p>`;
+                return;
+            }
+
+            markers.forEach(marker => {
+                const card = document.createElement('div');
+                card.className = 'bg-white p-5 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300';
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <h3 class="text-xl font-bold text-indigo-700">${marker.title || 'No Title'}</h3>
+                            <p class="text-sm text-gray-500">ID: ${marker.id}</p>
+                        </div>
+                        <button onclick="handleDelete('${fileKey}', '${marker.id}')" class="text-red-500 hover:text-red-700 font-bold py-1 px-2 rounded">&times;</button>
+                    </div>
+                    <div class="text-gray-700">
+                        <p><span class="font-semibold">Province:</span> ${marker.province || 'N/A'}</p>
+                        <p><span class="font-semibold">Address:</span> ${marker.address || 'N/A'}</p>
+                    </div>
+                `;
+                markerList.appendChild(card);
+            });
+        };
+
+        /**
+         * Handles the form submission to add a new marker.
+         * @param {Event} event - The form submission event.
+         */
+        const handleAddMarker = async (event) => {
+            event.preventDefault(); // Prevent page reload
+            
+            const fileKey = fileSelector.value;
+            const newMarker = {
+                id: document.getElementById('new-marker-id').value,
+                title: document.getElementById('new-marker-title').value,
+                province: document.getElementById('new-marker-province').value,
+                // Add other fields from your JSON structure here as empty values if needed
+                description: [],
+                product: [],
+                other_product: [],
+                service: [],
+                address: "",
+                status: "active",
+                promotion: [],
+                picture: ""
+            };
+
+            try {
+                const response = await fetch(`/api/markers/${fileKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newMarker),
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Failed to add marker');
+                }
+
+                addMarkerForm.reset(); // Clear the form
+                fetchAndRenderMarkers(fileKey); // Refresh the list
+            } catch (error) {
+                alert(`Error: ${error.message}`);
+                console.error('Error adding marker:', error);
+            }
+        };
+
+        /**
+         * Handles the click on a delete button.
+         * @param {string} fileKey - The key for the JSON file.
+         * @param {string} markerId - The ID of the marker to delete.
+         */
+        const handleDelete = async (fileKey, markerId) => {
+            if (!confirm(`Are you sure you want to delete marker ID ${markerId}?`)) return;
+
+            try {
+                const response = await fetch(`/api/markers/${fileKey}/${markerId}`, {
+                    method: 'DELETE',
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Failed to delete marker');
+                }
+                
+                fetchAndRenderMarkers(fileKey); // Refresh the list
+            } catch (error) {
+                alert(`Error: ${error.message}`);
+                console.error('Error deleting marker:', error);
+            }
+        };
+
+
+        // --- Event Listeners ---
+        
+        // Listen for changes on the dropdown selector
+        fileSelector.addEventListener('change', (event) => {
+            fetchAndRenderMarkers(event.target.value);
+        });
+
+        // Listen for the form being submitted
+        addMarkerForm.addEventListener('submit', handleAddMarker);
+        
+        // Initial load of the page
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchAndRenderMarkers(fileSelector.value);
+        });
+
+    </script>
+</body>
+</html>
