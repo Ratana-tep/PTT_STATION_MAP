@@ -1,33 +1,57 @@
-// Mapping object to associate data entries with specific images
+// --- Main Data Fetch (Example) ---
+// This is where your initial fetch from the API should happen.
+// The autoSelectFleetCard() call is moved here to fix the timing issue.
+document.addEventListener('DOMContentLoaded', () => {
+    // This function will fetch data and then run the setup.
+    fetchInitialDataAndSetup(); 
+});
+
+async function fetchInitialDataAndSetup() {
+    try {
+        // This assumes you fetch from an endpoint and set up 'allMarkers' globally.
+        // Replace with your actual initial data fetch call.
+        const response = await fetch('/api/markers/admin_fleet'); // Using admin_fleet as an example
+        const stationData = await response.json();
+
+        // This is an example of how you might create your 'allMarkers' global array.
+        // You'll need to adapt this part to your map marker creation logic.
+        // For example:
+        // allMarkers = stationData.map(station => ({ data: station, marker: createMarker(station) }));
+
+        // 1. Populate all the filter controls using the fetched data
+        populateIconContainersAndDropdown(stationData);
+
+        // 2. NOW that icons are created, we can safely auto-select "Fleet card"
+        autoSelectFleetCard();
+
+    } catch (error) {
+        console.error('Error fetching initial data:', error);
+    }
+}
+
+
+// --- Your Corrected and Completed Code ---
+
 const imageMapping = {
-  "Amazon": "amazon.png",
-  "7-Eleven": "7eleven.png",
-  "Fleet card": "fleet.png",
-  "KHQR": "KHQR.png",
-  "Cash": "cash.png",
-  "EV": "ev.png",
-  "Onion": "onion.png",
-  "ULG 95": "ULG95.png",
-  "ULR 91": "ULR91.png",
-  "HSD": "HSD.png",
-  "Otr": "OTR.png",
-  // Add more mappings as needed
+  "Amazon": "amazon.png", "7-Eleven": "7eleven.png", "Fleet card": "fleet.png",
+  "KHQR": "KHQR.png", "Cash": "cash.png", "EV": "ev.png",
+  "Onion": "onion.png", "ULG 95": "ULG95.png", "ULR 91": "ULR91.png",
+  "HSD": "HSD.png", "Otr": "OTR.png", "24h": "24h.png",
+  "16h": "16h.png", "Under Maintenance": "maintenance.png",
+  "brand change": "close.png", "16h": "16h.png"
 };
 
-// Function to automatically select "Fleet card"
 function autoSelectFleetCard() {
   const fleetCardIcon = document.querySelector('#service-icons img[data-item="Fleet card"]');
   if (fleetCardIcon) {
     fleetCardIcon.classList.add('selected');
-    console.log("Fleet card icon selected."); // Debugging log
-    updateClearFilterButton(); // Update the clear filter button visibility
-    applyFilter(); // Apply the filter immediately
+    updateClearFilterButton();
+    applyFilter();
   } else {
-    console.error("Fleet card icon not found in #service-icons."); // Debugging log
+    console.error("Fleet card icon not found. It might not exist in the current dataset.");
   }
 }
 
-// Function to populate icon containers and province dropdown
 function populateIconContainersAndDropdown(data) {
   const province = document.getElementById('province').value.toLowerCase() || '';
 
@@ -36,230 +60,157 @@ function populateIconContainersAndDropdown(data) {
   populateIconContainer('service-icons', getUniqueItems(data, 'service', province), 'custom');
   populateIconContainer('description-icons', getUniqueItems(data, 'description', province), 'round');
   populateIconContainer('promotion-icons', getUniqueItems(data, 'promotion', province), 'round');
+  populateIconContainer('status-icons', getUniqueItems(data, 'status', province), 'round');
   populateProvinceDropdown(data);
 }
 
-// Helper function to get unique items from data, filtered by province if provided
 function getUniqueItems(data, key, province = '') {
   const items = new Set();
   data.forEach(station => {
     if ((!province || station.province.toLowerCase() === province) && station[key]) {
-      (station[key] || []).forEach(item => {
-        if (item.trim() !== "") { // Filter out empty items
-          items.add(item);
-        }
-      });
+      const value = station[key];
+      if (Array.isArray(value)) {
+        value.forEach(item => { if (item && item.trim() !== "") items.add(item); });
+      } else if (typeof value === 'string' && value.trim() !== '') {
+        items.add(value);
+      }
     }
   });
   return Array.from(items);
 }
 
-// Function to populate an icon container
 function populateIconContainer(containerId, items, shapeClass) {
-  const container = document.getElementById(containerId);
-  const province = document.getElementById('province').value.toLowerCase();
-  container.innerHTML = ''; // Clear existing icons
-
-  items.forEach(item => {
-    const img = document.createElement('img');
-    img.src = `./pictures/${imageMapping[item]}`; // Use the mapping object to get the image filename
-    img.alt = item;
-    img.classList.add('filter-icon', shapeClass); // Apply the shape class
-    img.dataset.item = item;
-
-    // Check if the item is available in the selected province
-    const isAvailable = allMarkers.some(marker => {
-      return (!province || marker.data.province.toLowerCase() === province) &&
-        marker.data[containerId.replace('-icons', '').replace('-', '_')] && // Adjusting key name to match data structure
-        marker.data[containerId.replace('-icons', '').replace('-', '_')].map(el => el.toLowerCase()).includes(item.toLowerCase());
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    container.innerHTML = '';
+    items.forEach(item => {
+        if (!imageMapping[item]) {
+            console.warn(`No image mapping for item: ${item}`);
+            return;
+        }
+        const img = document.createElement('img');
+        img.src = `./pictures/${imageMapping[item]}`;
+        img.alt = item;
+        img.classList.add('filter-icon', shapeClass);
+        img.dataset.item = item;
+        img.addEventListener('click', toggleIconSelection);
+        container.appendChild(img);
     });
-
-    if (!isAvailable && province) {
-      img.classList.add('disabled'); // Add disabled class to grey out the icon
-      img.style.pointerEvents = 'none'; // Prevent clicking on the icon
-    } else {
-      img.classList.remove('disabled'); // Ensure the item is enabled
-      img.style.pointerEvents = 'auto'; // Ensure the item can be clicked
-      img.addEventListener('click', toggleIconSelection);
-    }
-
-    container.appendChild(img);
-  });
 }
 
-// Function to populate the province dropdown
 function populateProvinceDropdown(data) {
-  const provinces = new Set();
-  data.forEach(station => {
-    provinces.add(station.province);
-  });
-
-  // Sort provinces alphabetically
+  const provinces = new Set(data.map(station => station.province));
   const sortedProvinces = Array.from(provinces).sort((a, b) => a.localeCompare(b));
-
   const provinceSelect = document.getElementById('province');
-  provinceSelect.innerHTML = '<option value>All</option>'; // Clear existing options
+  provinceSelect.innerHTML = '<option value="">All</option>';
   sortedProvinces.forEach(province => {
     const option = document.createElement('option');
-    option.value = province;
-    option.text = province;
+    option.value = province; option.text = province;
     provinceSelect.add(option);
   });
+}
 
-  // Add event listener to update titles when province is selected
-  provinceSelect.addEventListener('change', () => {
-    const selectedProvince = provinceSelect.value.toLowerCase();
+document.getElementById('province').addEventListener('change', () => {
+    const selectedProvince = document.getElementById('province').value.toLowerCase();
+    const data = allMarkers.map(m => m.data);
     const titles = new Set();
     data.forEach(station => {
-      if (station.province.toLowerCase() === selectedProvince) {
-        titles.add(station.title);
-      }
+        if (!selectedProvince || station.province.toLowerCase() === selectedProvince) {
+            titles.add(station.title);
+        }
     });
-
     const titleSelect = document.getElementById('title');
-    titleSelect.innerHTML = '<option value>All</option>'; // Clear existing titles
-    titles.forEach(title => {
-      const option = document.createElement('option');
-      option.value = title;
-      option.text = title;
-      titleSelect.add(option);
+    titleSelect.innerHTML = '<option value="">All</option>';
+    Array.from(titles).sort().forEach(title => {
+        const option = document.createElement('option');
+        option.value = title; option.text = title;
+        titleSelect.add(option);
     });
-
-    // Repopulate icon containers based on selected province
     populateIconContainersAndDropdown(data);
-  });
-}
+});
 
-// Toggle icon selection
 function toggleIconSelection(event) {
-  const icon = event.target;
-  icon.classList.toggle('selected');
-  updateClearFilterButton(); // Update the button visibility whenever an icon is toggled
+  event.target.classList.toggle('selected');
+  updateClearFilterButton();
 }
 
-// Function to check if any filters are applied
 function areFiltersApplied() {
-  const province = document.getElementById('province').value.toLowerCase();
-  const title = document.getElementById('title').value.toLowerCase();
-  const selectedProducts = getSelectedItems('product-icons').map(item => item.toLowerCase());
-  const selectedOtherProducts = getSelectedItems('other-product-icons').map(item => item.toLowerCase());
-  const selectedServices = getSelectedItems('service-icons').map(item => item.toLowerCase());
-  const selectedDescriptions = getSelectedItems('description-icons').map(item => item.toLowerCase());
-  const selectedPromotions = getSelectedItems('promotion-icons').map(item => item.toLowerCase());
-
-  return province || title || selectedProducts.length || selectedOtherProducts.length || selectedServices.length || selectedDescriptions.length || selectedPromotions.length;
+  const province = document.getElementById('province').value;
+  const title = document.getElementById('title').value;
+  return province || title || document.querySelector('.filter-icon.selected');
 }
 
-// Helper function to get selected items from an icon container
 function getSelectedItems(containerId) {
   const container = document.getElementById(containerId);
-  const selectedIcons = container.querySelectorAll('.filter-icon.selected');
-  return Array.from(selectedIcons).map(icon => icon.dataset.item);
+  return Array.from(container.querySelectorAll('.filter-icon.selected')).map(icon => icon.dataset.item);
 }
 
-// Function to update the visibility of the clear filter button
 function updateClearFilterButton() {
-  const clearFilterButton = document.getElementById('clearAllButton');
-  if (areFiltersApplied()) {
-    clearFilterButton.style.display = 'block'; // Show the button
-  } else {
-    clearFilterButton.style.display = 'none'; // Hide the button
-  }
+  document.getElementById('clearAllButton').style.display = areFiltersApplied() ? 'block' : 'none';
 }
 
-// Add event listener to filter form submit
 document.getElementById('filterForm').addEventListener('submit', function(event) {
   event.preventDefault();
   applyFilter();
   updateClearFilterButton();
+  hideOffcanvas();
 });
 
-// Function to apply the filter
 function applyFilter() {
-  console.log("applyFilter called"); // Debugging log
-  const selectedServices = getSelectedItems('service-icons').map(item => item.toLowerCase());
+  const province = document.getElementById('province').value.toLowerCase();
+  const title = document.getElementById('title').value.toLowerCase();
+  const selectedProducts = getSelectedItems('product-icons').map(i => i.toLowerCase());
+  const selectedOtherProducts = getSelectedItems('other-product-icons').map(i => i.toLowerCase());
+  const selectedServices = getSelectedItems('service-icons').map(i => i.toLowerCase());
+  const selectedDescriptions = getSelectedItems('description-icons').map(i => i.toLowerCase());
+  const selectedPromotions = getSelectedItems('promotion-icons').map(i => i.toLowerCase());
+  const selectedStatuses = getSelectedItems('status-icons').map(i => i.toLowerCase());
 
-  console.log("Selected Services:", selectedServices); // Debugging log
-
-  markers.clearLayers(); // Clear existing markers
-  let filteredMarkers = []; // Array to hold filtered markers
+  markers.clearLayers();
+  let filteredMarkers = [];
 
   allMarkers.forEach(entry => {
+    const station = entry.data;
     let match = true;
 
-    // Check if the marker has "Fleet card" in its services
-    if (selectedServices.length && !selectedServices.some(item => entry.data.service.map(serv => serv.toLowerCase()).includes(item))) {
-      match = false;
-    }
+    if (province && station.province.toLowerCase() !== province) match = false;
+    if (title && station.title.toLowerCase() !== title) match = false;
+    if (selectedProducts.length && !selectedProducts.some(item => (station.product || []).map(p => p.toLowerCase()).includes(item))) match = false;
+    if (selectedOtherProducts.length && !selectedOtherProducts.some(item => (station.other_product || []).map(p => p.toLowerCase()).includes(item))) match = false;
+    if (selectedServices.length && !selectedServices.some(item => (station.service || []).map(s => s.toLowerCase()).includes(item))) match = false;
+    if (selectedDescriptions.length && !selectedDescriptions.some(item => (station.description || []).map(d => d.toLowerCase()).includes(item))) match = false;
+    if (selectedPromotions.length && !selectedPromotions.some(item => (station.promotion || []).map(p => p.toLowerCase()).includes(item))) match = false;
+    if (selectedStatuses.length && !selectedStatuses.includes((station.status || '').toLowerCase())) match = false;
 
     if (match) {
       markers.addLayer(entry.marker);
-      filteredMarkers.push(entry.marker); // Add the filtered marker to the array
+      filteredMarkers.push(entry.marker);
     }
   });
-
-  console.log("Filtered Markers:", filteredMarkers); // Debugging log
 
   map.addLayer(markers);
 
   if (filteredMarkers.length > 0) {
     const group = new L.featureGroup(filteredMarkers);
-    const bounds = group.getBounds();
-    map.flyToBounds(bounds, {
-      animate: true,
-      duration: 1, // Adjust the duration of the zoom animation here
-    }); // Animate map to fit the bounds of the filtered markers
+    map.flyToBounds(group.getBounds(), { animate: true, duration: 1 });
   }
 }
 
-// Function to clear all selections and show all markers
+function hideOffcanvas() {
+  const offcanvasEl = document.getElementById('filterOffcanvas');
+  const offcanvas = bootstrap.Offcanvas.getInstance(offcanvasEl);
+  if (offcanvas) offcanvas.hide();
+}
+
 function clearAllSelections() {
-  document.getElementById('province').value = '';
-  document.getElementById('title').innerHTML = '<option value>All</option>';
-  const iconContainers = document.querySelectorAll('.icon-container');
-  iconContainers.forEach(container => {
-    const icons = container.querySelectorAll('.filter-icon');
-    icons.forEach(icon => {
-      icon.classList.remove('selected');
-    });
-  });
-
-  markers.clearLayers(); // Clear existing markers
-
-  // Add all markers back to the map
-  allMarkers.forEach(entry => {
-    markers.addLayer(entry.marker);
-  });
-
-  map.addLayer(markers); // Reset the map to show all markers
-
-  // Optionally, fit the map bounds to all markers
-  const allMarkersArray = allMarkers.map(entry => entry.marker);
-  if (allMarkersArray.length > 0) {
-    const group = new L.featureGroup(allMarkersArray);
-    const bounds = group.getBounds();
-    map.flyToBounds(bounds, {
-      animate: true,
-      duration: 1 // Adjust the duration of the zoom animation here
-    }); // Animate map to fit the bounds of all markers
-  }
-
-  updateClearFilterButton(); // Hide the clear filter button
+  document.getElementById('filterForm').reset();
+  document.querySelectorAll('.filter-icon.selected').forEach(icon => icon.classList.remove('selected'));
+  
+  const data = allMarkers.map(m => m.data);
+  populateIconContainersAndDropdown(data);
+  
+  applyFilter();
+  updateClearFilterButton();
 }
 
-// Add event listener to clear all button
 document.getElementById('clearAllButton').addEventListener('click', clearAllSelections);
-
-// Update the clear filter button visibility on page load
-document.addEventListener('DOMContentLoaded', function() {
-  updateClearFilterButton();
-
-  // Automatically select "Fleet card" when the map is loaded
-  autoSelectFleetCard();
-
-  // Automatically select "Fleet card" when the filter modal is opened
-  const filterModal = document.getElementById('filterModal');
-  filterModal.addEventListener('show.bs.modal', function() {
-    autoSelectFleetCard();
-  });
-});

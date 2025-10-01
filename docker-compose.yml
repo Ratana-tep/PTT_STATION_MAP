@@ -5,7 +5,7 @@ services:
     
     # Maps port 5001 on your computer to port 5000 in the container.
     ports:
-      - "5000:5000"
+      - "7000:7000"
       
     # Mounts your local './data' folder to the '/app/data' folder inside the container.
     volumes:
