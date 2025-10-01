@@ -347,67 +347,86 @@
 
     <!-- Bootstrap 5 JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
-	<script>
-		function detectDevice() {
-			const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-			const isMobile = /android|webos|iphone|ipod|blackberry|iemobile|opera mini/i.test(userAgent.toLowerCase());
-			const isTablet = /(ipad|tablet|playbook|silk)|(android(?!.*mobile))/i.test(userAgent.toLowerCase());
-			const hash = window.location.hash.toLowerCase();
-			
-			// Base paths for different device types
-			const mobilePaths = {
-				default: 'mapViewPhone.html',
-				fleet: 'mapView_fleet.html',
-				ev: 'mapView_EV.html'
-			};
-			
-			const desktopPaths = {
-				default: 'mapViewerPC.html',
-				fleet: 'mapViewerPC_fleet.html',
-				ev: 'mapViewerPC_EV.html',
+<script>
+    function detectDevice() {
+      const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+      const isMobile = /android|webos|iphone|ipod|blackberry|iemobile|opera mini/i.test(userAgent.toLowerCase());
+      const isTablet = /(ipad|tablet|playbook|silk)|(android(?!.*mobile))/i.test(userAgent.toLowerCase());
+      const hash = window.location.hash.toLowerCase();
+      
+      // --- UPDATED: Defined paths for all device types ---
+      
+      // Mobile devices will use these pages
+      const mobilePaths = {
+        default: 'mapViewPhone.html',
+        fleet: 'mapView_fleet.html',
+        ev: 'mapView_EV.html',
+        admin_fleet: 'map_fleet.html', // Added admin path
+        admin:'map.html'              // Added admin path
+      };
+      
+      // Tablets will use these pages (often the same as desktop)
+      const tabletPaths = {
+        default: 'mapViewerPC.html',
+        fleet: 'mapViewerPC_fleet.html',
+        ev: 'mapViewerPC_EV.html',
+        admin_fleet: 'map_fleet.html', // Added admin path
+        admin:'map.html'              // Added admin path
+      };
+      
+      // Desktops will use these pages
+      const desktopPaths = {
+        default: 'mapViewerPC.html',
+        fleet: 'mapViewerPC_fleet.html',
+        ev: 'mapViewerPC_EV.html',
         admin_fleet: 'map_fleet.html',
         admin:'map.html'
-			};
-			
-			
-			// Determine which path set to use
-			let pathSet;
-			if (isMobile && !isTablet) {
-				pathSet = mobilePaths;
-			} else if (isTablet) {
-				pathSet = tabletPaths;
-			} else {
-				pathSet = desktopPaths;
-			}
-			
-			// Determine the specific page to redirect to
-			let redirectPath;
-			switch(hash) {
-				case '#fleet':
-					redirectPath = pathSet.fleet;
-					break;
-				case '#ev':
-					redirectPath = pathSet.ev;
-					break;
+      };
+      
+      // Determine which path set to use
+      let pathSet;
+      if (isMobile && !isTablet) {
+        pathSet = mobilePaths;
+      } else if (isTablet) {
+        pathSet = tabletPaths; // Now this exists!
+      } else {
+        pathSet = desktopPaths;
+      }
+      
+      // Determine the specific page to redirect to
+      let redirectPath;
+      switch(hash) {
+        case '#fleet':
+          redirectPath = pathSet.fleet;
+          break;
+        case '#ev':
+          redirectPath = pathSet.ev;
+          break;
         case '#admin_fleet':
           redirectPath = pathSet.admin_fleet;
           break;
         case '#admin':
           redirectPath = pathSet.admin;
           break;
-				default:
-					redirectPath = pathSet.default;
-			}
-			
-			// Perform the redirect
-			window.location.href = redirectPath;
-		}
-		
-		// Enhanced timeout with loading indicator option
-		document.addEventListener('DOMContentLoaded', function() {
-			// Optionally show a loading message or spinner here
-			setTimeout(detectDevice, 1500); // Reduced to 1.5s for better UX
-		});
-	</script>
+        default:
+          redirectPath = pathSet.default;
+      }
+      
+      // Ensure a redirect path was found before attempting to redirect
+      if (redirectPath) {
+        // Perform the redirect
+        window.location.href = redirectPath;
+      } else {
+        // Fallback in case a hash doesn't match any path
+        console.error("No valid redirect path found for this device and hash.");
+        window.location.href = pathSet.default; // Redirect to default as a fallback
+      }
+    }
+    
+    // Set a timeout to show the splash screen before redirecting
+    document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(detectDevice, 2500); // Increased timeout to see the animation
+    });
+  </script>
 </body>
 </html>
